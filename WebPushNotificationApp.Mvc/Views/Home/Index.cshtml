@@ -19,13 +19,12 @@
 
 @*Subscription button logic*@
 <script>
-    const publicKey = '@(Configuration["VapidDetails:PublicKey"])';
+    const publicKey = '@ViewBag.PublicKey';
 
     document.getElementById('push-button').addEventListener('click', async function() {
         // Check for service worker support
         if ('serviceWorker' in navigator) {
-            const registration = await navigator.serviceWorker.ready;
-
+            const registration = await navigator.serviceWorker.ready; 
             // Check if user is already subscribed
             const existingSubscription = await registration.pushManager.getSubscription();
             if (!existingSubscription) {
