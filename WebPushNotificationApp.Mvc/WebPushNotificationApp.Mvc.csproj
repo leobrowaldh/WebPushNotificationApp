@@ -16,4 +16,8 @@
     <PackageReference Include="WebPush" Version="1.0.12" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\WebPushNotificationsApp.PushService\WebPushNotificationsApp.PushService.csproj" />
+  </ItemGroup>
+
 </Project>
