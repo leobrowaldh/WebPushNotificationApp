@@ -2,10 +2,51 @@
     ViewData["Title"] = "Home Page";
 }
 
-<form method="post">
-    <input type="button" value="Send Notification"/>
-</form>
-<div class="text-center">
-    <h1 class="display-4">Welcome everyone</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+
+<button id="push-button">Notify Me</button>
+
+@* Register the service worker *@
+<script>
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/sw.js')
+            .then(function(registration) {
+                console.log('Service Worker registered with scope:', registration.scope);
+            }).catch(function(error) {
+                console.log('Service Worker registration failed:', error);
+            });
+    }
+</script>
+
+@*Subscription button logic*@
+<script>
+    const publicKey = '@(Configuration["VapidDetails:PublicKey"])';
+
+    document.getElementById('push-button').addEventListener('click', async function() {
+        // Check for service worker support
+        if ('serviceWorker' in navigator) {
+            const registration = await navigator.serviceWorker.ready;
+
+            // Check if user is already subscribed
+            const existingSubscription = await registration.pushManager.getSubscription();
+            if (!existingSubscription) {
+                // Subscribe the user
+                const newSubscription = await registration.pushManager.subscribe({
+                    userVisibleOnly: true, //will display visible notification for the user.
+                    applicationServerKey: publicKey //only the server knows the corresponding private key.
+                });
+
+                // Send subscription details to the server
+                await fetch('/Home/Subscribe', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(newSubscription)
+                });
+            }
+
+            // Send the notification request to the server
+            await fetch('/Home/SendNotification');
+        }
+    });
+</script>
