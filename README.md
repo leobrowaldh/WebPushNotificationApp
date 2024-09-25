@@ -20,10 +20,10 @@ public class VapidHelper
         Console.WriteLine($"Private Key: {keys.PrivateKey}");
     }
 }
-
+```
 The keys will be saved in appsetting.json (you will have to introduce them manually since appsetting.json is not tracked by git for security reasons.)
 like this:
-
+```
 {
   "VapidDetails": {
     "PublicKey": "your-public-key-here",
