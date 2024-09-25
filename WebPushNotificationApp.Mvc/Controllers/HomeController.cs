@@ -31,16 +31,22 @@ namespace WebPushNotificationApp.Mvc.Controllers
         {
             // Save the subscription object to database.
             // This object contains the endpoint and keys to send push notifications.
+            // Store subscription in session temporarily
+            HttpContext.Session.SetString("PushSubscription", JsonConvert.SerializeObject(subscription));
             return Ok();
         }
 
         public async Task<IActionResult> SendNotification()
         {
-            //here we should retrieve the subscription fron the database
-            var subscription = new PushSubscription
+            // Retrieve subscription from session
+            var subscriptionJson = HttpContext.Session.GetString("PushSubscription");
+
+            if (string.IsNullOrEmpty(subscriptionJson))
             {
-                Endpoint = "https://fcm.googleapis.com/fcm/send/example_subscription"
-            };
+                return BadRequest("No subscription found in session.");
+            }
+
+            var subscription = JsonConvert.DeserializeObject<PushSubscription>(subscriptionJson);
             var payload = JsonConvert.SerializeObject(new
             {
                 title = "Test Notification",
