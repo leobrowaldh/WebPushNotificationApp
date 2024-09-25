@@ -15,7 +15,7 @@ namespace WebPushNotificationApp.Mvc.Controllers
         {
             _pushService = pushService;
         }
-
+        
         //Handels the subscription
         [HttpPost("surbscribe")]
         public IActionResult Subscribe([FromBody] PushSubscription subscription)
