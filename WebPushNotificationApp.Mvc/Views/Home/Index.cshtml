@@ -38,7 +38,16 @@
 
         if (!existingSubscription) {
             console.log('No subscription found, subscribing user...');//DEBUG
-        
+
+            //Ask user for permission to send push notifications.
+            let permission = Notification.requestPermission();
+            if (permission === 'granted') {
+                console.log('Push Notifications - permission accepted')
+            }
+            else if (permission === 'denied') {
+                console.log('Push Notifications - permission denied')
+            }
+
             // Subscribe the user to push notifications
             const newSubscription = await registration.pushManager.subscribe({
                 userVisibleOnly: true, //visible notifications for the user
@@ -65,5 +74,6 @@
         const notificationResponse = await fetch('/Home/SendNotification');
         console.log('Notification response:', notificationResponse);//DEBUG
     });
+
 
 </script>
