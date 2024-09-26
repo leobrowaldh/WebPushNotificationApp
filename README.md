@@ -1,7 +1,5 @@
 # WebPushNotificationApp
 
-You will need the Webpush nuget package for the backend webpush notifications.
-
 To generate the vapid keys we will use in appsettings.json, you can use: 
 1) node.js:
    
