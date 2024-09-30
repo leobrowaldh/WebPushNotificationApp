@@ -1,3 +1,4 @@
+using Database.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.Diagnostics;
@@ -7,18 +8,12 @@ using WebPushNotificationsApp.PushService;
 
 namespace WebPushNotificationApp.Mvc.Controllers
 {
-    public class HomeController : Controller
+    public class HomeController(ILogger<HomeController> logger, PushService pushService, IConfiguration configuration, IUserRepository repository) : Controller
     {
-        private readonly ILogger<HomeController> _logger;
-        private readonly PushService _pushService;
-        private readonly IConfiguration _configuration;
-
-        public HomeController(ILogger<HomeController> logger, PushService pushService, IConfiguration configuration)
-        {
-            _logger = logger;
-            _pushService = pushService;
-            _configuration = configuration;
-        }
+        private readonly ILogger<HomeController> _logger = logger;
+        private readonly PushService _pushService = pushService;
+        private readonly IConfiguration _configuration = configuration;
+        private readonly IUserRepository _userRepository = repository;
 
         public IActionResult Index()
         {
@@ -27,13 +22,28 @@ namespace WebPushNotificationApp.Mvc.Controllers
         }
 
         [HttpPost]
-        public IActionResult Subscribe([FromBody] PushSubscription subscription)
+        public async Task<IActionResult> Subscribe([FromBody] PushSubscription subscription)
         {
             // Save the subscription object to database.
             // This object contains the endpoint and keys to send push notifications.
-            // Store subscription in session temporarily
-            HttpContext.Session.SetString("PushSubscription", JsonConvert.SerializeObject(subscription));
-            return Ok();
+
+            //check modelstate of subscription object
+            if (!ModelState.IsValid)
+            {
+                _logger.LogWarning("Invalid subscription model state: {@ModelState}", ModelState);
+                return BadRequest("Invalid subscription data.");
+            }
+            //try to save to db.
+            else if (await _userRepository.SaveSubscription(JsonConvert.SerializeObject(subscription)))
+            {
+                _logger.LogInformation("Successfully saved the subscription for: {Endpoint}", subscription.Endpoint);
+                return Ok("Subscription saved to database.");
+            }
+            else 
+            {
+                _logger.LogError("Failed to save the subscription for: {Endpoint}", subscription.Endpoint);
+                return StatusCode(StatusCodes.Status500InternalServerError, "Failed to save the subscription.");
+            }
         }
 
         public async Task<IActionResult> SendNotification()

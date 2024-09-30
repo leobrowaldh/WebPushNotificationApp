@@ -1,6 +1,4 @@
-﻿using Database.EntityModels;
-
-namespace Database;
+﻿namespace Database;
 
 public class WebPushAppContext(DbContextOptions<WebPushAppContext> options) : DbContext(options)
 {

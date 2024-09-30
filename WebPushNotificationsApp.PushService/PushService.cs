@@ -3,7 +3,7 @@ using Microsoft.Extensions.Configuration;
 
 namespace WebPushNotificationsApp.PushService;
 
-public class PushService
+public class PushService: IPushService
 {
     private readonly VapidDetails _vapidDetails;
 
