@@ -1,3 +1,6 @@
+//DTO's Would be more appropiate, we use Db entities for now.
+using Database.EntityModels;
+
 using Database.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
@@ -8,10 +11,10 @@ using WebPushNotificationsApp.PushService;
 
 namespace WebPushNotificationApp.Mvc.Controllers
 {
-    public class HomeController(ILogger<HomeController> logger, PushService pushService, IConfiguration configuration, IUserRepository repository) : Controller
+    public class HomeController(ILogger<HomeController> logger, IPushService pushService, IConfiguration configuration, IUserRepository repository) : Controller
     {
         private readonly ILogger<HomeController> _logger = logger;
-        private readonly PushService _pushService = pushService;
+        private readonly IPushService _pushService = pushService;
         private readonly IConfiguration _configuration = configuration;
         private readonly IUserRepository _userRepository = repository;
 
@@ -34,10 +37,12 @@ namespace WebPushNotificationApp.Mvc.Controllers
                 return BadRequest("Invalid subscription data.");
             }
             //try to save to db.
-            else if (await _userRepository.SaveSubscription(JsonConvert.SerializeObject(subscription)))
+            int userId = await _userRepository.SaveSubscriptionAsync(JsonConvert.SerializeObject(subscription));
+            if (userId != 0)
             {
                 _logger.LogInformation("Successfully saved the subscription for: {Endpoint}", subscription.Endpoint);
-                return Ok("Subscription saved to database.");
+                //this anonymous object will be automatically serialized into JSON by asp.net core:
+                return Ok(new { message = "Subscription saved to database.", id = userId });
             }
             else 
             {
@@ -46,17 +51,18 @@ namespace WebPushNotificationApp.Mvc.Controllers
             }
         }
 
-        public async Task<IActionResult> SendNotification()
+        [HttpPost]
+        public async Task<IActionResult> SendNotification(int userId)
         {
-            // Retrieve subscription from session
-            var subscriptionJson = HttpContext.Session.GetString("PushSubscription");
+            // Retrieve subscription from database
+            User? user = await _userRepository.GetSubscriptionAsync(userId);
 
-            if (string.IsNullOrEmpty(subscriptionJson))
+            if (user is null)
             {
-                return BadRequest("No subscription found in session.");
+                return BadRequest("No subscription found in database.");
             }
 
-            var subscription = JsonConvert.DeserializeObject<PushSubscription>(subscriptionJson);
+            var subscription = JsonConvert.DeserializeObject<PushSubscription>(user.SubscriptionJson);
             var payload = JsonConvert.SerializeObject(new
             {
                 title = "Test Notification",
@@ -64,7 +70,7 @@ namespace WebPushNotificationApp.Mvc.Controllers
             });
 
             await _pushService.SendNotificationAsync(subscription, payload);
-            return Ok();
+            return Ok("Notification Sent");
         }
         public IActionResult Privacy()
         {

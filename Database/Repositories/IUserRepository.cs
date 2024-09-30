@@ -8,6 +8,7 @@ namespace Database.Repositories
 {
     public interface IUserRepository
     {
-        public Task<bool> SaveSubscription(string subscription);
+        public Task<int> SaveSubscriptionAsync(string subscription);
+        public Task<User?> GetSubscriptionAsync(int subscriberId);
     }
 }

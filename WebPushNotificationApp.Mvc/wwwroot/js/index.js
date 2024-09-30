@@ -16,6 +16,8 @@ console.log('Public Key:', publicKey);//DEBUG
 // Subscription button logic
 document.getElementById('push-button').addEventListener('click', async function () {
     console.log('Button clicked'); // DEBUG
+    
+    let userId = null;
 
     // Wait for the service worker to be ready
     const registration = await navigator.serviceWorker.ready;
@@ -49,7 +51,16 @@ document.getElementById('push-button').addEventListener('click', async function 
                 },
                 body: JSON.stringify(newSubscription)
             });
-            console.log('Server response:', response); // DEBUG
+            if (response.ok) {
+                // Extracting JSON from the response to retrieve the userId
+                const data = await response.json();
+                console.log('Response data:', data);
+                userId = data.id; // Getting the userId from the parsed JSON
+                console.log('User ID:', userId); // DEBUG
+            } else {
+                console.error('Failed to subscribe:', response.statusText);
+            }
+
         } else if (permission === 'denied') {
             console.log('Push Notifications - permission denied');
             return; // Stop further execution if permission is denied
@@ -59,10 +70,21 @@ document.getElementById('push-button').addEventListener('click', async function 
         }
     } else {
         console.log('User is already subscribed.'); // DEBUG
+        
     }
 
     // Send notification
-    console.log('Sending notification...'); // DEBUG
-    const notificationResponse = await fetch('/Home/SendNotification');
-    console.log('Notification response:', notificationResponse); // DEBUG
+    if (userId) {
+        console.log('Sending notification...'); // DEBUG
+        //sending the id via form data to the server:
+        const formData = new FormData();
+        formData.append('userId', userId);
+        const notificationResponse = await fetch('/Home/SendNotification', {
+            method: 'POST',
+            body: formData
+        });
+        console.log('Notification response:', notificationResponse); // DEBUG
+    } else {
+        console.log('No userId available to send notification.'); // DEBUG
+    }
 });
