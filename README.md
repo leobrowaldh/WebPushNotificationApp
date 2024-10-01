@@ -30,3 +30,6 @@ like this:
   }
 }
 ```
+
+For the webpush notifications to work in your operative system, Notifications need to be allowed for the browser you are using. 
+If you are not recieving notifications, check your OS configuration to make sure notifications are on for this browser.
