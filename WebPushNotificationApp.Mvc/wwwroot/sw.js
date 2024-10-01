@@ -1,4 +1,5 @@
 ﻿self.addEventListener('push', function (event) {
+    console.log('Push event received in service worker:', event); //DEBUG
     let data;
 
     try {
