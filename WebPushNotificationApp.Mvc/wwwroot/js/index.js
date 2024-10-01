@@ -88,3 +88,13 @@ document.getElementById('push-button').addEventListener('click', async function 
         console.log('No userId available to send notification.'); // DEBUG
     }
 });
+
+document.getElementById("test-local-notification").addEventListener("click", function spam() {
+    new Notification("This is a local test notification");
+    console.log("Sending local Notification");
+});
+
+document.getElementById("test-local-notification-persistent").addEventListener("click", function spam() {
+    navigator.serviceWorker.getRegistration().then((reg) => reg.showNotification("Test persistent notification"))
+    console.log("Sending local Notification");
+});
