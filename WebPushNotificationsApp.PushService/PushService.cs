@@ -30,9 +30,14 @@ public class PushService: IPushService
         {
             await webPushClient.SendNotificationAsync(subscription, payload, _vapidDetails);
         }
-        catch (Exception ex) 
+        // Detailed error handling to improve debugging:
+        catch (WebPushException ex) 
         {
-            Console.WriteLine($"{ex.Message}");
+            Console.WriteLine($"WebPush error: {ex.StatusCode}, {ex.Message}, {ex.StackTrace}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"General error: {ex.Message}, {ex.StackTrace}");
         }
     }
 }

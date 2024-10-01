@@ -27,8 +27,18 @@ namespace WebPushNotificationApp.Mvc.Controllers
         [HttpPost]
         public async Task<IActionResult> Subscribe([FromBody] PushSubscription subscription)
         {
+            _logger.LogInformation("Received subscription: Endpoint = {Endpoint}, P256dh = {P256dh}, Auth = {Auth}",
+    subscription.Endpoint, subscription.P256DH, subscription.Auth);
+
             // Save the subscription object to database.
             // This object contains the endpoint and keys to send push notifications.
+
+            // Ensure keys are not null
+            if (string.IsNullOrEmpty(subscription.P256DH) || string.IsNullOrEmpty(subscription.Auth))
+            {
+                _logger.LogWarning("Subscription keys are missing or invalid.");
+                return BadRequest("Subscription must include auth and p256dh keys.");
+            }
 
             //check modelstate of subscription object
             if (!ModelState.IsValid)
