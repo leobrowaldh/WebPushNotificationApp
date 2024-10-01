@@ -35,21 +35,42 @@ document.getElementById('push-button').addEventListener('click', async function 
         if (permission === 'granted') {
             console.log('Push Notifications - permission accepted');
 
-            // Subscribe the user to push notifications
+            // **********Subscribe the user to push notifications***************
+
             const newSubscription = await registration.pushManager.subscribe({
                 userVisibleOnly: true, // visible notifications for the user
                 applicationServerKey: publicKey // private key is only known by the server
             });
-            console.log('New subscription:', newSubscription); // DEBUG
+            console.log('New subscription:', JSON.stringify(newSubscription)); // DEBUG
+            /* It looks like this:
+            New subscription: {"endpoint":"https://fcm.googleapis.com/fcm/send/dbeXbZ-G9yc:APA91bHnsBWfCc9UnJCreoXGPa4WJlcLr8HQtnn-d-XKevE4xvtZDv1ATHiHqw6P5Kt8oEF0ZFC5PRFvUddXuFfWRsPVmX-FDLWZS0Nxnpy6QxeJEol487xgbSjRr6gLznocHJZjvwvn",
+            "expirationTime":null,
+            "keys":{"p256dh":"BMpHpen87XTEOWYGub3Q-KXGxD7DbouDRfmIYVioeT_G2AOG5M5hnukNgK_2qE6SUL4MwRdfFFmpA8krDswEBkA","auth":"2G9581mqIGY8jnokL3YWAQ"}}
+            */
 
-            // Send subscription to the server
+            // **************Send subscription to the server**************
+
+            // Accomodating data to fit into Asp.NetCore.WebPush:
+            // Stringify the subscription object
+            const stringifiedSubscription = JSON.stringify(newSubscription);
+
+            // Parse it back into an object so it matches the expected structure
+            const parsedSubscription = JSON.parse(stringifiedSubscription);
+
+            // Now construct the object to send to the server
+            const subscriptionToSend = {
+                endpoint: parsedSubscription.endpoint,
+                p256dh: parsedSubscription.keys.p256dh,
+                auth: parsedSubscription.keys.auth
+            };
+
             console.log('Sending POST request to server with subscription data...'); // DEBUG
             const response = await fetch('/Home/Subscribe', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify(newSubscription)
+                body: JSON.stringify(subscriptionToSend)
             });
             if (response.ok) {
                 // Extracting JSON from the response to retrieve the userId
@@ -73,7 +94,7 @@ document.getElementById('push-button').addEventListener('click', async function 
         
     }
 
-    // Send notification
+    // ****************Send notification***************
     if (userId) {
         console.log('Sending notification...'); // DEBUG
         //sending the id via form data to the server:
