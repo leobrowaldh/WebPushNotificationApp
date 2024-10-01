@@ -37,9 +37,10 @@ document.getElementById('push-button').addEventListener('click', async function 
 
             // **********Subscribe the user to push notifications***************
 
+            //subscribing the service worker:
             const newSubscription = await registration.pushManager.subscribe({
                 userVisibleOnly: true, // visible notifications for the user
-                applicationServerKey: publicKey // private key is only known by the server
+                applicationServerKey: urlBase64ToUint8Array(publicKey) // Convert public key here
             });
             console.log('New subscription:', JSON.stringify(newSubscription)); // DEBUG
             /* It looks like this:
@@ -65,7 +66,7 @@ document.getElementById('push-button').addEventListener('click', async function 
             };
 
             console.log('Sending POST request to server with subscription data...'); // DEBUG
-            const response = await fetch('/Home/Subscribe', {
+            const response = await fetch('/Home/SavingSubscriptionToDb', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -109,3 +110,14 @@ document.getElementById('push-button').addEventListener('click', async function 
         console.log('No userId available to send notification.'); // DEBUG
     }
 });
+
+// Function to convert VAPID public key from base64 URL format to Uint8Array
+function urlBase64ToUint8Array(base64String) {
+    const padding = '='.repeat((4 - base64String.length % 4) % 4);
+    const base64 = (base64String + padding)
+        .replace(/-/g, '+')
+        .replace(/_/g, '/');
+
+    const rawData = window.atob(base64);
+    return new Uint8Array([...rawData].map(char => char.charCodeAt(0)));
+}
