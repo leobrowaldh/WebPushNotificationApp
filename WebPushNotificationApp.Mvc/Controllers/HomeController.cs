@@ -25,7 +25,7 @@ namespace WebPushNotificationApp.Mvc.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Subscribe([FromBody] PushSubscription subscription)
+        public async Task<IActionResult> SavingSubscriptionToDb([FromBody] PushSubscription subscription)
         {
             _logger.LogInformation("Received subscription: Endpoint = {Endpoint}, P256dh = {P256dh}, Auth = {Auth}",
     subscription.Endpoint, subscription.P256DH, subscription.Auth);
