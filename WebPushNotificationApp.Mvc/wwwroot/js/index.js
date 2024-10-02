@@ -13,11 +13,21 @@ document.getElementById('subscribe-button').addEventListener('click', async func
     console.log('Service Worker is ready:', registration);
 
     // Check if the user is already subscribed
-    const existingSubscription = await registration.pushManager.getSubscription();
-    console.log('Existing subscription:', existingSubscription); 
+    let existingSubscription = null;
+    try {
+        existingSubscription = await registration.pushManager.getSubscription();
+        if (!existingSubscription) {
+            console.log('No subscription found');
+        } else {
+            console.log('Subscription exists:', existingSubscription);
+        }
+    } catch (error) {
+        console.error('Error getting subscription:', error);
+    }
+ 
 
     if (!existingSubscription) {
-        console.log('No subscription found, subscribing user...'); 
+        console.log('Subscribing user...'); 
 
         // Ask user for permission through the browsers NotificationAPI:
         let permission = await Notification.requestPermission();
@@ -82,6 +92,10 @@ document.getElementById('subscribe-button').addEventListener('click', async func
 // Notification:
 document.getElementById('push-button').addEventListener('click', async function () {
     console.log('Push button clicked'); 
+    // Wait for the service worker to be ready
+    const registration = await navigator.serviceWorker.ready;
+    console.log('Service Worker is ready:', registration);
+
     const userId = localStorage.getItem('userId'); // Retrieve userId from local storage
     
     if (userId) {
