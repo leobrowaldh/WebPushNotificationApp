@@ -12,6 +12,8 @@
 
     const options = {
         body: data.message,
+        icon: data.icon,
+        badge: data.badge
     };
 
     event.waitUntil(

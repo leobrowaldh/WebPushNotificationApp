@@ -76,7 +76,9 @@ namespace WebPushNotificationApp.Mvc.Controllers
             var payload = JsonConvert.SerializeObject(new
             {
                 title = "Test Notification",
-                message = "This is a notification for you!"
+                message = "This is a notification for you!",
+                icon = "https://static-00.iconduck.com/assets.00/slightly-smiling-face-emoji-2048x2048-p8h7zhgm.png", 
+                badge = "https://static-00.iconduck.com/assets.00/slightly-smiling-face-emoji-2048x2048-p8h7zhgm.png", 
             });
 
             await _pushService.SendNotificationAsync(subscription, payload);
