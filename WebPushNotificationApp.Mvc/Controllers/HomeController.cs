@@ -28,7 +28,7 @@ namespace WebPushNotificationApp.Mvc.Controllers
         public async Task<IActionResult> SavingSubscriptionToDb([FromBody] PushSubscription subscription)
         {
             _logger.LogInformation("Received subscription: Endpoint = {Endpoint}, P256dh = {P256dh}, Auth = {Auth}",
-    subscription.Endpoint, subscription.P256DH, subscription.Auth);
+            subscription.Endpoint, subscription.P256DH, subscription.Auth);
 
             // Save the subscription object to database.
             // This object contains the endpoint and keys to send push notifications.
@@ -51,7 +51,7 @@ namespace WebPushNotificationApp.Mvc.Controllers
             if (userId != 0)
             {
                 _logger.LogInformation("Successfully saved the subscription for: {Endpoint}", subscription.Endpoint);
-                //this anonymous object will be automatically serialized into JSON by asp.net core:
+                //this c# anonymous object will be automatically serialized into JSON by asp.net core:
                 return Ok(new { message = "Subscription saved to database.", id = userId });
             }
             else 
@@ -82,6 +82,12 @@ namespace WebPushNotificationApp.Mvc.Controllers
             await _pushService.SendNotificationAsync(subscription, payload);
             return Ok("Notification Sent");
         }
+
+
+
+
+
+
         public IActionResult Privacy()
         {
             return View();
