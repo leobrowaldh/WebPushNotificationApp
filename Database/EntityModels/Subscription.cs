@@ -4,5 +4,5 @@ public class Subscription
 {
     public int Id { get; private set; }
     public string? SubscriptionJson { get; set; }
-    public int ApplicationUserId { get; set; }
+    public int AplicationUserId { get; set; }
 }

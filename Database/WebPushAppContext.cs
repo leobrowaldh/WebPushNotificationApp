@@ -3,7 +3,7 @@
 namespace Database;
 
 //ApplicationUser will replace the normal inherited user entity from identity
-public class WebPushAppContext : IdentityDbContext<ApplicationUser>
+public class WebPushAppContext : IdentityDbContext<AplicationUser>
 {
     public WebPushAppContext(DbContextOptions<WebPushAppContext> options)
             : base(options)
