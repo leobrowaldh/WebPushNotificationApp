@@ -1,7 +1,8 @@
 ﻿namespace Database.EntityModels;
 
-public class User
+public class Subscription
 {
     public int Id { get; private set; }
     public string? SubscriptionJson { get; set; }
+    public int ApplicationUserId { get; set; }
 }
