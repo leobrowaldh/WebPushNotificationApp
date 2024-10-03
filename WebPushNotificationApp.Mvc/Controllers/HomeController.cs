@@ -6,22 +6,28 @@ using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.Diagnostics;
 using WebPush;
+using WebPushNotificationApp.Mvc.DTOs;
 using WebPushNotificationApp.Mvc.Models;
 using WebPushNotificationsApp.PushService;
+using static System.Net.WebRequestMethods;
 
 namespace WebPushNotificationApp.Mvc.Controllers
 {
-    public class HomeController(ILogger<HomeController> logger, IPushService pushService, IConfiguration configuration, IUserRepository repository) : Controller
+    public class HomeController(ILogger<HomeController> _logger, IPushService _pushService, IConfiguration _configuration, IUserRepository _userRepository) : Controller
     {
-        private readonly ILogger<HomeController> _logger = logger;
-        private readonly IPushService _pushService = pushService;
-        private readonly IConfiguration _configuration = configuration;
-        private readonly IUserRepository _userRepository = repository;
-
         public IActionResult Index()
         {
             ViewBag.PublicKey = _configuration["VapidDetails:PublicKey"];
-            return View();
+            HomeIndexViewModel model = new
+            (
+                UserId: 1, //get by authenticatiuon of user.
+                ProfilePicture: "https://static-00.iconduck.com/assets.00/slightly-smiling-face-emoji-2048x2048-p8h7zhgm.png",
+                Contacts: new List<ContactDTO>() { 
+                    new ContactDTO("Olle Persson", "https://static-00.iconduck.com/assets.00/slightly-smiling-face-emoji-2048x2048-p8h7zhgm.png"),
+                    new ContactDTO("Lilly Torrvik", "https://static-00.iconduck.com/assets.00/slightly-smiling-face-emoji-2048x2048-p8h7zhgm.png")
+                }
+            );
+            return View(model);
         }
 
         [HttpPost]
@@ -47,12 +53,12 @@ namespace WebPushNotificationApp.Mvc.Controllers
                 return BadRequest("Invalid subscription data.");
             }
             //try to save to db.
-            int userId = await _userRepository.SaveSubscriptionAsync(JsonConvert.SerializeObject(subscription));
-            if (userId != 0)
+            int subscriptionId = await _userRepository.SaveSubscriptionAsync(JsonConvert.SerializeObject(subscription), "UserIdFromAuth"); //get userId from user authentication.
+            if (subscriptionId != 0)
             {
                 _logger.LogInformation("Successfully saved the subscription for: {Endpoint}", subscription.Endpoint);
                 //this c# anonymous object will be automatically serialized into JSON by asp.net core:
-                return Ok(new { message = "Subscription saved to database.", id = userId });
+                return Ok(new { message = "Subscription saved to database.", id = subscriptionId });
             }
             else 
             {
@@ -62,17 +68,17 @@ namespace WebPushNotificationApp.Mvc.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> SendNotification(int userId)
+        public async Task<IActionResult> SendNotification(string userId)
         {
             // Retrieve subscription from database
-            User? user = await _userRepository.GetSubscriptionAsync(userId);
+            string? subscriptionJSON = await _userRepository.GetUserSubscriptionsAsync(userId);
 
-            if (user is null)
+            if (subscriptionJSON is null)
             {
                 return BadRequest("No subscription found in database.");
             }
 
-            var subscription = JsonConvert.DeserializeObject<PushSubscription>(user.SubscriptionJson);
+            var subscription = JsonConvert.DeserializeObject<PushSubscription>(subscriptionJSON);
             var payload = JsonConvert.SerializeObject(new
             {
                 title = "Test Notification",

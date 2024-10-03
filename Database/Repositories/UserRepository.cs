@@ -4,14 +4,14 @@ namespace Database.Repositories;
 
 public class UserRepository(WebPushAppContext _db, ILogger<UserRepository> _logger): IUserRepository
 {
-    public async Task<string?> GetUserSubscriptionsAsync(int subscriberId)
+    public async Task<string?> GetUserSubscriptionsAsync(string subscriberId)
     {
-        Subscription? subscription = await _db.Subscriptions.FirstOrDefaultAsync(s => s.AplicationUserId == subscriberId);
+        Subscription? subscription = await _db.Subscriptions.FirstOrDefaultAsync(s => s.UserId == subscriberId);
         return subscription?.SubscriptionJson;
     }
 
     
-    public async Task<int> SaveSubscriptionAsync(string subscriptionString, int userId)
+    public async Task<int> SaveSubscriptionAsync(string subscriptionString, string userId)
     {
         AplicationUser? user = await _db.Users.FindAsync(userId);
         if (user == null) 
