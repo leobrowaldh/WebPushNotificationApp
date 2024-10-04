@@ -53,7 +53,7 @@ namespace WebPushNotificationApp.Mvc.Controllers
                 return BadRequest("Invalid subscription data.");
             }
             //try to save to db.
-            int subscriptionId = await _userRepository.SaveSubscriptionAsync(JsonConvert.SerializeObject(subscription), "UserIdFromAuth"); //get userId from user authentication.
+            int subscriptionId = await _userRepository.SaveSubscriptionAsync(JsonConvert.SerializeObject(subscription), "c39c78c3-3d5b-44ab-90ec-a5a7f5ddff9b"); //get userId from user authentication. (this is a test userID)
             if (subscriptionId != 0)
             {
                 _logger.LogInformation("Successfully saved the subscription for: {Endpoint}", subscription.Endpoint);
