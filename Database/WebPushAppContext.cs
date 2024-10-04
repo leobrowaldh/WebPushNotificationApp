@@ -12,15 +12,21 @@ public class WebPushAppContext : IdentityDbContext<AplicationUser>
 
     public DbSet<Subscription> Subscriptions { get; set; }
 
-    //Needed to clarify foreign key relationship:
+    // Handling the self referencing User relationship:
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
 
+        // Configure the self-referencing many-to-many relationship
+        modelBuilder.Entity<AplicationUser>()
+            .HasMany(u => u.Contacts)
+            .WithMany()
+            .UsingEntity(j => j.ToTable("UserContacts")); //creating the join table
+
         modelBuilder.Entity<Subscription>()
             .HasOne(s => s.User)
             .WithMany(u => u.Subscriptions)
-            .HasForeignKey(s => s.UserId); // Reference 'UserId', which points to IdentityUser's 'Id'
+            .HasForeignKey(s => s.UserId);
     }
 
 }
