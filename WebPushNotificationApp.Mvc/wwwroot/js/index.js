@@ -59,7 +59,7 @@ document.getElementById('subscribe-button').addEventListener('click', async func
             };
 
             console.log('Sending POST request to server with subscription data...'); 
-            const response = await fetch('/Home/SavingSubscriptionToDb', {
+            const response = await fetch('/Notifications/SavingSubscriptionToDb', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -103,7 +103,7 @@ document.getElementById('push-button').addEventListener('click', async function 
         //sending the id via form data to the server:
         const formData = new FormData();
         formData.append('userId', userId);
-        const notificationResponse = await fetch('/Home/SendNotification', {
+        const notificationResponse = await fetch('/Notifications/SendNotification', {
             method: 'POST',
             body: formData
         });

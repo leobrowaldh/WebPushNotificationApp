@@ -1,4 +1,5 @@
 using Database;
+using Database.EntityModels;
 using Database.Repositories;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -15,7 +16,7 @@ builder.Services.AddDbContext<WebPushAppContext>(
 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+builder.Services.AddDefaultIdentity<AplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddEntityFrameworkStores<WebPushAppContext>();
 
 builder.Services.AddSingleton<IPushService, PushService>();

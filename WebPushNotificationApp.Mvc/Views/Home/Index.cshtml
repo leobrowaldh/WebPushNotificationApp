@@ -2,13 +2,18 @@
     ViewData["Title"] = "Home Page";
 }
 
-<body>
-    <main>
-        <button id="subscribe-button">Subscribe</button>
-        <br />
-        <button id="push-button">Notify Me</button>
-    </main>
-</body>
+<div class="row">
+    <section class="col-md-8 chat-window">
+        <h2 class="text-center">Chat Window</h2>
+    </section>
+
+    <aside class="col-md-4 contacts-list">
+        <h2 class="text-center">Contacts</h2>
+    </aside>
+
+</div>
+
+
 <!-- Declaring the public key as a JavaScript variable -->
 <script>
     var publicKey = '@ViewBag.PublicKey';
