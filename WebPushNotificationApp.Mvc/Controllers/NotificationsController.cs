@@ -9,6 +9,7 @@ using WebPushNotificationsApp.PushService;
 
 namespace WebPushNotificationApp.Mvc.Controllers;
 
+[Route("Notifications")]
 public class NotificationsController(
     ILogger<HomeController> _logger, 
     IPushService _pushService, 
@@ -88,4 +89,46 @@ public class NotificationsController(
         return Ok("Notification Sent");
     }
 
+    [HttpPost("CheckUserSubscriptionAsync")]
+    public async Task<IActionResult> CheckUserSubscriptionAsync([FromBody] PushSubscription subscription)
+    {
+        string? currentUserId = _userManager.GetUserId(User);
+
+        if (currentUserId is null)
+        {
+            _logger.LogWarning("User not logged in, redirecting to login page.");
+            return Redirect($"~/Identity/Account/Login?ReturnUrl={Url.Action("Index", "Home")}");
+        }
+
+        var subscriptionJson = JsonConvert.SerializeObject(subscription);
+        _logger.LogInformation("Serialized subscription from client: {subscriptionJson}", subscriptionJson);
+
+        try
+        {
+            bool isUserSubscription = await _userRepository.IsUserSubscriptionAsync(subscriptionJson, currentUserId);
+            _logger.LogInformation("IsUserSubscriptionAsync result: {isUserSubscription}", isUserSubscription); 
+
+            return Ok(new { isUserSubscription });
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error while checking user subscription.");
+            return StatusCode(500, "An error occurred while checking the subscription.");
+        }
+    }
+
+
+    [HttpPost]
+    public async Task<IActionResult> RemoveSubscriptionAsync([FromBody] PushSubscription subscription)
+    {
+        bool success = await _userRepository.RemoveSubscriptionAsync(JsonConvert.SerializeObject(subscription));
+        if (success)
+        {
+            return Ok("subscription successfully removed from database.");
+        }
+        else 
+        { 
+            return StatusCode(StatusCodes.Status500InternalServerError, "Failed to remove the subscription from database."); 
+        }
+    }
 }
