@@ -3,7 +3,7 @@
 To generate the vapid keys we will use in appsettings.json, you can use: 
 1) node.js:
    
- ```npc web-push generate-vapid-keys```
+ ```npx web-push generate-vapid-keys```
  
 2) Webpush:
 ```   
