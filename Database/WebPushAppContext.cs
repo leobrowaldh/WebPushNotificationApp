@@ -1,6 +1,32 @@
-﻿namespace Database;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
-public class WebPushAppContext(DbContextOptions<WebPushAppContext> options) : DbContext(options)
+namespace Database;
+
+//ApplicationUser will replace the normal inherited user entity from identity
+public class WebPushAppContext : IdentityDbContext<AplicationUser>
 {
-    public DbSet<User> Users { get; set; }
+    public WebPushAppContext(DbContextOptions<WebPushAppContext> options)
+            : base(options)
+    {
+    }
+
+    public DbSet<Subscription> Subscriptions { get; set; }
+
+    // Handling the self referencing User relationship:
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        base.OnModelCreating(modelBuilder);
+
+        // Configure the self-referencing many-to-many relationship
+        modelBuilder.Entity<AplicationUser>()
+            .HasMany(u => u.Contacts)
+            .WithMany()
+            .UsingEntity(j => j.ToTable("UserContacts")); //creating the join table
+
+        modelBuilder.Entity<Subscription>()
+            .HasOne(s => s.User)
+            .WithMany(u => u.Subscriptions)
+            .HasForeignKey(s => s.UserId);
+    }
+
 }

@@ -1,15 +1,52 @@
+@{
+    ViewData["Title"] = "Home Page";
+}
+
 ﻿@page
 
-<body>
-    <main>
-        <button id="subscribe-button">Subscribe</button>
-        <br />
-        <button id="push-button">Notify Me</button>
-    </main>
-</body>
-<!-- Declaring the public key as a JavaScript variable -->
+
+<div class="row">
+    <section class="col-md-8 chat-window position-relative">
+        <!-- Added position-relative -->
+        <!-- Overlay element for notification request -->
+        <div id="notification-overlay" class="d-none position-absolute top-0 start-0 w-100 h-100 bg-light text-center p-4" style="z-index: 10;">
+            <div class="d-flex justify-content-center">
+                <button id="subscribe-button" class="btn btn-primary btn-lg mb-3 me-3">Activate Notifications</button>
+                <button id="no-thanks" class="btn btn-secondary btn-lg mb-3">No thanks</button>
+            </div>
+            <p>Activate web-push notifications if you want to be notified if someone sends you a message.</p>
+            <p>You don't need to stay logged in on this site to receive these notifications; they will be sent directly to your browser.</p>
+        </div>
+
+        <h2 class="text-center">Chat Window</h2>
+        <button id="push-button" class="btn btn-primary btn-lg mb-3 me-3">Test Notification</button>
+    </section>
+
+    <aside class="col-md-4 contacts-list">
+        <h2 class="text-center">Contacts</h2>
+        <ul class="list-group">
+            @foreach (ContactDTO contact in Model.Contacts)
+            {
+                <li class="list-group-item">
+                    <div class="d-flex">
+                        <div class="flex-shrink-0 rounded-circle">
+                            <img src="@contact.profilePicture" alt="Profile picture" width="50" height="50">
+                        </div>
+                        <div class="flex-grow-1 ms-3">
+                            @contact.userName
+                        </div>
+                    </div>
+                </li>
+            }
+        </ul>
+    </aside>
+</div>
+
+
+<!-- Declaring JavaScript global variable -->
 <script>
     var publicKey = '@ViewBag.PublicKey';
+    var userId = '@Model.UserId';
 </script>
 
 <script src="~/js/index.js"></script>

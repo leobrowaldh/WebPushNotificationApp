@@ -1,17 +1,14 @@
 using Database;
+using Database.EntityModels;
 using Database.Repositories;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using WebPushNotificationApp.Mvc.Data;
 using WebPushNotificationsApp.PushService;
 using WebPushNotificationApp.Mvc.Hubs;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlServer(connectionString));
 
 builder.Services.AddDbContext<WebPushAppContext>(
     options =>
@@ -20,8 +17,8 @@ builder.Services.AddDbContext<WebPushAppContext>(
 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
-    .AddEntityFrameworkStores<ApplicationDbContext>();
+builder.Services.AddDefaultIdentity<AplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
+    .AddEntityFrameworkStores<WebPushAppContext>();
 
 builder.Services.AddSingleton<IPushService, PushService>();
 
@@ -29,9 +26,11 @@ builder.Services.AddScoped<IUserRepository, UserRepository>();
 
 builder.Services.AddControllersWithViews();
 
+
 builder.Services.AddSignalR();
 //Before using db we will store subscription in session, for testing purposes.
 builder.Services.AddSession();
+
 
 var app = builder.Build();
 
@@ -46,7 +45,7 @@ else
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
-app.UseSession();
+
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
