@@ -31,19 +31,17 @@ async function ManagingSubscriptionState() {
             if (isUserSub) {
                 console.log('The subscription belongs to the logged-in user.');
             } else if (isUserSub === false) {
-                console.log('The subscription does not belong to this user, unsubscribing...');
-                // Unsubscribe the old subscription
-                await removeOldSubscription(existingSubscription);
+                console.log('The subscription does not belong to this user, ask him to subscribe');
                 // Show subscription request, display subscription button
                 document.getElementById('notification-overlay').classList.remove('d-none');
             } else {
-                console.log('Could not verify subscription due to an error.');
-                // Optionally, handle this scenario with a retry or logging
+                console.log('Could not verify subscription');
+                // How to handle this? subscribe anyway?
             }
         }
     } catch (error) {
         console.error('Error getting subscription:', error);
-        // Show subscription request, display subscription button
+        // Show subscription request, display subscription button, subscribe...
         document.getElementById('notification-overlay').classList.remove('d-none');
     }
 }

@@ -17,7 +17,7 @@ public class NotificationsController(
     UserManager<AplicationUser> _userManager) : Controller
 {
 
-    [HttpPost]
+    [HttpPost("SavingSubscriptionToDb")]
     public async Task<IActionResult> SavingSubscriptionToDb([FromBody] PushSubscription subscription)
     {
         _logger.LogInformation("Received subscription: Endpoint = {Endpoint}, P256dh = {P256dh}, Auth = {Auth}",
@@ -65,7 +65,7 @@ public class NotificationsController(
         }
     }
 
-    [HttpPost]
+    [HttpPost("SendNotification")]
     public async Task<IActionResult> SendNotification(string userId)
     {
         // Retrieve subscription from database
@@ -118,7 +118,7 @@ public class NotificationsController(
     }
 
 
-    [HttpPost]
+    [HttpPost("RemoveSubscriptionAsync")]
     public async Task<IActionResult> RemoveSubscriptionAsync([FromBody] PushSubscription subscription)
     {
         bool success = await _userRepository.RemoveSubscriptionAsync(JsonConvert.SerializeObject(subscription));

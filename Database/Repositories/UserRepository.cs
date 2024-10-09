@@ -16,14 +16,14 @@ public class UserRepository(WebPushAppContext _db, ILogger<UserRepository> _logg
     {
         try
         {
-            AplicationUser? user = await _db.Users.FindAsync(userId);
+            AplicationUser? user = await _db.Users.Include(u => u.Subscriptions).FirstOrDefaultAsync(u => u.Id == userId);
             if (user == null)
             {
                 _logger.LogError("User with ID {userId} not found in database.", userId);
                 return false;
             }
 
-            _logger.LogInformation("User subscriptions in DB: {subscriptions}", JsonConvert.SerializeObject(user.Subscriptions));
+            _logger.LogInformation("User subscriptions in DB: {subscriptions}", user.Subscriptions.Count);
 
             bool subscriptionExists = user.Subscriptions.Any(s => s.SubscriptionJson == subscriptionString);
             _logger.LogInformation("Subscription match found: {subscriptionExists}", subscriptionExists);
