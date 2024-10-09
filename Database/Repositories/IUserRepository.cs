@@ -21,7 +21,7 @@ public interface IUserRepository
     /// </summary>
     /// <param name="subscriberId"></param>
     /// <returns>The subscription as a JSON string, or null if subscription not found in database.</returns>
-    public Task<string?> GetUserSubscriptionsAsync(string subscriberId);
+    public Task<List<Subscription>> GetUserSubscriptionsAsync(string subscriberId);
 
     /// <summary>
     /// Checks if the subscription endpoint corresponds to the particular user.

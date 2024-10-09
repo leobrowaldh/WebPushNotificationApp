@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using System.Collections.Generic;
 using WebPush;
 using WebPushNotificationsApp.PushService;
 
@@ -68,24 +69,39 @@ public class NotificationsController(
     [HttpPost("SendNotification")]
     public async Task<IActionResult> SendNotification(string userId)
     {
-        // Retrieve subscription from database
-        string? subscriptionJSON = await _userRepository.GetUserSubscriptionsAsync(userId);
+        // Retrieve subscriptions from database
+        List <Subscription> subscriptions = await _userRepository.GetUserSubscriptionsAsync(userId);
 
-        if (subscriptionJSON is null)
+        if (subscriptions.Count == 0)
         {
             return BadRequest("No subscription found in database.");
         }
 
-        var subscription = JsonConvert.DeserializeObject<PushSubscription>(subscriptionJSON);
-        var payload = JsonConvert.SerializeObject(new
+        foreach (Subscription subscription in subscriptions)
         {
-            title = "Test Notification",
-            message = "This is a notification for you!",
-            icon = "https://static-00.iconduck.com/assets.00/slightly-smiling-face-emoji-2048x2048-p8h7zhgm.png",
-            badge = "https://static-00.iconduck.com/assets.00/slightly-smiling-face-emoji-2048x2048-p8h7zhgm.png",
-        });
+            if (string.IsNullOrEmpty(subscription.SubscriptionJson))
+            {
+                _logger.LogWarning("SubscriptionJson is null or empty for subscription with ID {SubscriptionId}.", subscription.Id);
+                continue; // Skipping this subscription if SubscriptionJson is invalid
+            }
+            var subscriptionToPushTo = JsonConvert.DeserializeObject<PushSubscription>(subscription.SubscriptionJson);
 
-        await _pushService.SendNotificationAsync(subscription, payload);
+            if (subscriptionToPushTo == null)
+            {
+                _logger.LogWarning("Failed to deserialize SubscriptionJson for subscription with ID {SubscriptionId}.", subscription.Id);
+                continue; // Skipping this subscription if deserialization fails
+            }
+
+            var payload = JsonConvert.SerializeObject(new
+            {
+                title = "Test Notification",
+                message = "This is a notification for you!",
+                icon = "https://static-00.iconduck.com/assets.00/slightly-smiling-face-emoji-2048x2048-p8h7zhgm.png",
+                badge = "https://static-00.iconduck.com/assets.00/slightly-smiling-face-emoji-2048x2048-p8h7zhgm.png",
+            });
+
+            await _pushService.SendNotificationAsync(subscriptionToPushTo, payload);
+        }
         return Ok("Notification Sent");
     }
 

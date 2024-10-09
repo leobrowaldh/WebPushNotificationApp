@@ -6,10 +6,10 @@ namespace Database.Repositories;
 
 public class UserRepository(WebPushAppContext _db, ILogger<UserRepository> _logger): IUserRepository
 {
-    public async Task<string?> GetUserSubscriptionsAsync(string subscriberId)
+    public async Task<List<Subscription>> GetUserSubscriptionsAsync(string subscriberId)
     {
-        Subscription? subscription = await _db.Subscriptions.FirstOrDefaultAsync(s => s.UserId == subscriberId);
-        return subscription?.SubscriptionJson;
+        List<Subscription> subscriptions = await _db.Subscriptions.Where(s => s.UserId == subscriberId).ToListAsync();
+        return subscriptions;
     }
 
     public async Task<bool> IsUserSubscriptionAsync(string subscriptionString, string userId)
