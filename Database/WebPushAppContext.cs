@@ -27,6 +27,11 @@ public class WebPushAppContext : IdentityDbContext<AplicationUser>
             .HasOne(s => s.User)
             .WithMany(u => u.Subscriptions)
             .HasForeignKey(s => s.UserId);
-    }
 
+        modelBuilder.Entity<Message>()
+            .HasOne<AplicationUser>(a => a.Sender)
+            .WithMany(d => d.Messages)
+            .HasForeignKey(d => d.UserId);
+    }
+    public DbSet<Message> Messages { get; set; }
 }

@@ -228,4 +228,3 @@ function urlBase64ToUint8Array(base64String) {
     const rawData = window.atob(base64);
     return new Uint8Array([...rawData].map(char => char.charCodeAt(0)));
 }
-

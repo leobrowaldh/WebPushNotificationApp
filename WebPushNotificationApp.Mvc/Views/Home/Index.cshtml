@@ -1,31 +1,65 @@
+@model HomeIndexViewModel
 @{
     ViewData["Title"] = "Home Page";
+    var userName = User.Identity.Name;
+    
 }
-
-ï»¿@page
-
-
 <div class="row">
-    <section class="col-md-8 chat-window position-relative">
-        <!-- Added position-relative -->
-        <!-- Overlay element for notification request -->
-        <div id="notification-overlay" class="d-none position-absolute top-0 start-0 w-100 h-100 bg-light text-center p-4" style="z-index: 10;">
-            <div class="d-flex justify-content-center">
-                <button id="subscribe-button" class="btn btn-primary btn-lg mb-3 me-3">Activate Notifications</button>
-                <button id="no-thanks" class="btn btn-secondary btn-lg mb-3">No thanks</button>
-            </div>
-            <p>Activate web-push notifications if you want to be notified if someone sends you a message.</p>
-            <p>You don't need to stay logged in on this site to receive these notifications; they will be sent directly to your browser.</p>
-        </div>
-
-        <h2 class="text-center">Chat Window</h2>
-        <button id="push-button" class="btn btn-primary btn-lg mb-3 me-3">Test Notification</button>
+    <aside>
+    <h2>Contacts</h2>
+    <section class="col-md-12">
+        @foreach (var user in Model.Users.OrderBy(m => m.UserName))
+        {
+            <a class="btn btn-primary">
+                @user.UserName
+            </a>
+        }
     </section>
+    </aside>
+    <br />
+    <h1>Public chat</h1>
+    <section class="col-md-12" id="chat">
+        @if (Model.Messages != null)
+        {
+            @foreach (var message in Model.Messages.OrderBy(m => m.When))
+            {
+                if (message.UserName == userName) // Kontrollera om meddelandet kommer från den inloggade användaren
+                {
+                    <div class="chat-container">
+                        <div class="sender">
+                            <p>@message.UserName</p>
+                            <p>@message.Text</p>
+                            <span>@message.When.ToString()</span>
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <div class="chat-container">
+                        <div class="receiver">
+                            <p>@message.UserName</p>
+                            <p>@message.Text</p>
+                            <span>@message.When.ToString()</span>
+                        </div>
+                    </div>
+                }
+            }
+        }
+    </section>
+    <div>
+        <form asp-controller="Home" asp-action="Create" data-ajax-begin="clearInputField" data-ajax-complete=""
+              data-ajax-failure="alert('fail')" data-ajax-success="sendMessage" data-ajax="true" data-ajax-method="POST">
+            <div asp-validation-summary="ModelOnly"></div>
+            <input style="width:300px" name="Text" id="messageText" />
+            <input type="submit" value="Send" id="submitButton" class="btn btn-primary" />
+            <input type="hidden" value="@userName" name="username"/>
+        </form>
+    </div>
 
-    <aside class="col-md-4 contacts-list">
+@*     <aside class="col-md-4 contacts-list">
         <h2 class="text-center">Contacts</h2>
         <ul class="list-group">
-            @foreach (ContactDTO contact in Model.Contacts)
+            @foreach (ContactDTO contact in Model.Contact)
             {
                 <li class="list-group-item">
                     <div class="d-flex">
@@ -39,44 +73,37 @@
                 </li>
             }
         </ul>
-    </aside>
+    </aside> *@
+@*     <section class="col-md-8 chat-window position-relative">
+        <!-- Added position-relative -->
+        <!-- Overlay element for notification request -->
+        <div id="notification-overlay" class="d-none position-absolute top-0 start-0 w-100 h-100 bg-light text-center p-4" style="z-index: 10;">
+            <div class="d-flex justify-content-center">
+                <button id="subscribe-button" class="btn btn-primary btn-lg mb-3 me-3">Activate Notifications</button>
+                <button id="no-thanks" class="btn btn-secondary btn-lg mb-3">No thanks</button>
+            </div>
+            <p>Activate web-push notifications if you want to be notified if someone sends you a message.</p>
+            <p>You don't need to stay logged in on this site to receive these notifications; they will be sent directly to your browser.</p>
+        </div>
+        <button id="push-button" class="btn btn-primary btn-lg mb-3 me-3">Test Notification</button> *@
+
+
+    </section>
 </div>
 
 
 <!-- Declaring JavaScript global variable -->
-<script>
+  <script>
+    const userName = "@ViewBag.CurrentUserName";
     var publicKey = '@ViewBag.PublicKey';
-    var userId = '@Model.UserId';
-</script>
-
+    var userId = "@Model.UserId";
+</script>  
+@section scripts{
+    <script src="~/js/signalr/dist/browser/signalr.min.js"></script>
+    <script src="~/lib/jquery/dist/jquery-unobtrusive-ajax.min.js"></script>
+    <script src="~/js/chat.js"></script>
+    <script src="~/js/signrReqHandler.js"></script>
+}
 <script src="~/js/index.js"></script>
 
-
-<div class="container">
-    <div class="row p-1">
-        <div class="col-1">User</div>
-        <div class="col-5"><input type="text" id="userInput" /></div>
-    </div>
-    <div class="row p-1">
-        <div class="col-1">Message</div>
-        <div class="col-5"><input type="text" class="w-100" id="messageInput" /></div>
-    </div>
-    <div class="row p-1">
-        <div class="col-6 text-end">
-            <input type="button" id="sendButton" value="Send Message" />
-        </div>
-    </div>
-    <div class="row p-1">
-        <div class="col-6">
-            <hr />
-        </div>
-    </div>
-    <div class="row p-1">
-        <div class="col-6">
-            <ul id="messagesList"></ul>
-        </div>
-    </div>
-</div>
-<script src="~/js/signalr/dist/browser/signalr.js"></script>
-<script src="~/js/chat.js"></script>
 
