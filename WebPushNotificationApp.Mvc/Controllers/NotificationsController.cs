@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using System.Collections.Generic;
 using WebPush;
 using WebPushNotificationsApp.PushService;
 
@@ -17,17 +18,25 @@ public class NotificationsController(
     UserManager<AplicationUser> _userManager) : Controller
 {
 
-    [HttpPost]
-    public async Task<IActionResult> SavingSubscriptionToDb([FromBody] PushSubscription subscription)
+    [HttpPost("SavingSubscriptionToDb")]
+    public async Task<IActionResult> SavingSubscriptionToDb([FromBody] PushSubscriptionDto subscriptionDto)
     {
+        // Restructuring the subscription
+        var dbSubscription = new WebPush.PushSubscription
+        {
+            Endpoint = subscriptionDto.Endpoint,
+            P256DH = subscriptionDto.Keys.P256DH, // Flattening 'keys'
+            Auth = subscriptionDto.Keys.Auth
+        };
+
         _logger.LogInformation("Received subscription: Endpoint = {Endpoint}, P256dh = {P256dh}, Auth = {Auth}",
-        subscription.Endpoint, subscription.P256DH, subscription.Auth);
+        dbSubscription.Endpoint, dbSubscription.P256DH, dbSubscription.Auth);
 
         // Save the subscription object to database.
         // This object contains the endpoint and keys to send push notifications.
 
         // Ensure keys are not null
-        if (string.IsNullOrEmpty(subscription.P256DH) || string.IsNullOrEmpty(subscription.Auth))
+        if (string.IsNullOrEmpty(dbSubscription.P256DH) || string.IsNullOrEmpty(dbSubscription.Auth))
         {
             _logger.LogWarning("Subscription keys are missing or invalid.");
             return BadRequest("Subscription must include auth and p256dh keys.");
@@ -50,48 +59,71 @@ public class NotificationsController(
         int subscriptionId = 0;
         if (userId != null)
         {
-            subscriptionId = await _userRepository.SaveSubscriptionAsync(JsonConvert.SerializeObject(subscription), userId);
+            subscriptionId = await _userRepository.SaveSubscriptionAsync(JsonConvert.SerializeObject(dbSubscription), userId);
         }
         if (subscriptionId != 0)
         {
-            _logger.LogInformation("Successfully saved the subscription for: {Endpoint}", subscription.Endpoint);
+            _logger.LogInformation("Successfully saved the subscription for: {Endpoint}", dbSubscription.Endpoint);
             //this c# anonymous object will be automatically serialized into JSON by asp.net core:
             return Ok(new { message = "Subscription saved to database.", id = subscriptionId });
         }
         else
         {
-            _logger.LogError("Failed to save the subscription for: {Endpoint}", subscription.Endpoint);
+            _logger.LogError("Failed to save the subscription for: {Endpoint}", dbSubscription.Endpoint);
             return StatusCode(StatusCodes.Status500InternalServerError, "Failed to save the subscription.");
         }
     }
 
-    [HttpPost]
+    [HttpPost("SendNotification")]
     public async Task<IActionResult> SendNotification(string userId)
     {
-        // Retrieve subscription from database
-        string? subscriptionJSON = await _userRepository.GetUserSubscriptionsAsync(userId);
+        // Retrieve subscriptions from database
+        List <Subscription> subscriptions = await _userRepository.GetUserSubscriptionsAsync(userId);
 
-        if (subscriptionJSON is null)
+        if (subscriptions.Count == 0)
         {
             return BadRequest("No subscription found in database.");
         }
 
-        var subscription = JsonConvert.DeserializeObject<PushSubscription>(subscriptionJSON);
-        var payload = JsonConvert.SerializeObject(new
+        foreach (Subscription subscription in subscriptions)
         {
-            title = "Test Notification",
-            message = "This is a notification for you!",
-            icon = "https://static-00.iconduck.com/assets.00/slightly-smiling-face-emoji-2048x2048-p8h7zhgm.png",
-            badge = "https://static-00.iconduck.com/assets.00/slightly-smiling-face-emoji-2048x2048-p8h7zhgm.png",
-        });
+            if (string.IsNullOrEmpty(subscription.SubscriptionJson))
+            {
+                _logger.LogWarning("SubscriptionJson is null or empty for subscription with ID {SubscriptionId}.", subscription.Id);
+                continue; // Skipping this subscription if SubscriptionJson is invalid
+            }
+            var subscriptionToPushTo = JsonConvert.DeserializeObject<PushSubscription>(subscription.SubscriptionJson);
 
-        await _pushService.SendNotificationAsync(subscription, payload);
+            if (subscriptionToPushTo == null)
+            {
+                _logger.LogWarning("Failed to deserialize SubscriptionJson for subscription with ID {SubscriptionId}.", subscription.Id);
+                continue; // Skipping this subscription if deserialization fails
+            }
+
+            var payload = JsonConvert.SerializeObject(new
+            {
+                title = "Test Notification",
+                message = "This is a notification for you!",
+                icon = "https://static-00.iconduck.com/assets.00/slightly-smiling-face-emoji-2048x2048-p8h7zhgm.png",
+                badge = "https://static-00.iconduck.com/assets.00/slightly-smiling-face-emoji-2048x2048-p8h7zhgm.png",
+            });
+
+            await _pushService.SendNotificationAsync(subscriptionToPushTo, payload);
+        }
         return Ok("Notification Sent");
     }
 
     [HttpPost("CheckUserSubscriptionAsync")]
-    public async Task<IActionResult> CheckUserSubscriptionAsync([FromBody] PushSubscription subscription)
+    public async Task<IActionResult> CheckUserSubscriptionAsync([FromBody] PushSubscriptionDto subscriptionDto)
     {
+        // Restructuring the subscription
+        var dbSubscription = new WebPush.PushSubscription
+        {
+            Endpoint = subscriptionDto.Endpoint,
+            P256DH = subscriptionDto.Keys.P256DH, // Flattening 'keys'
+            Auth = subscriptionDto.Keys.Auth
+        };
+
         string? currentUserId = _userManager.GetUserId(User);
 
         if (currentUserId is null)
@@ -100,7 +132,7 @@ public class NotificationsController(
             return Redirect($"~/Identity/Account/Login?ReturnUrl={Url.Action("Index", "Home")}");
         }
 
-        var subscriptionJson = JsonConvert.SerializeObject(subscription);
+        var subscriptionJson = JsonConvert.SerializeObject(dbSubscription);
         _logger.LogInformation("Serialized subscription from client: {subscriptionJson}", subscriptionJson);
 
         try
@@ -118,10 +150,18 @@ public class NotificationsController(
     }
 
 
-    [HttpPost]
-    public async Task<IActionResult> RemoveSubscriptionAsync([FromBody] PushSubscription subscription)
+    [HttpPost("RemoveSubscriptionAsync")]
+    public async Task<IActionResult> RemoveSubscriptionAsync([FromBody] PushSubscriptionDto subscriptionDto)
     {
-        bool success = await _userRepository.RemoveSubscriptionAsync(JsonConvert.SerializeObject(subscription));
+        // Restructuring the subscription
+        var dbSubscription = new WebPush.PushSubscription
+        {
+            Endpoint = subscriptionDto.Endpoint,
+            P256DH = subscriptionDto.Keys.P256DH, // Flattening 'keys'
+            Auth = subscriptionDto.Keys.Auth
+        };
+
+        bool success = await _userRepository.RemoveSubscriptionAsync(JsonConvert.SerializeObject(dbSubscription));
         if (success)
         {
             return Ok("subscription successfully removed from database.");

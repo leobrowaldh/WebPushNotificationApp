@@ -6,24 +6,24 @@ namespace Database.Repositories;
 
 public class UserRepository(WebPushAppContext _db, ILogger<UserRepository> _logger): IUserRepository
 {
-    public async Task<string?> GetUserSubscriptionsAsync(string subscriberId)
+    public async Task<List<Subscription>> GetUserSubscriptionsAsync(string subscriberId)
     {
-        Subscription? subscription = await _db.Subscriptions.FirstOrDefaultAsync(s => s.UserId == subscriberId);
-        return subscription?.SubscriptionJson;
+        List<Subscription> subscriptions = await _db.Subscriptions.Where(s => s.UserId == subscriberId).ToListAsync();
+        return subscriptions;
     }
 
     public async Task<bool> IsUserSubscriptionAsync(string subscriptionString, string userId)
     {
         try
         {
-            AplicationUser? user = await _db.Users.FindAsync(userId);
+            AplicationUser? user = await _db.Users.Include(u => u.Subscriptions).FirstOrDefaultAsync(u => u.Id == userId);
             if (user == null)
             {
                 _logger.LogError("User with ID {userId} not found in database.", userId);
                 return false;
             }
 
-            _logger.LogInformation("User subscriptions in DB: {subscriptions}", JsonConvert.SerializeObject(user.Subscriptions));
+            _logger.LogInformation("User subscriptions in DB: {subscriptions}", user.Subscriptions.Count);
 
             bool subscriptionExists = user.Subscriptions.Any(s => s.SubscriptionJson == subscriptionString);
             _logger.LogInformation("Subscription match found: {subscriptionExists}", subscriptionExists);

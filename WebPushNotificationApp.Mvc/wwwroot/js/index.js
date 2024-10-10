@@ -5,50 +5,6 @@ if (userId) {
     ManagingSubscriptionState();
 }
 
-
-
-//checks the current state of webPush subscriptions in this browser and acts accordingly
-async function ManagingSubscriptionState() {
-    // Preparing service worker
-    await registerServiceWorker();
-    let registration = await navigator.serviceWorker.ready;
-    console.log('Service Worker is ready:', registration);
-
-    // Check the state of subscription in the worker
-    let existingSubscription = null;
-    try {
-        existingSubscription = await registration.pushManager.getSubscription();
-        if (!existingSubscription) {
-            console.log('No subscription found');
-            // Show subscription request, display subscription button
-            document.getElementById('notification-overlay').classList.remove('d-none');
-        } else {
-            console.log('Subscription exists:', existingSubscription);
-            //formating subscription for server:
-            let subscriptionToSend = formatSubscriptionForServer(existingSubscription);
-            // Check that subscription corresponds to the logged-in user
-            const isUserSub = await isUserSubscription(subscriptionToSend);
-            if (isUserSub) {
-                console.log('The subscription belongs to the logged-in user.');
-            } else if (isUserSub === false) {
-                console.log('The subscription does not belong to this user, unsubscribing...');
-                // Unsubscribe the old subscription
-                await removeOldSubscription(existingSubscription);
-                // Show subscription request, display subscription button
-                document.getElementById('notification-overlay').classList.remove('d-none');
-            } else {
-                console.log('Could not verify subscription due to an error.');
-                // Optionally, handle this scenario with a retry or logging
-            }
-        }
-    } catch (error) {
-        console.error('Error getting subscription:', error);
-        // Show subscription request, display subscription button
-        document.getElementById('notification-overlay').classList.remove('d-none');
-    }
-}
-
-
 //accept-notifications button listener:
 document.getElementById('subscribe-button').addEventListener('click', async function () {
     //remove subscription request and hide subscription button
@@ -68,7 +24,6 @@ document.getElementById('subscribe-button').addEventListener('click', async func
 
             
         // **************Sending subscription to the server**************
-        let subscriptionToSend = formatSubscriptionForServer(newSubscription);
 
         console.log('Sending POST request to server with subscription data...'); 
         const response = await fetch('/Notifications/SavingSubscriptionToDb', {
@@ -76,7 +31,7 @@ document.getElementById('subscribe-button').addEventListener('click', async func
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify(subscriptionToSend)
+            body: JSON.stringify(newSubscription)
         });
         if (response.ok) {
             // Extracting JSON from the response to retrieve the userId
@@ -105,22 +60,88 @@ document.getElementById('no-thanks').addEventListener('click', function () {
     document.getElementById('notification-overlay').classList.add('d-none');
 });
 
-//Converts the subscription to server expected format:
-function formatSubscriptionForServer(newSubscription) {
-    // Stringifying the subscription object, to access its hidden properties
-    const stringifiedSubscription = JSON.stringify(newSubscription);
+// send-notification button-listener:
+document.getElementById('push-button').addEventListener('click', async function () {
+    console.log('Push button clicked'); 
+    // Wait for the service worker to be ready
+    const registration = await navigator.serviceWorker.ready;
+    console.log('Service Worker is ready:', registration);
+    
+    if (userId) {
+        console.log('Sending notification...'); 
+        //sending the id via form data to the server:
+        const formData = new FormData();
+        formData.append('userId', userId);
+        const notificationResponse = await fetch('/Notifications/SendNotification', {
+            method: 'POST',
+            body: formData
+        });
+        console.log('Notification response:', notificationResponse); 
+    } else {
+        console.log('No userId available to send notification.');
+    }
+})
 
-    // Parse it back into an object, to acces its properties
-    const parsedSubscription = JSON.parse(stringifiedSubscription);
+//unsubscribe button listener:
+document.getElementById('unsubscribe-button').addEventListener('click', async function () {
+    // Wait for the service worker to be ready
+    const registration = await navigator.serviceWorker.ready;
+    console.log('Service Worker is ready:', registration);
+    const existingSubscription = await registration.pushManager.getSubscription();
+    try {
+        const unsubscribeResult = await existingSubscription.unsubscribe();
+        if (unsubscribeResult) {
+            console.log('Successfully unsubscribed from browser.');
 
-    // Constructing the object to send to the server, as Asp.NetCore.WebPush expects it:
-    const subscriptionToSend = {
-        endpoint: parsedSubscription.endpoint,
-        p256dh: parsedSubscription.keys.p256dh,
-        auth: parsedSubscription.keys.auth
-    };
-    return subscriptionToSend;
+            if (existingSubscription) {
+                await removeOldSubscription(existingSubscription);
+            } else {
+                console.log('No existing subscription found.');
+            }
+        }
+    } catch (error) {
+        console.error('Error unsubscribing from browser:', error);
+    }
+})
+
+//checks the current state of webPush subscriptions in this browser and acts accordingly
+async function ManagingSubscriptionState() {
+    // Preparing service worker
+    await registerServiceWorker();
+    let registration = await navigator.serviceWorker.ready;
+    console.log('Service Worker is ready:', registration);
+
+    // Check the state of subscription in the worker
+    let existingSubscription = null;
+    try {
+        existingSubscription = await registration.pushManager.getSubscription();
+        if (!existingSubscription) {
+            console.log('No subscription found');
+            // Show subscription request, display subscription button
+            document.getElementById('notification-overlay').classList.remove('d-none');
+        } else {
+            console.log('Subscription exists:', existingSubscription);
+            // Check that subscription corresponds to the logged-in user
+            const isUserSub = await isUserSubscription(existingSubscription);
+            if (isUserSub) {
+                console.log('The subscription belongs to the logged-in user.');
+            } else if (isUserSub === false) {
+                console.log('The subscription does not belong to this user, ask him to subscribe');
+                // Show subscription request, display subscription button
+                document.getElementById('notification-overlay').classList.remove('d-none');
+            } else {
+                console.log('Could not verify subscription');
+                // How to handle this? subscribe anyway?
+            }
+        }
+    } catch (error) {
+        console.error('Error getting subscription:', error);
+        // Show subscription request, display subscription button, subscribe...
+        document.getElementById('notification-overlay').classList.remove('d-none');
+    }
 }
+
+
 
 //Checks if the current subscription is actually the logged in users subscription:
 async function isUserSubscription(subscription) {
@@ -148,58 +169,24 @@ async function isUserSubscription(subscription) {
 
 
 //unsubscribing and removing subscription from db:
-
 async function removeOldSubscription(existingSubscription) {
-    try {
-        const unsubscribeResult = await existingSubscription.unsubscribe();
-        if (unsubscribeResult) {
-            console.log('Successfully unsubscribed.');
+        console.log('Successfully unsubscribed from browser.');
 
-            // Remove the subscription from the database
-            const response = await fetch('/Notifications/RemoveSubscriptionAsync', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(existingSubscription)
-            });
-
-            if (response.ok) {
-                console.log('Subscription removed from the database.');
-            } else {
-                console.error('Failed to remove subscription from the database.');
-            }
-        } else {
-            console.error('Failed to unsubscribe from PushAPI.');
-        }
-    } catch (error) {
-        console.error('Error unsubscribing:', error);
-    }
-}
-
-
-
-// send-notification button-listener:
-document.getElementById('push-button').addEventListener('click', async function () {
-    console.log('Push button clicked'); 
-    // Wait for the service worker to be ready
-    const registration = await navigator.serviceWorker.ready;
-    console.log('Service Worker is ready:', registration);
-    
-    if (userId) {
-        console.log('Sending notification...'); 
-        //sending the id via form data to the server:
-        const formData = new FormData();
-        formData.append('userId', userId);
-        const notificationResponse = await fetch('/Notifications/SendNotification', {
+        // Remove the subscription from the database
+        const response = await fetch('/Notifications/RemoveSubscriptionAsync', {
             method: 'POST',
-            body: formData
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(existingSubscription)
         });
-        console.log('Notification response:', notificationResponse); 
-    } else {
-        console.log('No userId available to send notification.');
-    }
-});
+
+        if (response.ok) {
+            console.log('Subscription removed from the database.');
+        } else {
+            console.error('Failed to remove subscription from the database.');
+        }
+}
 
 
 // If not present, the function registers the service worker.

@@ -14,7 +14,6 @@
 *appsettings.Production.json
 
 # Appsettings
-*appsettings.json
 *appsettings.Development.json
 *appsettings.Production.json
 
@@ -369,3 +368,4 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+/WebPushNotificationApp.Mvc/appsettings.Development.json
