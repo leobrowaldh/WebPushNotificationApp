@@ -24,7 +24,6 @@ document.getElementById('subscribe-button').addEventListener('click', async func
 
             
         // **************Sending subscription to the server**************
-        let subscriptionToSend = formatSubscriptionForServer(newSubscription);
 
         console.log('Sending POST request to server with subscription data...'); 
         const response = await fetch('/Notifications/SavingSubscriptionToDb', {
@@ -32,7 +31,7 @@ document.getElementById('subscribe-button').addEventListener('click', async func
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify(subscriptionToSend)
+            body: JSON.stringify(newSubscription)
         });
         if (response.ok) {
             // Extracting JSON from the response to retrieve the userId
@@ -95,8 +94,7 @@ document.getElementById('unsubscribe-button').addEventListener('click', async fu
             console.log('Successfully unsubscribed from browser.');
 
             if (existingSubscription) {
-                let formatedSubscription = formatSubscriptionForServer(existingSubscription);
-                await removeOldSubscription(formatedSubscription);
+                await removeOldSubscription(existingSubscription);
             } else {
                 console.log('No existing subscription found.');
             }
@@ -123,10 +121,8 @@ async function ManagingSubscriptionState() {
             document.getElementById('notification-overlay').classList.remove('d-none');
         } else {
             console.log('Subscription exists:', existingSubscription);
-            //formating subscription for server:
-            let subscriptionToSend = formatSubscriptionForServer(existingSubscription);
             // Check that subscription corresponds to the logged-in user
-            const isUserSub = await isUserSubscription(subscriptionToSend);
+            const isUserSub = await isUserSubscription(existingSubscription);
             if (isUserSub) {
                 console.log('The subscription belongs to the logged-in user.');
             } else if (isUserSub === false) {
@@ -146,23 +142,6 @@ async function ManagingSubscriptionState() {
 }
 
 
-
-//Converts the subscription to server expected format:
-function formatSubscriptionForServer(newSubscription) {
-    // Stringifying the subscription object, to access its hidden properties
-    const stringifiedSubscription = JSON.stringify(newSubscription);
-
-    // Parse it back into an object, to acces its properties
-    const parsedSubscription = JSON.parse(stringifiedSubscription);
-
-    // Constructing the object to send to the server, as Asp.NetCore.WebPush expects it:
-    const subscriptionToSend = {
-        endpoint: parsedSubscription.endpoint,
-        p256dh: parsedSubscription.keys.p256dh,
-        auth: parsedSubscription.keys.auth
-    };
-    return subscriptionToSend;
-}
 
 //Checks if the current subscription is actually the logged in users subscription:
 async function isUserSubscription(subscription) {

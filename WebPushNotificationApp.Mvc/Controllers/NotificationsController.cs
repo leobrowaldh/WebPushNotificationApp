@@ -19,16 +19,24 @@ public class NotificationsController(
 {
 
     [HttpPost("SavingSubscriptionToDb")]
-    public async Task<IActionResult> SavingSubscriptionToDb([FromBody] PushSubscription subscription)
+    public async Task<IActionResult> SavingSubscriptionToDb([FromBody] PushSubscriptionDto subscriptionDto)
     {
+        // Restructuring the subscription
+        var dbSubscription = new WebPush.PushSubscription
+        {
+            Endpoint = subscriptionDto.Endpoint,
+            P256DH = subscriptionDto.Keys.P256DH, // Flattening 'keys'
+            Auth = subscriptionDto.Keys.Auth
+        };
+
         _logger.LogInformation("Received subscription: Endpoint = {Endpoint}, P256dh = {P256dh}, Auth = {Auth}",
-        subscription.Endpoint, subscription.P256DH, subscription.Auth);
+        dbSubscription.Endpoint, dbSubscription.P256DH, dbSubscription.Auth);
 
         // Save the subscription object to database.
         // This object contains the endpoint and keys to send push notifications.
 
         // Ensure keys are not null
-        if (string.IsNullOrEmpty(subscription.P256DH) || string.IsNullOrEmpty(subscription.Auth))
+        if (string.IsNullOrEmpty(dbSubscription.P256DH) || string.IsNullOrEmpty(dbSubscription.Auth))
         {
             _logger.LogWarning("Subscription keys are missing or invalid.");
             return BadRequest("Subscription must include auth and p256dh keys.");
@@ -51,17 +59,17 @@ public class NotificationsController(
         int subscriptionId = 0;
         if (userId != null)
         {
-            subscriptionId = await _userRepository.SaveSubscriptionAsync(JsonConvert.SerializeObject(subscription), userId);
+            subscriptionId = await _userRepository.SaveSubscriptionAsync(JsonConvert.SerializeObject(dbSubscription), userId);
         }
         if (subscriptionId != 0)
         {
-            _logger.LogInformation("Successfully saved the subscription for: {Endpoint}", subscription.Endpoint);
+            _logger.LogInformation("Successfully saved the subscription for: {Endpoint}", dbSubscription.Endpoint);
             //this c# anonymous object will be automatically serialized into JSON by asp.net core:
             return Ok(new { message = "Subscription saved to database.", id = subscriptionId });
         }
         else
         {
-            _logger.LogError("Failed to save the subscription for: {Endpoint}", subscription.Endpoint);
+            _logger.LogError("Failed to save the subscription for: {Endpoint}", dbSubscription.Endpoint);
             return StatusCode(StatusCodes.Status500InternalServerError, "Failed to save the subscription.");
         }
     }
@@ -106,8 +114,16 @@ public class NotificationsController(
     }
 
     [HttpPost("CheckUserSubscriptionAsync")]
-    public async Task<IActionResult> CheckUserSubscriptionAsync([FromBody] PushSubscription subscription)
+    public async Task<IActionResult> CheckUserSubscriptionAsync([FromBody] PushSubscriptionDto subscriptionDto)
     {
+        // Restructuring the subscription
+        var dbSubscription = new WebPush.PushSubscription
+        {
+            Endpoint = subscriptionDto.Endpoint,
+            P256DH = subscriptionDto.Keys.P256DH, // Flattening 'keys'
+            Auth = subscriptionDto.Keys.Auth
+        };
+
         string? currentUserId = _userManager.GetUserId(User);
 
         if (currentUserId is null)
@@ -116,7 +132,7 @@ public class NotificationsController(
             return Redirect($"~/Identity/Account/Login?ReturnUrl={Url.Action("Index", "Home")}");
         }
 
-        var subscriptionJson = JsonConvert.SerializeObject(subscription);
+        var subscriptionJson = JsonConvert.SerializeObject(dbSubscription);
         _logger.LogInformation("Serialized subscription from client: {subscriptionJson}", subscriptionJson);
 
         try
@@ -135,9 +151,17 @@ public class NotificationsController(
 
 
     [HttpPost("RemoveSubscriptionAsync")]
-    public async Task<IActionResult> RemoveSubscriptionAsync([FromBody] PushSubscription subscription)
+    public async Task<IActionResult> RemoveSubscriptionAsync([FromBody] PushSubscriptionDto subscriptionDto)
     {
-        bool success = await _userRepository.RemoveSubscriptionAsync(JsonConvert.SerializeObject(subscription));
+        // Restructuring the subscription
+        var dbSubscription = new WebPush.PushSubscription
+        {
+            Endpoint = subscriptionDto.Endpoint,
+            P256DH = subscriptionDto.Keys.P256DH, // Flattening 'keys'
+            Auth = subscriptionDto.Keys.Auth
+        };
+
+        bool success = await _userRepository.RemoveSubscriptionAsync(JsonConvert.SerializeObject(dbSubscription));
         if (success)
         {
             return Ok("subscription successfully removed from database.");
