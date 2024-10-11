@@ -25,14 +25,18 @@ public class HomeController(
     public async Task<IActionResult> Index()
     {
         var currentUser = await _userManager.GetUserAsync(User);
-        ViewBag.CurrentUserName = currentUser.UserName;
+        ViewBag.PublicKey = _configuration["VapidDetails:PublicKey"];
         var messageList = await _webPushAppContext.Messages.ToListAsync();
+        if (User.Identity.IsAuthenticated)
+        {
+            ViewBag.CurrentUserName = currentUser.UserName;
+        }
         foreach(var message in messageList)
         {
             _webPushAppContext.Entry(message).Reload();
         }
 
-        ViewBag.PublicKey = _configuration["VapidDetails:PublicKey"];
+
         HomeIndexViewModel model = new
         (
             Users: await _userManager.Users.ToListAsync(),

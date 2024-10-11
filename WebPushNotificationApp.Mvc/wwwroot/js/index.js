@@ -21,7 +21,6 @@ document.getElementById('subscribe-button').addEventListener('click', async func
             applicationServerKey: urlBase64ToUint8Array(publicKey) // Convert public key to the expected format.
         });
         console.log('New subscription:', JSON.stringify(newSubscription)); 
-
             
         // **************Sending subscription to the server**************
 
@@ -117,6 +116,7 @@ async function ManagingSubscriptionState() {
         existingSubscription = await registration.pushManager.getSubscription();
         if (!existingSubscription) {
             console.log('No subscription found');
+
             // Show subscription request, display subscription button
             document.getElementById('notification-overlay').classList.remove('d-none');
         } else {
@@ -212,6 +212,11 @@ function urlBase64ToUint8Array(base64String) {
         .replace(/-/g, '+')
         .replace(/_/g, '/');
 
-    const rawData = window.atob(base64);
-    return new Uint8Array([...rawData].map(char => char.charCodeAt(0)));
+    const rawData = atob(base64);
+    const outputArray = new Uint8Array(rawData.length);
+
+    for (let i = 0; i < rawData.length; ++i) {
+        outputArray[i] = rawData.charCodeAt(i);
+    }
+    return outputArray;
 }
