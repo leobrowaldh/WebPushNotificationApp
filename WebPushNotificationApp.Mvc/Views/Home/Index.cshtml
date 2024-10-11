@@ -8,10 +8,10 @@
     <aside>
         <h2>Contacts</h2>
             <section class="col-md-12">
-                @foreach (var user in Model.Users.OrderBy(m => m.UserName))
+                @foreach (var user in Model.Contacts.OrderBy(m => m.userName))
                 {
                     <a class="btn btn-primary">
-                        @user.UserName
+                        @user.userName
                     </a>
                 }
             </section>
@@ -23,11 +23,11 @@
         {
             @foreach (var message in Model.Messages.OrderBy(m => m.When))
             {
-                if (message.UserName == userName) // Kontrollera om meddelandet kommer från den inloggade användaren
+                if (message.UserContact.User.UserName == userName) // Kontrollera om meddelandet kommer från den inloggade användaren
                 {
                                 <div class="chat-container">
                                     <div class="sender">
-                                        <p>@message.UserName</p>
+                                        <p>@message.UserContact.User.UserName</p>
                                         <p>@message.Text</p>
                                         <span>@message.When.ToString()</span>
                                     </div>
@@ -37,7 +37,7 @@
                 {
                                 <div class="chat-container">
                                     <div class="receiver">
-                                        <p>@message.UserName</p>
+                                        <p>@message.UserContact.User.UserName</p>
                                         <p>@message.Text</p>
                                         <span>@message.When.ToString()</span>
                                     </div>

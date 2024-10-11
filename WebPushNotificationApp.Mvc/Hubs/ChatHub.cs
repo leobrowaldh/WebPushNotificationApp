@@ -8,6 +8,7 @@ namespace WebPushNotificationApp.Mvc.Hubs
         public async Task SendMessage(Message message)
         {
             await Clients.All.SendAsync("receiveMessage", message);
+            
         }
     }
 }
