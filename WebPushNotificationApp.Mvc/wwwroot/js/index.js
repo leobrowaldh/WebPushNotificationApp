@@ -2,6 +2,7 @@
 //If the user is logged in, only then do we proceed to check for subscriptions:
 if (userId) {
     console.log('User logged in with userId = ', userId);
+    console.log(publicKey)
     ManagingSubscriptionState();
 }
 
@@ -21,7 +22,6 @@ document.getElementById('subscribe-button').addEventListener('click', async func
             applicationServerKey: urlBase64ToUint8Array(publicKey) // Convert public key to the expected format.
         });
         console.log('New subscription:', JSON.stringify(newSubscription)); 
-
             
         // **************Sending subscription to the server**************
 
@@ -117,6 +117,7 @@ async function ManagingSubscriptionState() {
         existingSubscription = await registration.pushManager.getSubscription();
         if (!existingSubscription) {
             console.log('No subscription found');
+
             // Show subscription request, display subscription button
             document.getElementById('notification-overlay').classList.remove('d-none');
         } else {
@@ -215,4 +216,3 @@ function urlBase64ToUint8Array(base64String) {
     const rawData = window.atob(base64);
     return new Uint8Array([...rawData].map(char => char.charCodeAt(0)));
 }
-

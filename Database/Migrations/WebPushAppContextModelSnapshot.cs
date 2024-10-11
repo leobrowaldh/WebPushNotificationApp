@@ -105,6 +105,36 @@ namespace Database.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
+            modelBuilder.Entity("Database.EntityModels.Message", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Text")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("UserName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("When")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Messages");
+                });
+
             modelBuilder.Entity("Database.EntityModels.Subscription", b =>
                 {
                     b.Property<int>("Id")
@@ -280,6 +310,17 @@ namespace Database.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("Database.EntityModels.Message", b =>
+                {
+                    b.HasOne("Database.EntityModels.AplicationUser", "Sender")
+                        .WithMany("Messages")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Sender");
+                });
+
             modelBuilder.Entity("Database.EntityModels.Subscription", b =>
                 {
                     b.HasOne("Database.EntityModels.AplicationUser", "User")
@@ -344,6 +385,8 @@ namespace Database.Migrations
 
             modelBuilder.Entity("Database.EntityModels.AplicationUser", b =>
                 {
+                    b.Navigation("Messages");
+
                     b.Navigation("Subscriptions");
                 });
 #pragma warning restore 612, 618

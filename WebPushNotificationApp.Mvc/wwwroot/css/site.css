@@ -1,22 +1,155 @@
-html {
-  font-size: 14px;
-}
-
-@media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
-}
-
-.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
-}
-
-html {
-  position: relative;
-  min-height: 100%;
-}
-
+﻿/* Grundinställningar */
 body {
-  margin-bottom: 60px;
+    font-family: 'Garamond', serif; /* Medeltida stiligt typsnitt */
+    background-color: white /* Ljus bakgrund för en gammal känsla */
+    color: #3e3e3e; /* Mörk textfärg */
+    line-height: 1.6; /* Bra läsbarhet */
+    margin: 0;
+    padding: 0;
+}
+
+/* Rubriker */
+h1, h2, h3 {
+    font-family: 'Old English Text MT', cursive; /* Traditionell medeltidsstil */
+    color:cornflowerblue /* Mörkbrun färg */
+    text-shadow: 1px 1px 2px #d1b48c; /* Liten skugga för djup */
+}
+
+h1 {
+    font-size: 2.5em; /* Storlek för huvudrubrik */
+    margin-top: 20px;
+    text-align: center;
+}
+
+h2 {
+    font-size: 2em; /* Storlek för andra rubriker */
+    margin-top: 15px;
+}
+
+h3 {
+    font-size: 1.5em; /* Storlek för tredje rubriker */
+    margin-top: 10px;
+}
+
+/* Paragrafer */
+p {
+    margin: 15px 0;
+}
+
+/* Länkar */
+a {
+    color: #b22222; /* Mörkröd färg för länkar */
+    text-decoration: none;
+}
+
+    a:hover {
+        text-decoration: underline; /* Understrykning vid hovring */
+    }
+
+/* Knappar */
+button {
+    background-color: #8B4513; /* Mörkbrun bakgrund */
+    color: white; /* Vit text */
+    border: none;
+    padding: 10px 20px;
+    font-size: 1em;
+    cursor: pointer;
+    border-radius: 5px; /* Rundade hörn */
+}
+
+    button:hover {
+        background-color: #a0522d; /* Ljusare brun vid hovring */
+    }
+
+/* Lista */
+ul {
+    list-style-type: none; /* Ingen standardpunkt */
+    padding: 0;
+}
+
+li {
+    background: url('path_to_icon.png') no-repeat left center; /* Lägg till en ikon för listan */
+    padding-left: 20px; /* Utrymme för ikonen */
+    margin: 5px 0;
+}
+
+/* Citaten */
+blockquote {
+    font-style: italic; /* Kursiv stil */
+    border-left: 4px solid #8B4513; /* För att ge en känsla av ett gammalt manuskript */
+    padding-left: 15px;
+    margin: 20px 0;
+}
+
+/* Fotnot */
+footer {
+    text-align: center;
+    padding: 20px;
+    background-color: #3e3e3e; /* Mörk bakgrund */
+    color: white; /* Vit text */
+}
+/* Chatbubblor */
+.chat-container {
+    display: flex;
+    flex-direction: column;
+    margin: 10px 0; /* Lite mellanrum mellan meddelandena */
+}
+
+/* Bubblan för avsändaren */
+.sender {
+    background-color: paleturquoise; /* Mörkbrun bakgrund */
+    color: black; /* Vit text */
+    padding: 10px 15px;
+    border-radius: 10px;
+    max-width: 70%;
+    align-self: flex-end; /* Högerjusterad */
+    position: relative;
+    box-shadow: 10px 5px 5px;
+}
+
+    /* Triangel för avsändaren */
+    .sender::after {
+        content: '';
+        position: absolute;
+        top: 10px;
+        right: -10px;
+        border-width: 10px;
+        border-style: solid;
+        border-color: transparent;/* Triangel pekar till höger */
+    }
+
+/* Bubblan för mottagaren */
+.receiver {
+    background-color: #B6FFA1; /* Ljusare brun */
+    color: #3e3e3e; /* Mörk text */
+    padding: 10px 15px;
+    border-radius: 10px;
+    max-width: 70%;
+    align-self: flex-start; /* Vänsterjusterad */
+    position: relative;
+    box-shadow: 10px 5px 5px;
+}
+
+    /* Triangel för mottagaren */
+    .receiver::after {
+        content: '';
+        position: absolute;
+        top: 10px;
+        left: -10px;
+        border-width: 10px;
+        border-style: solid;
+        border-color: transparent; /* Triangel pekar till vänster */
+    }
+#chat {
+    display: flex;
+    flex-direction: column; /* Se till att innehållet staplas vertikalt */
+    height: 400px; /* Ge chatten en fast höjd */
+    overflow-y: auto; /* Tillåt rullning om det blir för många meddelanden */
+    border: 1px solid #ccc; /* Valfri kantlinje för att definiera chatten */
+    padding: 10px; /* Lite inre avstånd */
+    margin-bottom: 10px; /* Utrymme under chatten */
+}
+
+.chat-container {
+    margin: 10px 0; /* Lite mellanrum mellan meddelandena */
 }
