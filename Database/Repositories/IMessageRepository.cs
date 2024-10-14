@@ -8,9 +8,9 @@ namespace Database.Repositories;
 
 public interface IMessageRepository
 {
-    public Task<List<Message>?> GetContactMessagesAsync(string user, string contact);
+    public Task<List<Message>?> GetContactMessagesAsync(string userId, string contactId);
     public Task<Message?> GetMessageAsync(int messageId);
-    public Task<Message> AddMessageAsync(Message message);
+    public Task<Message?> AddMessageAsync(Message message);
     public Task<Message> UpdateMessageAsync(Message message);
-    public Task<Message> DeleteMessageAsync(int messageId);
+    public Task<bool> DeleteMessageAsync(int messageId);
 }

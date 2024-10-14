@@ -9,19 +9,29 @@ namespace Database.Repositories;
 
 public class MessageRepository(WebPushAppContext _db, ILogger<SubscriptionRepository> _logger) : IMessageRepository
 {
-    public Task<Message> AddMessageAsync(Message message)
+    public async Task<Message?> AddMessageAsync(Message message)
     {
-        throw new NotImplementedException();
+        _db.Messages.Add(message);
+        int success = await _db.SaveChangesAsync();
+        return success == 0 ? null : message;
     }
 
-    public Task<Message> DeleteMessageAsync(int messageId)
+    public async Task<bool> DeleteMessageAsync(int messageId)
     {
-        throw new NotImplementedException();
+        Message? messageToRemove = await _db.Messages.FindAsync(messageId);
+        if (messageToRemove != null)
+        {
+            _db.Messages.Remove(messageToRemove);
+        }
+        int success = await _db.SaveChangesAsync();
+        return success != 0;
     }
 
-    public Task<List<Message>?> GetContactMessagesAsync(string user, string contact)
+    public async Task<List<Message>?> GetContactMessagesAsync(string userId, string contactId)
     {
-        throw new NotImplementedException();
+        return await _db.Messages.Where(m => m.UserContact.UserId == userId && m.UserContact.ContactId == contactId)
+            .OrderBy(m  => m.When)
+            .ToListAsync();
     }
 
     public Task<Message?> GetMessageAsync(int messageId)
