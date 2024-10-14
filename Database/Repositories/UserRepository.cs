@@ -9,14 +9,39 @@ namespace Database.Repositories;
 
 public class UserRepository(WebPushAppContext _db, ILogger<SubscriptionRepository> _logger) : IUserRepository
 {
-    public Task<string> AddContactAsync(string userId, string contactId)
+    public async Task<AplicationUser?> AddContactAsync(string userId, string contactId)
     {
-        throw new NotImplementedException();
+        AplicationUser? user = await _db.Users.FindAsync(userId);
+        if (user == null) 
+        {
+            _logger.LogError("User not found");
+            return null;
+        }
+        AplicationUser? contact = await _db.Users.FindAsync(userId);
+        if (contact == null)
+        {
+            _logger.LogError("Contact not found");
+            return null;
+        }
+
+        UserContact userContact = new UserContact
+        {
+            UserId = userId,
+            ContactId = contactId,
+            User = user,
+            Contact = contact
+        };
+        user.Contacts.Add(userContact);
+        int success = await _db.SaveChangesAsync();
+        return success == 0 ? null : contact;
     }
 
-    public Task<UserContact> GetContactByIdAsync(string userId)
+    public async Task<UserContact?> GetContactByIdAsync(string userId, string contactId)
     {
-        throw new NotImplementedException();
+        var userContact = await _db.UserContacts
+            .FirstOrDefaultAsync(uc => uc.UserId == userId && uc.ContactId == contactId);
+
+        return userContact;
     }
 
     public Task<List<UserContact>?> GetUserContactsAsync(string userId)

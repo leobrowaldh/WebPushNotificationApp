@@ -15,35 +15,32 @@ public class WebPushAppContext : IdentityDbContext<AplicationUser>
     public DbSet<Message> Messages { get; set; }
     public DbSet<UserContact> UserContacts {  get; set; }
 
-    // Handling the self referencing User relationship:
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
 
         // Configure the self-referencing many-to-many relationship using the explicit UserContacts entity
         modelBuilder.Entity<UserContact>()
-            .HasKey(uc => new { uc.UserId, uc.ContactId });  // Composite key
+            .HasKey(uc => new { uc.UserId, uc.ContactId });
 
         modelBuilder.Entity<UserContact>()
             .HasOne(uc => uc.User)
             .WithMany(u => u.Contacts)
             .HasForeignKey(uc => uc.UserId)
-            .OnDelete(DeleteBehavior.Restrict);  // No cascading delete on user removal
+            .OnDelete(DeleteBehavior.Restrict);
 
-        modelBuilder.Entity<UserContact>()  // Korrigera här
+        modelBuilder.Entity<UserContact>() 
             .HasOne(uc => uc.Contact)
-            .WithMany()  // Contact side doesn't need a collection
+            .WithMany()
             .HasForeignKey(uc => uc.ContactId)
-            .OnDelete(DeleteBehavior.Restrict);  // No cascading delete on contact removal
+            .OnDelete(DeleteBehavior.Restrict);
 
-        // Configure the relationship between UserContacts and Messages
         modelBuilder.Entity<Message>()
-            .HasOne(m => m.UserContact)  // Korrigera här
+            .HasOne(m => m.UserContact)
             .WithMany(uc => uc.Messages)
-            .HasForeignKey(m => new { m.UserId, m.ContactId })  // Korrigera här
-            .OnDelete(DeleteBehavior.Cascade);  // Deleting UserContacts deletes messages
+            .HasForeignKey(m => new { m.UserId, m.ContactId })
+            .OnDelete(DeleteBehavior.Cascade);
 
-        // Existing Subscription configuration remains the same
         modelBuilder.Entity<Subscription>()
             .HasOne(s => s.User)
             .WithMany(u => u.Subscriptions)
