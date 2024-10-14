@@ -1,80 +1,31 @@
-﻿using Microsoft.EntityFrameworkCore.Storage.Json;
-using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
+﻿using Microsoft.Extensions.Logging;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace Database.Repositories;
 
-public class UserRepository(WebPushAppContext _db, ILogger<UserRepository> _logger): IUserRepository
+public class UserRepository(WebPushAppContext _db, ILogger<SubscriptionRepository> _logger) : IUserRepository
 {
-    public async Task<List<Subscription>> GetUserSubscriptionsAsync(string subscriberId)
+    public Task<string> AddContactAsync(string userId, string contactId)
     {
-        List<Subscription> subscriptions = await _db.Subscriptions.Where(s => s.UserId == subscriberId).ToListAsync();
-        return subscriptions;
+        throw new NotImplementedException();
     }
 
-    public async Task<bool> IsUserSubscriptionAsync(string subscriptionString, string userId)
+    public Task<UserContact> GetContactByIdAsync(string userId)
     {
-        try
-        {
-            AplicationUser? user = await _db.Users.Include(u => u.Subscriptions).FirstOrDefaultAsync(u => u.Id == userId);
-            if (user == null)
-            {
-                _logger.LogError("User with ID {userId} not found in database.", userId);
-                return false;
-            }
-
-            _logger.LogInformation("User subscriptions in DB: {subscriptions}", user.Subscriptions.Count);
-
-            bool subscriptionExists = user.Subscriptions.Any(s => s.SubscriptionJson == subscriptionString);
-            _logger.LogInformation("Subscription match found: {subscriptionExists}", subscriptionExists);
-
-            return subscriptionExists;
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Error occurred while checking subscription for user {userId}.", userId);
-            return false;
-        }
+        throw new NotImplementedException();
     }
 
-
-    public async Task<bool> RemoveSubscriptionAsync(string subscriptionString)
+    public Task<List<UserContact>?> GetUserContactsAsync(string userId)
     {
-        Subscription? subscription = _db.Subscriptions.FirstOrDefault(s => s.SubscriptionJson.Equals(subscriptionString));
-        int success = 0;
-        if (subscription is not null)
-        {
-            _db.Subscriptions.Remove(subscription);
-            success = await _db.SaveChangesAsync();
-        }
-        if (subscription != null && success != 0)
-        {
-            _logger.LogInformation("subscription successfully removed from database.");
-            return true;
-        }
-        else
-        {
-            _logger.LogError("Subscription not removed from database.");
-            return false;
-        }
+        throw new NotImplementedException();
     }
 
-    public async Task<int> SaveSubscriptionAsync(string subscriptionString, string userId)
+    public Task<bool> RemoveContactAsync(string userId, string contactId)
     {
-        AplicationUser? user = await _db.Users.FindAsync(userId);
-        if (user == null) 
-        {
-            _logger.LogError("user with id = {userId} was not found in database", userId);
-            return 0; 
-        }
-        Subscription subscription = new() { SubscriptionJson = subscriptionString };
-        user.Subscriptions.Add(subscription);
-        int success = await _db.SaveChangesAsync();
-        if (success == 0) 
-        {
-            _logger.LogError("Failed to save subscription to database.");
-            return 0; 
-        }
-        return subscription.Id;
+        throw new NotImplementedException();
     }
 }

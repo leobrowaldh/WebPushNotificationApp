@@ -16,7 +16,7 @@ namespace WebPushNotificationApp.Mvc.Controllers;
 public class HomeController(
     ILogger<HomeController> _logger, 
     IConfiguration _configuration, 
-    IUserRepository _userRepository,
+    ISubscriptionRepository _subscriptionRepository,
     WebPushAppContext _webPushAppContext,
     UserManager<AplicationUser> _userManager) : Controller
 {
