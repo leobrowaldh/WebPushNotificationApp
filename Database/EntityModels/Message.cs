@@ -11,17 +11,10 @@ namespace Database.EntityModels
     {
         public int Id { get; set; }
         [Required]
-        public string UserName { get; set; }
-        [Required]
         public string Text { get; set; }
         public DateTime When { get; set; } = DateTime.Now;
-        public string UserId { get; set; }
-        public virtual AplicationUser Sender { get; set; }
-
-        public Message() 
-        {
-            When = DateTime.Now;
-        }
-
+        public string UserId { get; set; } // Nytt fält
+        public string ContactId { get; set; } // Nytt fält
+        public UserContact UserContact { get; set; }
     }
 }

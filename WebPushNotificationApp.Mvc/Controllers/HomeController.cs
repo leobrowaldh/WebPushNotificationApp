@@ -8,7 +8,6 @@ using Microsoft.Identity.Client;
 using Newtonsoft.Json;
 using System.Diagnostics;
 using WebPush;
-
 using WebPushNotificationsApp.PushService;
 using static System.Net.WebRequestMethods;
 
@@ -36,7 +35,6 @@ public class HomeController(
             _webPushAppContext.Entry(message).Reload();
         }
 
-
         HomeIndexViewModel model = new
         (
             Users: await _userManager.Users.ToListAsync(),
@@ -44,8 +42,7 @@ public class HomeController(
             UserId: _userManager.GetUserId(User)!, //if authorized, the id is present, not null, safe !
             ProfilePicture: "https://static-00.iconduck.com/assets.00/slightly-smiling-face-emoji-2048x2048-p8h7zhgm.png",
             Contacts: new List<ContactDTO>() {
-                new ContactDTO("Olle Persson", "https://static-00.iconduck.com/assets.00/slightly-smiling-face-emoji-2048x2048-p8h7zhgm.png"),
-                new ContactDTO("Lilly Torrvik", "https://static-00.iconduck.com/assets.00/slightly-smiling-face-emoji-2048x2048-p8h7zhgm.png")
+                new ContactDTO("Arne", "https://static-00.iconduck.com/assets.00/slightly-smiling-face-emoji-2048x2048-p8h7zhgm.png")
             }
         );
         return View(model);
@@ -54,18 +51,14 @@ public class HomeController(
     public async Task<IActionResult> Create(Message message) 
     { 
 
-            message.UserName = User.Identity.Name;
+            //message.UserName = User.Identity.Name;
             var sender = await _userManager.GetUserAsync(User);
-            message.UserId = sender.Id;
+            //message.UserId = sender.Id;
             await _webPushAppContext.Messages.AddAsync(message);
             await _webPushAppContext.SaveChangesAsync();
             return Ok();
 
     }
-
-
-
-
 
     public IActionResult Privacy()
     {
