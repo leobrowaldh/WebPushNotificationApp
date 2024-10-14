@@ -59,7 +59,7 @@ public class NotificationsController(
         int subscriptionId = 0;
         if (userId != null)
         {
-            subscriptionId = await _userRepository.SaveSubscriptionAsync(JsonConvert.SerializeObject(dbSubscription), userId);
+            subscriptionId = await _subscriptionRepository.SaveSubscriptionAsync(JsonConvert.SerializeObject(dbSubscription), userId);
         }
         if (subscriptionId != 0)
         {
@@ -78,7 +78,7 @@ public class NotificationsController(
     public async Task<IActionResult> SendNotification(string userId)
     {
         // Retrieve subscriptions from database
-        List <Subscription> subscriptions = await _userRepository.GetUserSubscriptionsAsync(userId);
+        List <Subscription> subscriptions = await _subscriptionRepository.GetUserSubscriptionsAsync(userId);
 
         if (subscriptions.Count == 0)
         {
@@ -137,7 +137,7 @@ public class NotificationsController(
 
         try
         {
-            bool isUserSubscription = await _userRepository.IsUserSubscriptionAsync(subscriptionJson, currentUserId);
+            bool isUserSubscription = await _subscriptionRepository.IsUserSubscriptionAsync(subscriptionJson, currentUserId);
             _logger.LogInformation("IsUserSubscriptionAsync result: {isUserSubscription}", isUserSubscription); 
 
             return Ok(new { isUserSubscription });
@@ -161,7 +161,7 @@ public class NotificationsController(
             Auth = subscriptionDto.Keys.Auth
         };
 
-        bool success = await _userRepository.RemoveSubscriptionAsync(JsonConvert.SerializeObject(dbSubscription));
+        bool success = await _subscriptionRepository.RemoveSubscriptionAsync(JsonConvert.SerializeObject(dbSubscription));
         if (success)
         {
             return Ok("subscription successfully removed from database.");

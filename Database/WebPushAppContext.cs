@@ -1,5 +1,4 @@
-﻿using Database.EntityModels;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace Database;
 
