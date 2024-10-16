@@ -23,6 +23,12 @@ document.getElementById('submitButton').addEventListener('click', () => {
         + currentdate.getDate() + "/"
         + currentdate.getFullYear() + " "
         + currentdate.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true })
+
+    //Sending notifications to all other users:
+    fetch('/Notifications/NotifyAll', { method: 'POST' })
+        .then(response => response.text())
+        .then(result => console.log(result))
+        .catch(error => console.error('Error:', error));
 });
 
 function clearInputField() {

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Database.Repositories;
 
-public interface IUserRepository
+public interface ISubscriptionRepository
 {
     /// <summary>
     /// Saves the subscription to the database
@@ -22,6 +22,13 @@ public interface IUserRepository
     /// <param name="subscriberId"></param>
     /// <returns>The subscription as a JSON string, or null if subscription not found in database.</returns>
     public Task<List<Subscription>> GetUserSubscriptionsAsync(string subscriberId);
+
+    /// <summary>
+    /// Gets all subscriptions except those belonging to the sender user
+    /// </summary>
+    /// <param name="senderId">The Id of the user that is sending the message</param>
+    /// <returns>a list containing all subscriptions except the sender of the message.</returns>
+    public Task<List<Subscription>> GetAllNonSenderSubscriptionsAsync(string senderId);
 
     /// <summary>
     /// Checks if the subscription endpoint corresponds to the particular user.

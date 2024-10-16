@@ -15,10 +15,9 @@ using static System.Net.WebRequestMethods;
 namespace WebPushNotificationApp.Mvc.Controllers;
 
 public class HomeController(
-    ILogger<HomeController> _logger, 
-    IConfiguration _configuration, 
-    IUserRepository _userRepository,
-    WebPushAppContext _webPushAppContext,
+    ILogger<HomeController> _logger,
+    IConfiguration _configuration,
+    IMessageRepository _messageRepository,
     UserManager<AplicationUser> _userManager) : Controller
 {
     [Authorize]
@@ -26,14 +25,14 @@ public class HomeController(
     {
         var currentUser = await _userManager.GetUserAsync(User);
         ViewBag.PublicKey = _configuration["VapidDetails:PublicKey"];
-        var messageList = await _webPushAppContext.Messages.ToListAsync();
-        if (User.Identity.IsAuthenticated)
+        var messageList = await _messageRepository.GetAllMessagesAsync();
+        if (User.Identity is not null && User.Identity.IsAuthenticated && currentUser is not null)
         {
             ViewBag.CurrentUserName = currentUser.UserName;
         }
-        foreach(var message in messageList)
+        foreach (var message in messageList)
         {
-            _webPushAppContext.Entry(message).Reload();
+            _messageRepository.ReloadEntity(message);
         }
 
 
@@ -51,15 +50,14 @@ public class HomeController(
         return View(model);
     }
 
-    public async Task<IActionResult> Create(Message message) 
-    { 
+    public async Task<IActionResult> Create(Message message)
+    {
 
-            message.UserName = User.Identity.Name;
-            var sender = await _userManager.GetUserAsync(User);
-            message.UserId = sender.Id;
-            await _webPushAppContext.Messages.AddAsync(message);
-            await _webPushAppContext.SaveChangesAsync();
-            return Ok();
+        message.UserName = User.Identity.Name;
+        var sender = await _userManager.GetUserAsync(User);
+        message.UserId = sender.Id;
+        await _messageRepository.AddMessageAsync(message);
+        return Ok();
 
     }
 

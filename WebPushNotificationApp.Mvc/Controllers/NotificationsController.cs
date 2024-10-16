@@ -12,9 +12,9 @@ namespace WebPushNotificationApp.Mvc.Controllers;
 
 [Route("Notifications")]
 public class NotificationsController(
-    ILogger<HomeController> _logger, 
-    IPushService _pushService, 
-    IUserRepository _userRepository,
+    ILogger<HomeController> _logger,
+    IPushService _pushService,
+    ISubscriptionRepository _subscriptionRepository,
     UserManager<AplicationUser> _userManager) : Controller
 {
 
@@ -50,7 +50,7 @@ public class NotificationsController(
         }
 
         // Get the logged-in user's ID
-        string? userId = null; 
+        string? userId = null;
         if (User.Identity != null && User.Identity.IsAuthenticated)
         {
             userId = _userManager.GetUserId(User);
@@ -59,7 +59,7 @@ public class NotificationsController(
         int subscriptionId = 0;
         if (userId != null)
         {
-            subscriptionId = await _userRepository.SaveSubscriptionAsync(JsonConvert.SerializeObject(dbSubscription), userId);
+            subscriptionId = await _subscriptionRepository.SaveSubscriptionAsync(JsonConvert.SerializeObject(dbSubscription), userId);
         }
         if (subscriptionId != 0)
         {
@@ -78,7 +78,7 @@ public class NotificationsController(
     public async Task<IActionResult> SendNotification(string userId)
     {
         // Retrieve subscriptions from database
-        List <Subscription> subscriptions = await _userRepository.GetUserSubscriptionsAsync(userId);
+        List<Subscription> subscriptions = await _subscriptionRepository.GetUserSubscriptionsAsync(userId);
 
         if (subscriptions.Count == 0)
         {
@@ -113,6 +113,51 @@ public class NotificationsController(
         return Ok("Notification Sent");
     }
 
+    [HttpPost("NotifyAll")]
+    public async Task<IActionResult> NotifyAllExceptMe()
+    {
+        AplicationUser? sender = await _userManager.GetUserAsync(User);
+        if (sender == null)
+        {
+            return BadRequest("No logged in user was found.");
+        }
+
+        // Retrieve subscriptions from database
+        List<Subscription> subscriptions = await _subscriptionRepository.GetAllNonSenderSubscriptionsAsync(sender.Id);
+
+        if (subscriptions.Count == 0)
+        {
+            return BadRequest("No subscription found in database.");
+        }
+
+        foreach (Subscription subscription in subscriptions)
+        {
+            if (string.IsNullOrEmpty(subscription.SubscriptionJson))
+            {
+                _logger.LogWarning("SubscriptionJson is null or empty for subscription with ID {SubscriptionId}.", subscription.Id);
+                continue; // Skipping this subscription if SubscriptionJson is invalid
+            }
+            var subscriptionToPushTo = JsonConvert.DeserializeObject<PushSubscription>(subscription.SubscriptionJson);
+
+            if (subscriptionToPushTo == null)
+            {
+                _logger.LogWarning("Failed to deserialize SubscriptionJson for subscription with ID {SubscriptionId}.", subscription.Id);
+                continue; // Skipping this subscription if deserialization fails
+            }
+
+            var payload = JsonConvert.SerializeObject(new
+            {
+                title = "New Message from",
+                message = "This is a notification for you!",
+                icon = "https://static-00.iconduck.com/assets.00/slightly-smiling-face-emoji-2048x2048-p8h7zhgm.png",
+                badge = "https://static-00.iconduck.com/assets.00/slightly-smiling-face-emoji-2048x2048-p8h7zhgm.png",
+            });
+
+            await _pushService.SendNotificationAsync(subscriptionToPushTo, payload);
+        }
+        return Ok("Notification Sent");
+    }
+
     [HttpPost("CheckUserSubscriptionAsync")]
     public async Task<IActionResult> CheckUserSubscriptionAsync([FromBody] PushSubscriptionDto subscriptionDto)
     {
@@ -120,7 +165,7 @@ public class NotificationsController(
         var dbSubscription = new WebPush.PushSubscription
         {
             Endpoint = subscriptionDto.Endpoint,
-            P256DH = subscriptionDto.Keys.P256DH, // Flattening 'keys'
+            P256DH = subscriptionDto.Keys.P256DH,
             Auth = subscriptionDto.Keys.Auth
         };
 
@@ -137,8 +182,8 @@ public class NotificationsController(
 
         try
         {
-            bool isUserSubscription = await _userRepository.IsUserSubscriptionAsync(subscriptionJson, currentUserId);
-            _logger.LogInformation("IsUserSubscriptionAsync result: {isUserSubscription}", isUserSubscription); 
+            bool isUserSubscription = await _subscriptionRepository.IsUserSubscriptionAsync(subscriptionJson, currentUserId);
+            _logger.LogInformation("IsUserSubscriptionAsync result: {isUserSubscription}", isUserSubscription);
 
             return Ok(new { isUserSubscription });
         }
@@ -157,18 +202,18 @@ public class NotificationsController(
         var dbSubscription = new WebPush.PushSubscription
         {
             Endpoint = subscriptionDto.Endpoint,
-            P256DH = subscriptionDto.Keys.P256DH, // Flattening 'keys'
+            P256DH = subscriptionDto.Keys.P256DH,
             Auth = subscriptionDto.Keys.Auth
         };
 
-        bool success = await _userRepository.RemoveSubscriptionAsync(JsonConvert.SerializeObject(dbSubscription));
+        bool success = await _subscriptionRepository.RemoveSubscriptionAsync(JsonConvert.SerializeObject(dbSubscription));
         if (success)
         {
             return Ok("subscription successfully removed from database.");
         }
-        else 
-        { 
-            return StatusCode(StatusCodes.Status500InternalServerError, "Failed to remove the subscription from database."); 
+        else
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, "Failed to remove the subscription from database.");
         }
     }
 }

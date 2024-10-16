@@ -30,7 +30,8 @@ builder.Services.AddDefaultIdentity<AplicationUser>(options => options.SignIn.Re
 
 builder.Services.AddSingleton<IPushService, PushService>();
 
-builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<ISubscriptionRepository, SubscriptionRepository>();
+builder.Services.AddScoped<IMessageRepository, MessageRepository>();
 
 builder.Services.AddControllersWithViews();
 

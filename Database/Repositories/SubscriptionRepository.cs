@@ -4,8 +4,13 @@ using Newtonsoft.Json;
 
 namespace Database.Repositories;
 
-public class UserRepository(WebPushAppContext _db, ILogger<UserRepository> _logger): IUserRepository
+public class SubscriptionRepository(WebPushAppContext _db, ILogger<SubscriptionRepository> _logger) : ISubscriptionRepository
 {
+    public async Task<List<Subscription>> GetAllNonSenderSubscriptionsAsync(string senderId)
+    {
+        return await _db.Subscriptions.Where(s => s.UserId != senderId).ToListAsync();
+    }
+
     public async Task<List<Subscription>> GetUserSubscriptionsAsync(string subscriberId)
     {
         List<Subscription> subscriptions = await _db.Subscriptions.Where(s => s.UserId == subscriberId).ToListAsync();
@@ -62,18 +67,18 @@ public class UserRepository(WebPushAppContext _db, ILogger<UserRepository> _logg
     public async Task<int> SaveSubscriptionAsync(string subscriptionString, string userId)
     {
         AplicationUser? user = await _db.Users.FindAsync(userId);
-        if (user == null) 
+        if (user == null)
         {
             _logger.LogError("user with id = {userId} was not found in database", userId);
-            return 0; 
+            return 0;
         }
         Subscription subscription = new() { SubscriptionJson = subscriptionString };
         user.Subscriptions.Add(subscription);
         int success = await _db.SaveChangesAsync();
-        if (success == 0) 
+        if (success == 0)
         {
             _logger.LogError("Failed to save subscription to database.");
-            return 0; 
+            return 0;
         }
         return subscription.Id;
     }
