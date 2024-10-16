@@ -1,7 +1,7 @@
 ﻿/* Grundinställningar */
 body {
     font-family: 'Garamond', serif; /* Medeltida stiligt typsnitt */
-    background-color: white /* Ljus bakgrund för en gammal känsla */
+    background-color: white; /* Ljus bakgrund för en gammal känsla */
     color: #3e3e3e; /* Mörk textfärg */
     line-height: 1.6; /* Bra läsbarhet */
     margin: 0;
@@ -11,7 +11,7 @@ body {
 /* Rubriker */
 h1, h2, h3 {
     font-family: 'Old English Text MT', cursive; /* Traditionell medeltidsstil */
-    color:cornflowerblue /* Mörkbrun färg */
+    color:cornflowerblue; /* Mörkbrun färg */
     text-shadow: 1px 1px 2px #d1b48c; /* Liten skugga för djup */
 }
 
@@ -42,9 +42,9 @@ a {
     text-decoration: none;
 }
 
-    a:hover {
-        text-decoration: underline; /* Understrykning vid hovring */
-    }
+a:hover {
+    text-decoration: underline; /* Understrykning vid hovring */
+}
 
 /* Knappar */
 button {
