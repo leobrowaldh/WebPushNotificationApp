@@ -2,7 +2,6 @@
 //If the user is logged in, only then do we proceed to check for subscriptions:
 if (userId) {
     console.log('User logged in with userId = ', userId);
-    console.log(publicKey)
     ManagingSubscriptionState();
 }
 

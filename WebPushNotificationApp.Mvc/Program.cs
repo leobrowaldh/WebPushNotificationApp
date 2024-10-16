@@ -6,15 +6,23 @@ using Microsoft.EntityFrameworkCore;
 using WebPushNotificationsApp.PushService;
 using WebPushNotificationApp.Mvc.Hubs;
 using Microsoft.AspNet.SignalR;
+using dotenv;
+using dotenv.net;
 
 var builder = WebApplication.CreateBuilder(args);
 
+DotEnv.Load();
 // Add services to the container.
 
 builder.Services.AddDbContext<WebPushAppContext>(
     options =>
         options.UseSqlServer(
-            builder.Configuration.GetConnectionString("WebPushAppConecction")));
+            Environment.GetEnvironmentVariable("CONNECTION_STRING")));
+
+builder.Configuration["VapidDetails:Subject"] = Environment.GetEnvironmentVariable("VAPID_SUBJECT") ?? builder.Configuration["VapidDetails:Subject"];
+builder.Configuration["VapidDetails:PublicKey"] = Environment.GetEnvironmentVariable("VAPID_PUBLIC_KEY") ?? builder.Configuration["VapidDetails:PublicKey"];
+builder.Configuration["VapidDetails:PrivateKey"] = Environment.GetEnvironmentVariable("VAPID_PRIVATE_KEY") ?? builder.Configuration["VapidDetails:PrivateKey"];
+
 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 

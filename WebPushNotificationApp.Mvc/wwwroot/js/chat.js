@@ -42,50 +42,41 @@ function sendMessage() {
 function addMessageToChat(message) {
     let isCurrentUserMessage = message.userName === username;
 
-    // Skapa en container för meddelandet
     let container = document.createElement('div');
-    container.className = "chat-container"; // Använd "chat-container"
+    container.className = "chat-container"; 
 
-    // Skapa en inner-container för att gruppera avsändarens namn, text och tid
     let messageContainer = document.createElement('div');
-    messageContainer.className = isCurrentUserMessage ? "sender" : "receiver"; // Justera klassen för meddelandet
-
-    // Skapa avsändarens namn
+    messageContainer.className = isCurrentUserMessage ? "sender" : "receiver";
     let sender = document.createElement('p');
-    sender.className = "sender-name"; // Klassiskt för avsändarens namn
+    sender.className = "sender-name"; 
     sender.innerHTML = message.userName;
 
-    // Skapa meddelandets text
+   
     let text = document.createElement('p');
-    text.className = "message-text"; // Klassiskt för meddelandets text
+    text.className = "message-text"; 
     text.innerHTML = message.text;
 
     let when = document.createElement('span');
-    when.className = "message-time"; // Klassiskt för tidsangivelsen
+    when.className = "message-time"; 
     var currentdate = new Date();
 
-    // Formatera datum till YYYY-MM-DD
+    
     let formattedDate = currentdate.getFullYear() + '-' +
         String(currentdate.getMonth() + 1).padStart(2, '0') + '-' +
         String(currentdate.getDate()).padStart(2, '0');
 
-    // Hämta timmar, minuter och sekunder
+   
     let hours = String(currentdate.getHours()).padStart(2, '0');
     let minutes = String(currentdate.getMinutes()).padStart(2, '0');
     let seconds = String(currentdate.getSeconds()).padStart(2, '0');
 
-    // Kombinera datum och tid
-    when.innerHTML = formattedDate + ' ' + hours + ':' + minutes + ':' + seconds; // Sätt det formaterade datumet och tiden som innehåll
+    
+    when.innerHTML = formattedDate + ' ' + hours + ':' + minutes + ':' + seconds;
 
-
-
-
-    // Lägg till avsändarens namn, text och tid i inner-containern
     messageContainer.appendChild(sender);
     messageContainer.appendChild(text);
     messageContainer.appendChild(when);
 
-    // Lägg till inner-containern i chatten
     container.appendChild(messageContainer);
     document.getElementById('chat').appendChild(container);
 
