@@ -1,4 +1,7 @@
 ﻿
+// Create a reference to the notification modal instance
+let notificationModal = new bootstrap.Modal(document.getElementById('notification-modal'));
+
 //If the user is logged in, only then do we proceed to check for subscriptions:
 if (userId) {
     console.log('User logged in with userId = ', userId);
@@ -7,24 +10,24 @@ if (userId) {
 
 //accept-notifications button listener:
 document.getElementById('subscribe-button').addEventListener('click', async function () {
-    //remove subscription request and hide subscription button
-    document.getElementById('notification-overlay').classList.add('d-none');
+    // Hide the modal using the instance
+    notificationModal.hide();
 
-    // Ask user for permission through the browsers NotificationAPI:
+    // Ask user for permission through the browser's Notification API
     let permission = await Notification.requestPermission();
     if (permission === 'granted') {
         console.log('Push Notifications - permission accepted');
 
-        //subscribing the service worker:
+        // Subscribe the service worker
         const newSubscription = await registration.pushManager.subscribe({
             userVisibleOnly: true, // visible notifications for the user
             applicationServerKey: urlBase64ToUint8Array(publicKey) // Convert public key to the expected format.
         });
-        console.log('New subscription:', JSON.stringify(newSubscription)); 
-            
+        console.log('New subscription:', JSON.stringify(newSubscription));
+
         // **************Sending subscription to the server**************
 
-        console.log('Sending POST request to server with subscription data...'); 
+        console.log('Sending POST request to server with subscription data...');
         const response = await fetch('/Notifications/SavingSubscriptionToDb', {
             method: 'POST',
             headers: {
@@ -33,7 +36,7 @@ document.getElementById('subscribe-button').addEventListener('click', async func
             body: JSON.stringify(newSubscription)
         });
         if (response.ok) {
-            // Extracting JSON from the response to retrieve the userId
+            // Extract JSON from the response to retrieve the userId
             const data = await response.json();
             console.log('Response data:', data);
             console.log('Subscription ID:', data.id);
@@ -43,13 +46,14 @@ document.getElementById('subscribe-button').addEventListener('click', async func
 
     } else if (permission === 'denied') {
         console.log('Push Notifications - permission denied');
-        return; 
+        return;
     } else {
         console.log('Push Notifications - permission dismissed or default');
-        return; 
+        return;
     }
-
 });
+
+
 
 //deny-notifications button listener:
 document.getElementById('no-thanks').addEventListener('click', function () {
@@ -93,7 +97,7 @@ document.getElementById('unsubscribe-button').addEventListener('click', async fu
             console.log('Successfully unsubscribed from browser.');
 
             if (existingSubscription) {
-                await removeOldSubscription(existingSubscription);
+                await removeSubscriptionFromDatabase(existingSubscription);
             } else {
                 console.log('No existing subscription found.');
             }
@@ -116,9 +120,8 @@ async function ManagingSubscriptionState() {
         existingSubscription = await registration.pushManager.getSubscription();
         if (!existingSubscription) {
             console.log('No subscription found');
-
-            // Show subscription request, display subscription button
-            document.getElementById('notification-overlay').classList.remove('d-none');
+            // Show modal to ask for subscription
+            notificationModal.show();
         } else {
             console.log('Subscription exists:', existingSubscription);
             // Check that subscription corresponds to the logged-in user
@@ -127,19 +130,21 @@ async function ManagingSubscriptionState() {
                 console.log('The subscription belongs to the logged-in user.');
             } else if (isUserSub === false) {
                 console.log('The subscription does not belong to this user, ask him to subscribe');
-                // Show subscription request, display subscription button
-                document.getElementById('notification-overlay').classList.remove('d-none');
+                // Show modal to ask for subscription
+                notificationModal.show();
             } else {
                 console.log('Could not verify subscription');
-                // How to handle this? subscribe anyway?
+                // Handle the case of subscription verification failure
             }
         }
     } catch (error) {
         console.error('Error getting subscription:', error);
-        // Show subscription request, display subscription button, subscribe...
-        document.getElementById('notification-overlay').classList.remove('d-none');
+        // Show modal to ask for subscription in case of error
+        notificationModal.show();
     }
 }
+
+
 
 
 
@@ -169,8 +174,7 @@ async function isUserSubscription(subscription) {
 
 
 //unsubscribing and removing subscription from db:
-async function removeOldSubscription(existingSubscription) {
-        console.log('Successfully unsubscribed from browser.');
+async function removeSubscriptionFromDatabase(existingSubscription) {
 
         // Remove the subscription from the database
         const response = await fetch('/Notifications/RemoveSubscriptionAsync', {

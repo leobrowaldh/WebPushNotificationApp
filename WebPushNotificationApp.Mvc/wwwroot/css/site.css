@@ -1,5 +1,12 @@
 ﻿/* Grundinställningar */
+
+html, body {
+    height: 100%; /* Ensure the body and html take up full height */
+}
+
 body {
+    display: flex;
+    flex-direction: column;
     font-family: 'Garamond', serif; /* Medeltida stiligt typsnitt */
     background-color: white; /* Ljus bakgrund för en gammal känsla */
     color: #3e3e3e; /* Mörk textfärg */
@@ -7,6 +14,7 @@ body {
     margin: 0;
     padding: 0;
 }
+
 
 /* Rubriker */
 h1, h2, h3 {
@@ -57,9 +65,9 @@ button {
     border-radius: 5px; /* Rundade hörn */
 }
 
-    button:hover {
-        background-color: #a0522d; /* Ljusare brun vid hovring */
-    }
+button:hover {
+    background-color: #a0522d; /* Ljusare brun vid hovring */
+}
 
 /* Lista */
 ul {
@@ -83,6 +91,9 @@ blockquote {
 
 /* Fotnot */
 footer {
+    position: relative;
+    bottom: 0;
+    width: 100%;
     text-align: center;
     padding: 20px;
     background-color: #3e3e3e; /* Mörk bakgrund */
@@ -107,16 +118,16 @@ footer {
     box-shadow: 10px 5px 5px;
 }
 
-    /* Triangel för avsändaren */
-    .sender::after {
-        content: '';
-        position: absolute;
-        top: 10px;
-        right: -10px;
-        border-width: 10px;
-        border-style: solid;
-        border-color: transparent;/* Triangel pekar till höger */
-    }
+/* Triangel för avsändaren */
+.sender::after {
+    content: '';
+    position: absolute;
+    top: 10px;
+    right: -10px;
+    border-width: 10px;
+    border-style: solid;
+    border-color: transparent;/* Triangel pekar till höger */
+}
 
 /* Bubblan för mottagaren */
 .receiver {
@@ -130,16 +141,16 @@ footer {
     box-shadow: 10px 5px 5px;
 }
 
-    /* Triangel för mottagaren */
-    .receiver::after {
-        content: '';
-        position: absolute;
-        top: 10px;
-        left: -10px;
-        border-width: 10px;
-        border-style: solid;
-        border-color: transparent; /* Triangel pekar till vänster */
-    }
+/* Triangel för mottagaren */
+.receiver::after {
+    content: '';
+    position: absolute;
+    top: 10px;
+    left: -10px;
+    border-width: 10px;
+    border-style: solid;
+    border-color: transparent; /* Triangel pekar till vänster */
+}
 #chat {
     display: flex;
     flex-direction: column; /* Se till att innehållet staplas vertikalt */
@@ -152,4 +163,8 @@ footer {
 
 .chat-container {
     margin: 10px 0; /* Lite mellanrum mellan meddelandena */
+}
+
+.container {
+    flex-grow: 1; /* Allow the main content to grow and push the footer down */
 }
