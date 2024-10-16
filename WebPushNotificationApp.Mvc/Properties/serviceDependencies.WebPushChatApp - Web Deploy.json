@@ -1,0 +1,11 @@
+{
+  "dependencies": {
+    "mssql3": {
+      "serviceConnectorResourceId": "",
+      "secretStore": "AzureAppSettings",
+      "type": "mssql.onprem",
+      "connectionId": "ConnectionStrings:WebPushAppConecction",
+      "dynamicId": null
+    }
+  }
+}

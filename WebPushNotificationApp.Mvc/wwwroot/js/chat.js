@@ -18,7 +18,7 @@ chats.scrollTop = chats.scrollHeight;
 
 document.getElementById('submitButton').addEventListener('click', () => {
     var currentdate = new Date();
-    when.innerHTML =
+    currentdate.innerHTML =
         (currentdate.getMonth() + 1) + "/"
         + currentdate.getDate() + "/"
         + currentdate.getFullYear() + " "

@@ -16,8 +16,7 @@ DotEnv.Load();
 
 builder.Services.AddDbContext<WebPushAppContext>(
     options =>
-        options.UseSqlServer(
-            Environment.GetEnvironmentVariable("CONNECTION_STRING")));
+        options.UseSqlServer(builder.Configuration.GetConnectionString("WebPushAppConecction")));
 
 builder.Configuration["VapidDetails:Subject"] = Environment.GetEnvironmentVariable("VAPID_SUBJECT") ?? builder.Configuration["VapidDetails:Subject"];
 builder.Configuration["VapidDetails:PublicKey"] = Environment.GetEnvironmentVariable("VAPID_PUBLIC_KEY") ?? builder.Configuration["VapidDetails:PublicKey"];
