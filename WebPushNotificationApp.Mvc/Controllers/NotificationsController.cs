@@ -18,6 +18,12 @@ public class NotificationsController(
     UserManager<AplicationUser> _userManager) : Controller
 {
 
+    public  IActionResult Settings()
+    {
+        string? userId = _userManager.GetUserId(User);
+        return View(userId);
+    }
+
     [HttpPost("SavingSubscriptionToDb")]
     public async Task<IActionResult> SavingSubscriptionToDb([FromBody] PushSubscriptionDto subscriptionDto)
     {
