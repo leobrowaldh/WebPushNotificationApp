@@ -6,62 +6,64 @@
 }
 
 
-
-<div class="row">
-
-    <!-- Chat window -->
-    <section class="col-md-8 chat-window">
-        <h1>Public chat</h1>
-        <div id="chat">
-            @if (Model.Messages != null)
-            {
-                @foreach (var message in Model.Messages.OrderBy(m => m.When))
+<div class="container">
+    <div class="row">
+        <!-- Chat window -->
+        <section class="col-md-8 chat-window">
+            <h1>Public chat</h1>
+            <div id="chat">
+                @if (Model.Messages != null)
                 {
-                    if (message.UserName == userName)
+                    @foreach (var message in Model.Messages.OrderBy(m => m.When))
                     {
-                        <div class="chat-container">
-                            <div class="sender">
-                                <p>@message.UserName</p>
-                                <p>@message.Text</p>
-                                <span>@message.When.ToString()</span>
+                        if (message.UserName == userName)
+                        {
+                            <div class="chat-container">
+                                <div class="sender">
+                                    <p>@message.UserName</p>
+                                    <p>@message.Text</p>
+                                    <span>@message.When.ToString()</span>
+                                </div>
                             </div>
-                        </div>
-                    }
-                    else
-                    {
-                        <div class="chat-container">
-                            <div class="receiver">
-                                <p>@message.UserName</p>
-                                <p>@message.Text</p>
-                                <span>@message.When.ToString()</span>
+                        }
+                        else
+                        {
+                            <div class="chat-container">
+                                <div class="receiver">
+                                    <p>@message.UserName</p>
+                                    <p>@message.Text</p>
+                                    <span>@message.When.ToString()</span>
+                                </div>
                             </div>
-                        </div>
+                        }
                     }
                 }
-            }
-        </div>
+            </div>
 
-        <form asp-controller="Home" asp-action="Create" data-ajax-begin="clearInputField" data-ajax-complete=""
-              data-ajax-failure="alert('fail')" data-ajax-success="sendMessage" data-ajax="true" data-ajax-method="POST">
-            <div asp-validation-summary="ModelOnly"></div>
-            <input style="width:300px" name="Text" id="messageText" />
-            <input type="submit" value="Send" id="submitButton" class="btn btn-primary" />
-            <input type="hidden" value="@userName" name="username" />
-        </form>
-    </section>
-
-    <!-- Contacts (aside element moved here) -->
-    <aside class="col-md-4">
-        <h2>Contacts</h2>
-        <section class="col-md-12">
-            @foreach (var user in Model.Users.OrderBy(m => m.UserName))
-            {
-                <a class="btn btn-primary mb-2">
-                    @user.UserName
-                </a>
-            }
+            <form asp-controller="Home" asp-action="Create" data-ajax-begin="clearInputField" data-ajax-complete=""
+                  data-ajax-failure="alert('fail')" data-ajax-success="sendMessage" data-ajax="true" data-ajax-method="POST">
+                <div asp-validation-summary="ModelOnly"></div>
+                <input style="width:300px" name="Text" id="messageText" />
+                <input type="submit" value="Send" id="submitButton" class="btn btn-primary" />
+                <input type="hidden" value="@userName" name="username" />
+            </form>
         </section>
-    </aside>
+
+        <!-- Contacts -->
+        <aside class="col-md-4">
+            <h2>Contacts</h2>
+            <section class="col-md-12">
+                <ul class="list-group">
+                    @foreach (var user in Model.Users.OrderBy(m => m.UserName))
+                    {
+                        <li class="list-group-item">
+                            @user.UserName
+                        </li>
+                    }
+                </ul>
+            </section>
+        </aside>
+    </div>
 </div>
 
 <!-- Modal structure for notification overlay -->

@@ -3,7 +3,6 @@
 html, body {
     height: 100%; /* Ensure the body and html take up full height */
     margin: 0;
-    padding: 0;
 }
 
 body {
@@ -81,6 +80,15 @@ li {
     margin: 5px 0;
 }
 
+.list-group-item {
+    word-wrap: break-word; /* Ensure long text wraps within the item */
+    white-space: normal; /* Prevent text from being forced into a single line */
+    overflow: hidden; /* Hide any overflow */
+    background-color: #0F67B1;
+    color: white;
+}
+
+
 /* Citaten */
 blockquote {
     font-style: italic; /* Kursiv stil */
@@ -89,16 +97,7 @@ blockquote {
     margin: 20px 0;
 }
 
-/* Fotnot */
-footer {
-    position: relative;
-    bottom: 0;
-    width: 100%;
-    text-align: center;
-    padding: 20px;
-    background-color: #3e3e3e; /* Mörk bakgrund */
-    color: white; /* Vit text */
-}
+
 /* Chatbubblor */
 .chat-container {
     display: flex;
@@ -152,24 +151,26 @@ footer {
     border-color: transparent; /* Triangel pekar till vänster */
 }
 #chat {
+    flex-grow: 1; /* Allow chat to expand */
     display: flex;
-    flex-direction: column; /* Se till att innehållet staplas vertikalt */
-    height: 400px; /* Ge chatten en fast höjd */
-    overflow-y: auto; /* Tillåt rullning om det blir för många meddelanden */
-    border: 1px solid #ccc; /* Valfri kantlinje för att definiera chatten */
-    padding: 10px; /* Lite inre avstånd */
-    margin-bottom: 10px; /* Utrymme under chatten */
-}
-
-.chat-container {
-    margin: 10px 0; /* Lite mellanrum mellan meddelandena */
+    flex-direction: column; /* Stack chat messages vertically */
+    height: 400px; /* Set a fixed height for the chat */
+    overflow-y: auto; /* Enable vertical scrolling if necessary */
+    border: 1px solid #ccc; /* Optional border for chat area */
+    padding: 10px; /* Internal padding */
+    margin-bottom: 10px; /* Space below the chat area */
 }
 
 .container {
-    flex-grow: 1; /* Allow the main content to grow */
     display: flex;
     flex-direction: column; /* Stack children vertically */
-    justify-content: space-between; /* Space out children */
+    flex-grow: 1; /* Allow the main content to grow */
+}
+
+.chat-window {
+    display: flex;
+    flex-direction: column; /* Stack chat content vertically */
+    justify-content: space-between; /* Space out chat components */
 }
 
 
