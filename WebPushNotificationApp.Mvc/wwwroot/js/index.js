@@ -1,4 +1,4 @@
-﻿import { isUserSubscription } from './notifications.js'; 
+﻿import { isUserSubscription, registerServiceWorker, urlBase64ToUint8Array } from './notifications.js'; 
 
 
 // Creating a reference to the notification modal instance
@@ -19,7 +19,9 @@ document.getElementById('subscribe-button').addEventListener('click', async func
     let permission = await Notification.requestPermission();
     if (permission === 'granted') {
         console.log('Push Notifications - permission accepted');
-
+        //await service worker:
+        let registration = await navigator.serviceWorker.ready;
+        console.log('Service Worker is ready:', registration);
         // Subscribe the service worker
         const newSubscription = await registration.pushManager.subscribe({
             userVisibleOnly: true, // visible notifications for the user
@@ -62,7 +64,6 @@ document.getElementById('no-thanks').addEventListener('click', function () {
     //remove subscription request and hide subscription button
     notificationModal.hide();
 });
-
 
 
 //checks the current state of webPush subscriptions in this browser and acts accordingly

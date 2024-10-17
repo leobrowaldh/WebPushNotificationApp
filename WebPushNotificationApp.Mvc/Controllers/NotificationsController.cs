@@ -18,10 +18,11 @@ public class NotificationsController(
     UserManager<AplicationUser> _userManager) : Controller
 {
 
+    [HttpGet("settings")]
     public  IActionResult Settings()
     {
-        string? userId = _userManager.GetUserId(User);
-        return View(userId);
+        ViewBag.UserId = _userManager.GetUserId(User);
+		return View();
     }
 
     [HttpPost("SavingSubscriptionToDb")]

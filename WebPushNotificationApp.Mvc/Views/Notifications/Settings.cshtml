@@ -7,6 +7,13 @@
 <button id="push-button" class="btn btn-primary btn-lg mb-3 me-3">Test Notification</button>
 <button id="unsubscribe-button" class="btn btn-secondary btn-lg mb-3 me-3">Unsubscribe Browser</button>
 
+
+<!-- Declaring JavaScript global variables -->
+<script>
+	var userId = '@ViewBag.UserId';
+</script>
+
+
 @section scripts {
-	<script src="~/js/settings.js"></script>
+	<script type="module" src="~/js/settings.js"></script>
 }
