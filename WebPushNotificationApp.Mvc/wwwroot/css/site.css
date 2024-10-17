@@ -8,18 +8,18 @@ html, body {
 body {
     display: flex;
     flex-direction: column;
-    font-family: 'Garamond', serif; /* Medeltida stiligt typsnitt */
-    background-color: white; /* Ljus bakgrund för en gammal känsla */
-    color: #3e3e3e; /* Mörk textfärg */
-    line-height: 1.6; /* Bra läsbarhet */
+    font-family: 'Garamond', serif; 
+    background-color: white; 
+    color: #3e3e3e; 
+    line-height: 1.6; 
 }
 
 
 /* Rubriker */
 h1, h2, h3 {
-    font-family: 'Old English Text MT', cursive; /* Traditionell medeltidsstil */
-    color:cornflowerblue; /* Mörkbrun färg */
-    text-shadow: 1px 1px 2px #d1b48c; /* Liten skugga för djup */
+    font-family: 'Old English Text MT', cursive; 
+    color:cornflowerblue;
+    text-shadow: 2px 2px 1px #d1b48c;
 }
 
 h1 {
@@ -86,6 +86,8 @@ li {
     overflow: hidden; /* Hide any overflow */
     background-color: #0F67B1;
     color: white;
+    box-shadow: 4px 6px 6px rgba(0, 0, 0, 0.5); 
+    border-radius: 5px;
 }
 
 
@@ -159,18 +161,21 @@ blockquote {
     border: 1px solid #ccc; /* Optional border for chat area */
     padding: 10px; /* Internal padding */
     margin-bottom: 10px; /* Space below the chat area */
+    box-shadow: 2px 3px 3px rgba(0, 0, 0, 0.3);
 }
 
 .container {
     display: flex;
-    flex-direction: column; /* Stack children vertically */
+    flex-direction: column; 
     flex-grow: 1; /* Allow the main content to grow */
 }
 
 .chat-window {
     display: flex;
-    flex-direction: column; /* Stack chat content vertically */
-    justify-content: space-between; /* Space out chat components */
+    flex-direction: column; 
+    justify-content: space-between; 
 }
+
+
 
 
