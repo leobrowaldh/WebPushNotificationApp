@@ -2,6 +2,8 @@
 
 html, body {
     height: 100%; /* Ensure the body and html take up full height */
+    margin: 0;
+    padding: 0;
 }
 
 body {
@@ -11,8 +13,6 @@ body {
     background-color: white; /* Ljus bakgrund för en gammal känsla */
     color: #3e3e3e; /* Mörk textfärg */
     line-height: 1.6; /* Bra läsbarhet */
-    margin: 0;
-    padding: 0;
 }
 
 
@@ -166,5 +166,10 @@ footer {
 }
 
 .container {
-    flex-grow: 1; /* Allow the main content to grow and push the footer down */
+    flex-grow: 1; /* Allow the main content to grow */
+    display: flex;
+    flex-direction: column; /* Stack children vertically */
+    justify-content: space-between; /* Space out children */
 }
+
+
