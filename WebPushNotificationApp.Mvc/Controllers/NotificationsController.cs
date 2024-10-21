@@ -3,6 +3,7 @@ using Database.Repositories;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using WebPush;
@@ -91,6 +92,7 @@ public class NotificationsController(
         {
             return BadRequest("No subscription found in database.");
         }
+        var user = _userManager.Users.Where(x => x.Id == userId).Select(x => x.UserName).First().ToString();
 
         foreach (Subscription subscription in subscriptions)
         {
@@ -109,7 +111,7 @@ public class NotificationsController(
 
             var payload = JsonConvert.SerializeObject(new
             {
-                title = "Test Notification",
+                title = _userManager.Users.Where(x => x.Id == userId).Select(x => x.UserName).First().ToString() + " did just send a message.",
                 message = "This is a notification for you!",
                 icon = "https://static-00.iconduck.com/assets.00/slightly-smiling-face-emoji-2048x2048-p8h7zhgm.png",
                 badge = "https://static-00.iconduck.com/assets.00/slightly-smiling-face-emoji-2048x2048-p8h7zhgm.png",
@@ -154,7 +156,7 @@ public class NotificationsController(
 
             var payload = JsonConvert.SerializeObject(new
             {
-                title = "New Message from",
+                title = "New Message from " + sender.UserName,
                 message = "This is a notification for you!",
                 icon = "https://static-00.iconduck.com/assets.00/slightly-smiling-face-emoji-2048x2048-p8h7zhgm.png",
                 badge = "https://static-00.iconduck.com/assets.00/slightly-smiling-face-emoji-2048x2048-p8h7zhgm.png",
