@@ -1,21 +1,21 @@
-﻿/* Grundinställningar */
-
-html, body {
-    height: 100%; /* Ensure the body and html take up full height */
+﻿html, body {
+    height: 100%; 
     margin: 0;
+
 }
 
 body {
     display: flex;
     flex-direction: column;
-    font-family: 'Garamond', serif; 
-    background-color: white; 
-    color: #3e3e3e; 
-    line-height: 1.6; 
+    font-family: 'Garamond', serif;
+    background-color: white;
+    color: #3e3e3e;
+    line-height: 1.6;
+    min-height: 100vh;
 }
 
 
-/* Rubriker */
+
 h1, h2, h3 {
     font-family: 'Old English Text MT', cursive; 
     color:cornflowerblue;
@@ -23,67 +23,74 @@ h1, h2, h3 {
 }
 
 h1 {
-    font-size: 2.5em; /* Storlek för huvudrubrik */
+    font-size: 2.5em; 
     margin-top: 20px;
     text-align: center;
 }
 
 h2 {
-    font-size: 2em; /* Storlek för andra rubriker */
+    font-size: 2em; 
     margin-top: 15px;
 }
 
 h3 {
-    font-size: 1.5em; /* Storlek för tredje rubriker */
+    font-size: 1.5em; 
     margin-top: 10px;
 }
 
-/* Paragrafer */
+
 p {
     margin: 15px 0;
 }
 
-/* Länkar */
+
 a {
-    color: #b22222; /* Mörkröd färg för länkar */
+    color: #b22222; 
     text-decoration: none;
 }
 
 a:hover {
-    text-decoration: underline; /* Understrykning vid hovring */
+    text-decoration: underline; 
 }
 
-/* Knappar */
 button {
-    background-color: #8B4513; /* Mörkbrun bakgrund */
-    color: white; /* Vit text */
-    border: none;
-    padding: 10px 20px;
+    background-color: white;
+    border-color: black;
+    border: groove;
     font-size: 1em;
     cursor: pointer;
-    border-radius: 5px; /* Rundade hörn */
+    border-radius: 5px;
 }
 
-button:hover {
-    background-color: #a0522d; /* Ljusare brun vid hovring */
+#button-modal {
+    background-color: white;
+    border-color: black;
+    border: groove;
+    font-size: 1em;
+    cursor: pointer;
+    border-radius: 5px;
+}
+#button-modal:hover {
+    background-color: lightgray;
 }
 
-/* Lista */
+
+
 ul {
-    list-style-type: none; /* Ingen standardpunkt */
+    list-style-type: none;
     padding: 0;
 }
 
 li {
-    background: url('path_to_icon.png') no-repeat left center; /* Lägg till en ikon för listan */
-    padding-left: 20px; /* Utrymme för ikonen */
+    background: url('path_to_icon.png') no-repeat left center; 
+    padding-left: 20px; 
     margin: 5px 0;
 }
 
 .list-group-item {
-    word-wrap: break-word; /* Ensure long text wraps within the item */
-    white-space: normal; /* Prevent text from being forced into a single line */
-    overflow: hidden; /* Hide any overflow */
+    word-wrap: break-word; 
+    white-space: normal; 
+    overflow: hidden; 
     background-color: #0F67B1;
     color: white;
     box-shadow: 4px 6px 6px rgba(0, 0, 0, 0.5); 
@@ -91,35 +98,30 @@ li {
 }
 
 
-/* Citaten */
 blockquote {
-    font-style: italic; /* Kursiv stil */
-    border-left: 4px solid #8B4513; /* För att ge en känsla av ett gammalt manuskript */
+    font-style: italic; 
+    border-left: 4px solid #8B4513; 
     padding-left: 15px;
     margin: 20px 0;
 }
 
 
-/* Chatbubblor */
 .chat-container {
     display: flex;
     flex-direction: column;
-    margin: 10px 0; /* Lite mellanrum mellan meddelandena */
+    margin: 10px 0;
 }
-
-/* Bubblan för avsändaren */
 .sender {
-    background-color: paleturquoise; /* Mörkbrun bakgrund */
-    color: black; /* Vit text */
+    background-color: paleturquoise; 
+    color: black; 
     padding: 10px 15px;
     border-radius: 10px;
     max-width: 70%;
-    align-self: flex-end; /* Högerjusterad */
+    align-self: flex-end; 
     position: relative;
     box-shadow: 10px 5px 5px;
 }
 
-/* Triangel för avsändaren */
 .sender::after {
     content: '';
     position: absolute;
@@ -127,22 +129,20 @@ blockquote {
     right: -10px;
     border-width: 10px;
     border-style: solid;
-    border-color: transparent;/* Triangel pekar till höger */
+    border-color: transparent;
 }
 
-/* Bubblan för mottagaren */
 .receiver {
-    background-color: #B6FFA1; /* Ljusare brun */
-    color: #3e3e3e; /* Mörk text */
+    background-color: #B6FFA1; 
+    color: #3e3e3e; 
     padding: 10px 15px;
     border-radius: 10px;
     max-width: 70%;
-    align-self: flex-start; /* Vänsterjusterad */
+    align-self: flex-start; 
     position: relative;
     box-shadow: 10px 5px 5px;
 }
 
-/* Triangel för mottagaren */
 .receiver::after {
     content: '';
     position: absolute;
@@ -150,24 +150,24 @@ blockquote {
     left: -10px;
     border-width: 10px;
     border-style: solid;
-    border-color: transparent; /* Triangel pekar till vänster */
+    border-color: transparent; 
 }
 #chat {
-    flex-grow: 1; /* Allow chat to expand */
+    flex-grow: 1; 
     display: flex;
-    flex-direction: column; /* Stack chat messages vertically */
-    height: 400px; /* Set a fixed height for the chat */
-    overflow-y: auto; /* Enable vertical scrolling if necessary */
-    border: 1px solid #ccc; /* Optional border for chat area */
-    padding: 10px; /* Internal padding */
-    margin-bottom: 10px; /* Space below the chat area */
+    flex-direction: column; 
+    height: 400px; 
+    overflow-y: auto;
+    border: 1px solid #ccc; 
+    padding: 10px; 
+    margin-bottom: 10px; 
     box-shadow: 2px 3px 3px rgba(0, 0, 0, 0.3);
 }
 
 .container {
     display: flex;
     flex-direction: column; 
-    flex-grow: 1; /* Allow the main content to grow */
+    flex-grow: 1; 
 }
 
 .chat-window {
@@ -176,6 +176,16 @@ blockquote {
     justify-content: space-between; 
 }
 
-
-
-
+@media (max-width: 600px) {
+    .sender, .receiver {
+        padding: 4px 12px;
+        font-size: 0.9em;
+        max-width: 85%;
+    }
+    .chat-window {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        height: 550px;
+    }
+}

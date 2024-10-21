@@ -20,9 +20,8 @@
                         {
                             <div class="chat-container">
                                 <div class="sender">
-                                    <p>@message.UserName</p>
+                                    <span><strong>@message.UserName</strong> - @message.When.ToString()</span>
                                     <p>@message.Text</p>
-                                    <span>@message.When.ToString()</span>
                                 </div>
                             </div>
                         }
@@ -30,9 +29,8 @@
                         {
                             <div class="chat-container">
                                 <div class="receiver">
-                                    <p>@message.UserName</p>
+                                    <span><strong>@message.UserName</strong> - @message.When.ToString()</span>
                                     <p>@message.Text</p>
-                                    <span>@message.When.ToString()</span>
                                 </div>
                             </div>
                         }
@@ -72,7 +70,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="notificationModalLabel">Notifications</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button type="button" id="button-modal" class="btn-close" data-bs-dismiss="modal" aria-label="Close">X</button>
             </div>
             <div class="modal-body text-center">
                 <p>Activate web-push notifications if you want to be notified when someone sends you a message.</p>

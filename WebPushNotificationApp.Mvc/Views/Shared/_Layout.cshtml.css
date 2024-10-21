@@ -40,9 +40,21 @@ button.accept-policy {
 }
 
 .footer {
-  position: absolute;
+  background-color: lightgray;
   bottom: 0;
   width: 100%;
   white-space: nowrap;
   line-height: 60px;
 }
+nav {
+    flex-shrink: 0;
+    z-index: 1000; 
+}
+
+.nav-link {
+    color: #b22222; 
+}
+
+    .nav-link:hover {
+        color: #a00000; 
+    }
