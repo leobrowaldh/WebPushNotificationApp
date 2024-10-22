@@ -157,10 +157,11 @@ public class NotificationsController(
 
             var payload = JsonConvert.SerializeObject(new
             {
+                //pictures need to be urls to accessible pictures in the correct format for icon and badge.
                 title = "New Message from " + sender.UserName,
                 message = _messageRepository.GetLastMessageAsync().Result,
-                icon = "https://static-00.iconduck.com/assets.00/slightly-smiling-face-emoji-2048x2048-p8h7zhgm.png",
-                badge = "https://static-00.iconduck.com/assets.00/message-icon-1023x1024-7pbl8unr.png",
+                icon = sender.ProfilePicture,
+                badge = "https://static-00.iconduck.com/assets.00/message-icon-1023x1024-7pbl8unr.png", //the app logo
             });
 
             await _pushService.SendNotificationAsync(subscriptionToPushTo, payload);

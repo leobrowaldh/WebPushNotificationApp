@@ -88,13 +88,16 @@ li {
 }
 
 .list-group-item {
-    word-wrap: break-word; 
-    white-space: normal; 
-    overflow: hidden; 
+    word-wrap: break-word;
+    white-space: normal;
+    overflow: hidden;
     background-color: #0F67B1;
     color: white;
-    box-shadow: 4px 6px 6px rgba(0, 0, 0, 0.5); 
+    box-shadow: 4px 6px 6px rgba(0, 0, 0, 0.5);
     border-radius: 5px;
+    text-align: left;
+    display: flex;
+    align-items: center;
 }
 
 
@@ -187,5 +190,12 @@ blockquote {
         flex-direction: column;
         justify-content: space-between;
         height: 550px;
+    }
+}
+
+@media (max-width: 990px) {
+    .list-group-item {
+        padding: 12px 20px; /* Adjust padding if needed */
+        min-width: 250px; /* Adjust minimum width */
     }
 }

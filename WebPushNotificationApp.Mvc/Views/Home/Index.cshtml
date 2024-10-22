@@ -55,6 +55,7 @@
                     @foreach (var user in Model.Users.OrderBy(m => m.UserName))
                     {
                         <li class="list-group-item">
+                            <img src="@user.ProfilePicture" alt="Profile Picture" class="img-fluid" style="max-width: 60px; height: auto; margin-right: 10px;" />
                             @user.UserName
                         </li>
                     }
