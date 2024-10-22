@@ -8,7 +8,10 @@ namespace Database.Repositories;
 
 public class MessageRepository(WebPushAppContext _db) : IMessageRepository
 {
-
+    public async Task<string> GetLastMessageAsync()
+    {
+        return await _db.Messages.OrderByDescending(x => x.When).Select(x => x.Text).FirstOrDefaultAsync();
+    }
     public async Task<List<Message>> GetAllMessagesAsync()
     {
         return await _db.Messages.ToListAsync();

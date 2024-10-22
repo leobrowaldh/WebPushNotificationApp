@@ -6,7 +6,6 @@ let notificationModal = new bootstrap.Modal(document.getElementById('notificatio
 
 //If the user is logged in, only then do we proceed to check for subscriptions:
 if (userId) {
-    console.log('User logged in with userId = ', userId);
     ManagingSubscriptionState();
 }
 
@@ -21,13 +20,13 @@ document.getElementById('subscribe-button').addEventListener('click', async func
         console.log('Push Notifications - permission accepted');
         //await service worker:
         let registration = await navigator.serviceWorker.ready;
-        console.log('Service Worker is ready:', registration);
+        console.log('Service Worker is ready');
         // Subscribe the service worker
         const newSubscription = await registration.pushManager.subscribe({
             userVisibleOnly: true, // visible notifications for the user
             applicationServerKey: urlBase64ToUint8Array(publicKey) // Convert public key to the expected format.
         });
-        console.log('New subscription:', JSON.stringify(newSubscription));
+        console.log('New subscription');
 
         // **************Sending subscription to the server**************
 
@@ -42,8 +41,6 @@ document.getElementById('subscribe-button').addEventListener('click', async func
         if (response.ok) {
             // Extract JSON from the response to retrieve the userId
             const data = await response.json();
-            console.log('Response data:', data);
-            console.log('Subscription ID:', data.id);
         } else {
             console.error('Failed to subscribe:', response.statusText);
         }
@@ -71,7 +68,7 @@ async function ManagingSubscriptionState() {
     // Preparing service worker
     await registerServiceWorker();
     let registration = await navigator.serviceWorker.ready;
-    console.log('Service Worker is ready:', registration);
+    console.log('Service Worker is ready');
 
     // Check the state of subscription in the worker
     let existingSubscription = null;
@@ -82,7 +79,7 @@ async function ManagingSubscriptionState() {
             // Show modal to ask for subscription
             notificationModal.show();
         } else {
-            console.log('Subscription exists:', existingSubscription);
+            console.log('Subscription exists');
             // Check that subscription corresponds to the logged-in user
             const isUserSub = await isUserSubscription(existingSubscription);
             if (isUserSub) {
