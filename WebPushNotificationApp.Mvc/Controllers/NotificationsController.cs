@@ -160,7 +160,7 @@ public class NotificationsController(
                 title = "New Message from " + sender.UserName,
                 message = _messageRepository.GetLastMessageAsync().Result,
                 icon = "https://static-00.iconduck.com/assets.00/slightly-smiling-face-emoji-2048x2048-p8h7zhgm.png",
-                badge = "https://static-00.iconduck.com/assets.00/slightly-smiling-face-emoji-2048x2048-p8h7zhgm.png",
+                badge = "https://static-00.iconduck.com/assets.00/message-icon-1023x1024-7pbl8unr.png",
             });
 
             await _pushService.SendNotificationAsync(subscriptionToPushTo, payload);
