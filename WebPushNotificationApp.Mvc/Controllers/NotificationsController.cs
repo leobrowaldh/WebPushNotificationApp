@@ -16,6 +16,7 @@ public class NotificationsController(
     ILogger<HomeController> _logger,
     IPushService _pushService,
     ISubscriptionRepository _subscriptionRepository,
+    IMessageRepository _messageRepository,
     UserManager<AplicationUser> _userManager) : Controller
 {
 
@@ -87,12 +88,12 @@ public class NotificationsController(
     {
         // Retrieve subscriptions from database
         List<Subscription> subscriptions = await _subscriptionRepository.GetUserSubscriptionsAsync(userId);
-
+        var lastMessage = _messageRepository.GetLastMessageAsync().Result;
+        
         if (subscriptions.Count == 0)
         {
             return BadRequest("No subscription found in database.");
         }
-        var user = _userManager.Users.Where(x => x.Id == userId).Select(x => x.UserName).First().ToString();
 
         foreach (Subscription subscription in subscriptions)
         {
@@ -111,8 +112,8 @@ public class NotificationsController(
 
             var payload = JsonConvert.SerializeObject(new
             {
-                title = _userManager.Users.Where(x => x.Id == userId).Select(x => x.UserName).First().ToString() + " did just send a message.",
-                message = "This is a notification for you!",
+                title = "Test Notification",
+                message = "This is a test Notification",
                 icon = "https://static-00.iconduck.com/assets.00/slightly-smiling-face-emoji-2048x2048-p8h7zhgm.png",
                 badge = "https://static-00.iconduck.com/assets.00/slightly-smiling-face-emoji-2048x2048-p8h7zhgm.png",
             });
@@ -157,7 +158,7 @@ public class NotificationsController(
             var payload = JsonConvert.SerializeObject(new
             {
                 title = "New Message from " + sender.UserName,
-                message = "This is a notification for you!",
+                message = _messageRepository.GetLastMessageAsync().Result,
                 icon = "https://static-00.iconduck.com/assets.00/slightly-smiling-face-emoji-2048x2048-p8h7zhgm.png",
                 badge = "https://static-00.iconduck.com/assets.00/slightly-smiling-face-emoji-2048x2048-p8h7zhgm.png",
             });

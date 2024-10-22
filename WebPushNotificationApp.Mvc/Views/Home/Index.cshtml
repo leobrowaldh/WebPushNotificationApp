@@ -70,7 +70,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="notificationModalLabel">Notifications</h5>
-                <button type="button" id="button-modal" class="btn-close" data-bs-dismiss="modal" aria-label="Close">X</button>
+                <button type="button" id="button-modal" class="btn-close" data-dismiss="modal" aria-label="Close">X</button>
             </div>
             <div class="modal-body text-center">
                 <p>Activate web-push notifications if you want to be notified when someone sends you a message.</p>
@@ -84,7 +84,6 @@
     </div>
 </div>
 
-    
 <!-- Declaring JavaScript global variables -->
 @if (User.Identity != null && User.Identity.IsAuthenticated)
 {
