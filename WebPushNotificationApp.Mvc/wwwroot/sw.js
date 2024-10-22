@@ -30,13 +30,13 @@ self.addEventListener('notificationclick', (event) => {
             // Check if the app is already open in a tab
             for (var i = 0; i < clientList.length; i++) {
                 var client = clientList[i];
-                if (client.url === 'https://localhost:7039/' && 'focus' in client) {
+                if (client.url === 'https://webpushchatapp-e7d5dac2fjdyfxaa.northeurope-01.azurewebsites.net/' && 'focus' in client) {
                     return client.focus();
                 }
             }
             // If not, open a new window or tab
             if (clients.openWindow) {
-                return clients.openWindow('https://localhost:7039/');
+                return clients.openWindow('https://webpushchatapp-e7d5dac2fjdyfxaa.northeurope-01.azurewebsites.net/');
             }
         })
     );
