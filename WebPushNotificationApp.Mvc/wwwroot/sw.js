@@ -1,5 +1,5 @@
 ﻿self.addEventListener('push', function (event) {
-    console.log('Push event received in service worker:', event); //DEBUG
+    console.log('Push event received in service worker:');
     let data;
 
     try {
@@ -18,5 +18,26 @@
 
     event.waitUntil(
         self.registration.showNotification(data.title, options)
+    );
+});
+
+self.addEventListener('notificationclick', (event) => {
+    console.log('User clicked on notification.');
+    event.notification.close(); // Close the notification
+
+    event.waitUntil(
+        clients.matchAll({ type: 'window' }).then( (clientList) => {
+            // Check if the app is already open in a tab
+            for (var i = 0; i < clientList.length; i++) {
+                var client = clientList[i];
+                if (client.url === 'https://localhost:7039/' && 'focus' in client) {
+                    return client.focus();
+                }
+            }
+            // If not, open a new window or tab
+            if (clients.openWindow) {
+                return clients.openWindow('https://localhost:7039/');
+            }
+        })
     );
 });
