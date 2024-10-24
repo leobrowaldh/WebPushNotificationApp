@@ -13,10 +13,10 @@ var builder = WebApplication.CreateBuilder(args);
 
 DotEnv.Load();
 // Add services to the container.
-var connectionStringAzure = Environment.GetEnvironmentVariable("CONNECTION_STRING");
 builder.Services.AddDbContext<WebPushAppContext>(
     options =>
-        options.UseSqlServer(connectionStringAzure));
+        options.UseSqlServer(
+            builder.Configuration.GetConnectionString("WebPushAppConecction")));
 
 builder.Configuration["VapidDetails:Subject"] = Environment.GetEnvironmentVariable("VAPID_SUBJECT") ?? builder.Configuration["VapidDetails:Subject"];
 builder.Configuration["VapidDetails:PublicKey"] = Environment.GetEnvironmentVariable("VAPID_PUBLIC_KEY") ?? builder.Configuration["VapidDetails:PublicKey"];
