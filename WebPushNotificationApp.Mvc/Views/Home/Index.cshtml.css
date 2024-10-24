@@ -1,0 +1,10 @@
+﻿.under-chat-container{
+    margin: 20px;
+    padding-left: 20px;
+}
+
+.profile-picture {
+    max-width: 60px;
+    height: auto;
+    margin-right: 10px;
+}

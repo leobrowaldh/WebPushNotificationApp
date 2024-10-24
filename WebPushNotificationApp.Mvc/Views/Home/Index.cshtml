@@ -38,13 +38,16 @@
                 }
             </div>
 
-            <form asp-controller="Home" asp-action="Create" data-ajax-begin="clearInputField" data-ajax-complete=""
-                  data-ajax-failure="alert('fail')" data-ajax-success="sendMessage" data-ajax="true" data-ajax-method="POST">
-                <div asp-validation-summary="ModelOnly"></div>
-                <input style="width:300px" name="Text" id="messageText" />
-                <input type="submit" value="Send" id="submitButton" class="btn btn-primary" />
-                <input type="hidden" value="@userName" name="username" />
-            </form>
+            <div class="under-chat-container row">
+                <img src="@ViewBag.CurrentUser.ProfilePicture" alt="Profile Picture" class="img-fluid profile-picture" />
+                <form asp-controller="Home" asp-action="Create" data-ajax-begin="clearInputField" data-ajax-complete=""
+                      data-ajax-failure="alert('fail')" data-ajax-success="sendMessage" data-ajax="true" data-ajax-method="POST">
+                    <div asp-validation-summary="ModelOnly"></div>
+                    <input style="width:300px" name="Text" id="messageText" />
+                    <input type="submit" value="Send" id="submitButton" class="btn btn-primary" />
+                    <input type="hidden" value="@userName" name="username" />
+                </form>
+            </div>
         </section>
 
         <!-- Contacts -->
@@ -89,7 +92,7 @@
 @if (User.Identity != null && User.Identity.IsAuthenticated)
 {
     <script>
-        const userName = "@ViewBag.CurrentUserName";
+        const userName = "@User.Identity.Name";
     </script>
 }
 

@@ -28,7 +28,7 @@ public class HomeController(
         var messageList = await _messageRepository.GetAllMessagesAsync();
         if (User.Identity is not null && User.Identity.IsAuthenticated && currentUser is not null)
         {
-            ViewBag.CurrentUserName = currentUser.UserName;
+            ViewBag.CurrentUser = currentUser;
         }
         foreach (var message in messageList)
         {
