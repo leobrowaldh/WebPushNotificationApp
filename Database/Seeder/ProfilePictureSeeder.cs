@@ -17,7 +17,6 @@ public static class ProfilePictureSeeder
         "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRMF7rNYRqdBhKmsTiW0pes2TrBJnzv7zqbjMp9W9J4cX4XK8jSeUmHBgHrgIt9AmANjxk&usqp=CAU",
         "https://wallpapers.com/images/featured/cute-profile-picture-s52z1uggme5sj92d.jpg",
         "https://i.pinimg.com/236x/85/59/09/855909df65727e5c7ba5e11a8c45849a.jpg",
-        "https://static-00.iconduck.com/assets.00/message-icon-1023x1024-7pbl8unr.png",
         "https://img.freepik.com/premium-vector/hand-drawing-cartoon-girl-cute-girl-drawing-profile-picture_488586-692.jpg?w=360",
         "https://d22e6o9mp4t2lx.cloudfront.net/cms/pfp2_11cfcec183.webp",
         "https://static.vecteezy.com/system/resources/thumbnails/002/002/403/small/man-with-beard-avatar-character-isolated-icon-free-vector.jpg",
