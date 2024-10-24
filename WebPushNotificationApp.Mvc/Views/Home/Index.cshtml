@@ -57,7 +57,7 @@
                     @foreach (var user in Model.Users.Where(u => u.UserName != User.Identity.Name).OrderBy(u => u.UserName))
                     {
                         <li class="list-group-item">
-                            <img src="@user.ProfilePicture" alt="Profile Picture" class="img-fluid" style="max-width: 60px; height: auto; margin-right: 10px;" />
+                            <img src="@user.ProfilePicture" alt="Profile Picture" class="img-fluid profile-picture" style="max-width: 60px; height: auto; margin-right: 10px;" />
                             @user.UserName
                         </li>
                     }

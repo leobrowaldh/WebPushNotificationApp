@@ -7,4 +7,132 @@
     max-width: 60px;
     height: auto;
     margin-right: 10px;
+    border-radius: 5px;
+}
+
+blockquote {
+    font-style: italic;
+    border-left: 4px solid #8B4513;
+    padding-left: 15px;
+    margin: 20px 0;
+}
+
+#button-modal {
+    background-color: white;
+    border-color: black;
+    border: groove;
+    font-size: 1em;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+
+
+
+.list-group-item {
+    word-wrap: break-word;
+    white-space: normal;
+    overflow: hidden;
+    background-color: #0F67B1;
+    color: white;
+    box-shadow: 4px 6px 6px rgba(0, 0, 0, 0.5);
+    border-radius: 5px;
+    text-align: left;
+    display: flex;
+    align-items: center;
+}
+
+#button-modal:hover {
+    background-color: lightgray;
+}
+
+
+
+.chat-container {
+    display: flex;
+    flex-direction: column;
+    margin: 10px 0;
+}
+
+.sender {
+    background-color: paleturquoise;
+    color: black;
+    padding: 10px 15px;
+    border-radius: 10px;
+    max-width: 70%;
+    align-self: flex-end;
+    position: relative;
+    box-shadow: 10px 5px 5px;
+}
+
+.sender::after {
+    content: '';
+    position: absolute;
+    top: 10px;
+    right: -10px;
+    border-width: 10px;
+    border-style: solid;
+    border-color: transparent;
+}
+
+.receiver {
+    background-color: #B6FFA1;
+    color: #3e3e3e;
+    padding: 10px 15px;
+    border-radius: 10px;
+    max-width: 70%;
+    align-self: flex-start;
+    position: relative;
+    box-shadow: 10px 5px 5px;
+}
+
+.receiver::after {
+    content: '';
+    position: absolute;
+    top: 10px;
+    left: -10px;
+    border-width: 10px;
+    border-style: solid;
+    border-color: transparent;
+}
+
+#chat {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    height: 400px;
+    overflow-y: auto;
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin-bottom: 10px;
+    box-shadow: 2px 3px 3px rgba(0, 0, 0, 0.3);
+}
+
+
+.chat-window {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+@media (max-width: 600px) {
+    .sender, .receiver {
+        padding: 4px 12px;
+        font-size: 0.9em;
+        max-width: 85%;
+    }
+
+    .chat-window {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        height: 550px;
+    }
+}
+
+@media (max-width: 990px) {
+    .list-group-item {
+        padding: 12px 20px; /* Adjust padding if needed */
+        min-width: 250px; /* Adjust minimum width */
+    }
 }
