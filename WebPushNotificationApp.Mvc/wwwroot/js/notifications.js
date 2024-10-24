@@ -50,7 +50,7 @@ export async function removeSubscriptionFromDatabase(existingSubscription) {
 export async function registerServiceWorker() {
     if ('serviceWorker' in navigator) {
         try {
-            const registration = await navigator.serviceWorker.register('sw.js');
+            const registration = await navigator.serviceWorker.register('/sw.js');
             console.log('Service Worker registered with scope');
         } catch (error) {
             console.error('Service Worker registration failed:', error);

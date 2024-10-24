@@ -8,6 +8,7 @@ using Newtonsoft.Json;
 using System.Collections.Generic;
 using WebPush;
 using WebPushNotificationsApp.PushService;
+using static System.Net.WebRequestMethods;
 
 namespace WebPushNotificationApp.Mvc.Controllers;
 
@@ -17,13 +18,15 @@ public class NotificationsController(
     IPushService _pushService,
     ISubscriptionRepository _subscriptionRepository,
     IMessageRepository _messageRepository,
-    UserManager<AplicationUser> _userManager) : Controller
+	IConfiguration _configuration,
+	UserManager<AplicationUser> _userManager) : Controller
 {
 
     [HttpGet("settings")]
     public  IActionResult Settings()
     {
         ViewBag.UserId = _userManager.GetUserId(User);
+		ViewBag.PublicKey = _configuration["VapidDetails:PublicKey"];
 		return View();
     }
 

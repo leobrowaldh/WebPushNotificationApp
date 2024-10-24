@@ -1,19 +1,39 @@
-﻿
-@{
+﻿@{
 	ViewData["Title"] = "Notifications Settings";
 }
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notification Subscription</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="~/css/notificationSettings.css" />
+    <script>
+        var publicKey = '@ViewBag.PublicKey';
+        var userId = '@ViewBag.UserId';
+    </script>
+</head>
+<body>
 
-<button id="push-button" class="btn btn-primary btn-lg mb-3 me-3">Test Notification</button>
-<button id="unsubscribe-button" class="btn btn-secondary btn-lg mb-3 me-3">Unsubscribe Browser</button>
+    <div class="container mt-5">
+        <div class="form-group d-flex align-items-center">
+            <label class="switch mr-2">
+                <input type="checkbox" id="notification-switch">
+                <span class="slider"></span>
+            </label>
+            <span id="status-message" class="mr-2">Notifications are enabled</span>
+        </div>
+    </div>
+    <button id="push-button" class="btn btn-primary btn-sm" disabled>Test Notification</button>
 
 
-<!-- Declaring JavaScript global variables -->
-<script>
-	var userId = '@ViewBag.UserId';
-</script>
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+<script type="module" src="~/js/settings.js"></script>
+<script src="~/sw.js"></script>
 
-
-@section scripts {
-	<script type="module" src="~/js/settings.js"></script>
-}
+</body>
+</html>
