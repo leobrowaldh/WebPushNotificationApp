@@ -1,6 +1,6 @@
 ﻿{
-  "name": "PWA Push Notification",
-  "short_name": "Push",
+  "name": "WebPushChatApp",
+  "short_name": "Chat",
   "icons": [
     {
       "src": "/images/icon-48x48.png",
@@ -21,5 +21,16 @@
   "start_url": "/",
   "display": "standalone",
   "background_color": "#959595",
-  "theme_color": "#FFFFFF"
+  "theme_color": "#0F67B1",
+  "description": "With the ChatPushApp you can more easily access your favorite chat application from your homescreen/desktop, and having it installed makes it easier for the app to notify you if you have new messages.",
+  "screenshots": [
+    {
+      "src": "https://webpushchatapp-e7d5dac2fjdyfxaa.northeurope-01.azurewebsites.net/images/screenshots/PWA.png",
+      "sizes": "571x907",
+      "type": "image/png",
+      "form_factor": "tall",
+      "label": "Homescreen of WebPushChatApp App"
+    }
+  ]
+
 }
