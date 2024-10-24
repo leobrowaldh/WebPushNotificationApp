@@ -5,8 +5,17 @@
 let notificationModal = new bootstrap.Modal(document.getElementById('notification-modal'));
 
 //If the user is logged in, only then do we proceed to check for subscriptions:
-if (userId) {
-    ManagingSubscriptionState();
+if (!localStorage.getItem('modalShown')) {
+    // If the user is logged in, check for subscriptions
+    if (userId) {
+
+
+        // Show the modal
+        notificationModal.show();
+
+        // Set the item in localStorage to prevent future shows
+        localStorage.setItem('modalShown', 'true');
+    }
 }
 
 //accept-notifications button listener:
@@ -17,10 +26,12 @@ document.getElementById('subscribe-button').addEventListener('click', async func
     // Ask user for permission through the browser's Notification API
     let permission = await Notification.requestPermission();
     if (permission === 'granted') {
-        console.log('Push Notifications - permission accepted');
-        //await service worker:
+
+        // Preparing service worker
+        await registerServiceWorker();
         let registration = await navigator.serviceWorker.ready;
         console.log('Service Worker is ready');
+
         // Subscribe the service worker
         const newSubscription = await registration.pushManager.subscribe({
             userVisibleOnly: true, // visible notifications for the user
@@ -30,7 +41,7 @@ document.getElementById('subscribe-button').addEventListener('click', async func
 
         // **************Sending subscription to the server**************
 
-        console.log('Sending POST request to server with subscription data...');
+        console.log('Sending POST request to server with subscription data.');
         const response = await fetch('/Notifications/SavingSubscriptionToDb', {
             method: 'POST',
             headers: {
@@ -41,9 +52,12 @@ document.getElementById('subscribe-button').addEventListener('click', async func
         if (response.ok) {
             // Extract JSON from the response to retrieve the userId
             const data = await response.json();
+            ManagingSubscriptionState();
         } else {
             console.error('Failed to subscribe:', response.statusText);
         }
+
+
 
     } else if (permission === 'denied') {
         console.log('Push Notifications - permission denied');
@@ -65,10 +79,8 @@ document.getElementById('no-thanks').addEventListener('click', function () {
 
 //checks the current state of webPush subscriptions in this browser and acts accordingly
 async function ManagingSubscriptionState() {
-    // Preparing service worker
-    await registerServiceWorker();
+
     let registration = await navigator.serviceWorker.ready;
-    console.log('Service Worker is ready');
 
     // Check the state of subscription in the worker
     let existingSubscription = null;
@@ -77,7 +89,6 @@ async function ManagingSubscriptionState() {
         if (!existingSubscription) {
             console.log('No subscription found');
             // Show modal to ask for subscription
-            notificationModal.show();
         } else {
             console.log('Subscription exists');
             // Check that subscription corresponds to the logged-in user
@@ -87,7 +98,6 @@ async function ManagingSubscriptionState() {
             } else if (isUserSub === false) {
                 console.log('The subscription does not belong to this user, ask him to subscribe');
                 // Show modal to ask for subscription
-                notificationModal.show();
             } else {
                 console.log('Could not verify subscription');
                 // Handle the case of subscription verification failure

@@ -8,7 +8,6 @@ using Microsoft.Identity.Client;
 using Newtonsoft.Json;
 using System.Diagnostics;
 using WebPush;
-
 using WebPushNotificationsApp.PushService;
 using static System.Net.WebRequestMethods;
 
@@ -60,10 +59,6 @@ public class HomeController(
         return Ok();
 
     }
-
-
-
-
 
     public IActionResult Privacy()
     {

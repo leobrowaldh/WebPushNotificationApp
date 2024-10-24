@@ -18,10 +18,5 @@ namespace Database.EntityModels
         public string UserId { get; set; }
         public virtual AplicationUser Sender { get; set; }
 
-        public Message() 
-        {
-            When = DateTime.Now;
-        }
-
     }
 }

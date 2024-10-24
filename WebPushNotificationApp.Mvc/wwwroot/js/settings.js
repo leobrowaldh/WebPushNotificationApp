@@ -1,8 +1,87 @@
-﻿import { removeSubscriptionFromDatabase } from './notifications.js'; 
+﻿import { removeSubscriptionFromDatabase, isUserSubscription, registerServiceWorker, urlBase64ToUint8Array } from './notifications.js'; 
+
+async function ManagingSubscriptionState() {
+
+    const pushButton = document.getElementById('push-button');
+    const registration = await navigator.serviceWorker.ready;
+    const existingSubscription = await registration.pushManager.getSubscription();
+
+    if (existingSubscription) {
+        console.log('Subscription exists');
+        const isUserSub = await isUserSubscription(existingSubscription);
+        if (isUserSub) {
+            pushButton.disabled = false; // Enable the button
+            document.getElementById('notification-switch').checked = true;
+            pushButton.classList.remove('disabled'); // Remove Bootstrap's disabled class
+            document.getElementById('status-message').textContent = 'Notifications are enabled.';
+        } else {
+            await registerServiceWorker();
+            console.log('The subscription does not belong to this user, ask them to subscribe');
+        }
+    } else {
+        await registerServiceWorker();
+        console.log('No subscription found');
+        pushButton.disabled = true; // Disable the button
+        document.getElementById('notification-switch').checked = false;
+        pushButton.classList.add('disabled'); // Add Bootstrap's disabled class
+        document.getElementById('status-message').textContent = 'Notifications are disabled.';
+    }
+}
+
+async function subscribeUser() {
+
+
+    let permission = await Notification.requestPermission();
+    if (permission === 'granted') {
+
+        await registerServiceWorker();
+        let registration = await navigator.serviceWorker.ready;
+        console.log('Service Worker is ready');
+
+        console.log('Push Notifications - permission accepted');
+        const newSubscription = await registration.pushManager.subscribe({
+            userVisibleOnly: true,
+            applicationServerKey: urlBase64ToUint8Array(publicKey)
+        });
+        console.log('New subscription');
+
+        const response = await fetch('/Notifications/SavingSubscriptionToDb', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(newSubscription)
+        });
+        if (response.ok) {
+            const data = await response.json();
+            document.getElementById('status-message').textContent = 'Notifications are enabled.';
+            ManagingSubscriptionState();
+        } else {
+            console.error('Failed to subscribe:', response.statusText);
+            document.getElementById('notification-switch').checked = false; // revert switch state on failure
+        }
+    } else {
+        console.log('Push Notifications - permission denied');
+        document.getElementById('notification-switch').checked = false; // revert switch state if permission denied
+    }
+}
+
+async function unsubscribeUser() {
+    const registration = await navigator.serviceWorker.ready;
+    const existingSubscription = await registration.pushManager.getSubscription();
+    if (existingSubscription) {
+        const unsubscribeResult = await existingSubscription.unsubscribe();
+        if (unsubscribeResult) {
+            console.log('Successfully unsubscribed from browser.');
+            await removeSubscriptionFromDatabase(existingSubscription);
+            document.getElementById('status-message').textContent = 'Notifications are disabled.';
+        }
+    }
+}
 
 // send-notification button-listener:
 document.getElementById('push-button').addEventListener('click', async function () {
-    console.log('Push button clicked');
+
     // Wait for the service worker to be ready
     const registration = await navigator.serviceWorker.ready;
     console.log('Service Worker is ready:', registration);
@@ -21,25 +100,23 @@ document.getElementById('push-button').addEventListener('click', async function 
         console.log('No userId available to send notification.');
     }
 })
-
-//unsubscribe button listener:
-document.getElementById('unsubscribe-button').addEventListener('click', async function () {
-    // Wait for the service worker to be ready
-    const registration = await navigator.serviceWorker.ready;
-    console.log('Service Worker is ready:', registration);
-    const existingSubscription = await registration.pushManager.getSubscription();
-    try {
-        const unsubscribeResult = await existingSubscription.unsubscribe();
-        if (unsubscribeResult) {
-            console.log('Successfully unsubscribed from browser.');
-
-            if (existingSubscription) {
-                await removeSubscriptionFromDatabase(existingSubscription);
-            } else {
-                console.log('No existing subscription found.');
-            }
-        }
-    } catch (error) {
-        console.error('Error unsubscribing from browser:', error);
+ManagingSubscriptionState();
+document.getElementById('notification-switch').addEventListener('change', function () {
+    const pushButton = document.getElementById('push-button');
+    if (this.checked) {
+        pushButton.disabled = false; // Enable the button
+        pushButton.classList.remove('disabled'); // Remove Bootstrap's disabled class
+        document.getElementById('status-message').textContent = 'Notifications are enabled';
+        // Call the subscribeUser function if you want to subscribe immediately
+        subscribeUser();
+    } else {
+        pushButton.disabled = true; // Disable the button
+        pushButton.classList.add('disabled'); // Add Bootstrap's disabled class
+        document.getElementById('status-message').textContent = 'Notifications are disabled';
+        // Call the unsubscribeUser function if you want to unsubscribe immediately
+        unsubscribeUser();
     }
-})
+});
+
+
+
