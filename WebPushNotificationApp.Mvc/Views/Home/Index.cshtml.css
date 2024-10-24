@@ -1,6 +1,8 @@
-﻿.under-chat-container{
-    margin: 20px;
-    padding-left: 20px;
+﻿.under-chat-container {
+    margin: 10px;
+    display: flex;
+    align-items: center;
+    flex-wrap: nowrap;
 }
 
 .profile-picture {
@@ -115,7 +117,24 @@ blockquote {
     justify-content: space-between;
 }
 
-@media (max-width: 600px) {
+@media (max-width: 990px) {
+    .list-group-item {
+        padding: 12px 20px;
+        min-width: 250px;
+    }
+    .under-chat-container {
+        flex-wrap: nowrap; 
+    }
+    #submitButton {
+        margin-top: 5px; 
+    }
+}
+@media (max-width: 750px) {
+    #submitButton {
+        margin-top: 0px; 
+    }
+}
+@media (max-width: 550px) {
     .sender, .receiver {
         padding: 4px 12px;
         font-size: 0.9em;
@@ -128,11 +147,8 @@ blockquote {
         justify-content: space-between;
         height: 550px;
     }
-}
-
-@media (max-width: 990px) {
-    .list-group-item {
-        padding: 12px 20px; /* Adjust padding if needed */
-        min-width: 250px; /* Adjust minimum width */
+    #submitButton {
+        margin-top: 5px;
     }
 }
+
