@@ -67,15 +67,15 @@ blockquote {
     box-shadow: 10px 5px 5px;
 }
 
-.sender::after {
-    content: '';
-    position: absolute;
-    top: 10px;
-    right: -10px;
-    border-width: 10px;
-    border-style: solid;
-    border-color: transparent;
-}
+    .sender::after {
+        content: '';
+        position: absolute;
+        top: 10px;
+        right: -10px;
+        border-width: 10px;
+        border-style: solid;
+        border-color: transparent;
+    }
 
 .receiver {
     background-color: #B6FFA1;
@@ -88,15 +88,15 @@ blockquote {
     box-shadow: 10px 5px 5px;
 }
 
-.receiver::after {
-    content: '';
-    position: absolute;
-    top: 10px;
-    left: -10px;
-    border-width: 10px;
-    border-style: solid;
-    border-color: transparent;
-}
+    .receiver::after {
+        content: '';
+        position: absolute;
+        top: 10px;
+        left: -10px;
+        border-width: 10px;
+        border-style: solid;
+        border-color: transparent;
+    }
 
 #chat {
     flex-grow: 1;
@@ -122,18 +122,22 @@ blockquote {
         padding: 12px 20px;
         min-width: 250px;
     }
+
     .under-chat-container {
-        flex-wrap: nowrap; 
+        flex-wrap: nowrap;
     }
+
     #submitButton {
-        margin-top: 5px; 
+        margin-top: 5px;
     }
 }
+
 @media (max-width: 750px) {
     #submitButton {
-        margin-top: 0px; 
+        margin-top: 0px;
     }
 }
+
 @media (max-width: 550px) {
     .sender, .receiver {
         padding: 4px 12px;
@@ -147,8 +151,8 @@ blockquote {
         justify-content: space-between;
         height: 550px;
     }
+
     #submitButton {
         margin-top: 5px;
     }
 }
-
