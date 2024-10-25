@@ -1,5 +1,5 @@
 ﻿
-const chatUrl = 'https://localhost:7039';
+const chatUrl = 'https://webpushchatapp-e7d5dac2fjdyfxaa.northeurope-01.azurewebsites.net/';
 self.addEventListener('push', async function (event) {
     console.log('Push event received in service worker:');
     let data;
