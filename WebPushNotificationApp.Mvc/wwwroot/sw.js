@@ -1,4 +1,6 @@
-﻿self.addEventListener('push', function (event) {
+﻿
+const chatUrl = 'https://localhost:7039';
+self.addEventListener('push', async function (event) {
     console.log('Push event received in service worker:');
     let data;
 
@@ -15,11 +17,21 @@
         icon: data.icon,
         badge: data.badge
     };
+    //retrieve browser tabs, or clients:
+    const clientList = await self.clients.matchAll({
+        type: 'window',
+        includeUncontrolled: true
+    });
 
-    event.waitUntil(
-        self.registration.showNotification(data.title, options)
-    );
+    // Check if a client with the chat is already focused
+    const isChatOpen = clientList.some(client => client.url.includes(chatUrl) && client.focused);
+
+    // Only show notification if the chat tab is not open and focused
+    if (!isChatOpen) {
+        await self.registration.showNotification(data.title, options);
+    }
 });
+
 
 self.addEventListener('notificationclick', (event) => {
     console.log('User clicked on notification.');
@@ -30,13 +42,13 @@ self.addEventListener('notificationclick', (event) => {
             // Check if the app is already open in a tab
             for (var i = 0; i < clientList.length; i++) {
                 var client = clientList[i];
-                if (client.url === 'https://webpushchatapp-e7d5dac2fjdyfxaa.northeurope-01.azurewebsites.net/' && 'focus' in client) {
+                if (client.url === chatUrl && 'focus' in client) {
                     return client.focus();
                 }
             }
             // If not, open a new window or tab
             if (clients.openWindow) {
-                return clients.openWindow('https://webpushchatapp-e7d5dac2fjdyfxaa.northeurope-01.azurewebsites.net/');
+                return clients.openWindow(chatUrl);
             }
         })
     );
