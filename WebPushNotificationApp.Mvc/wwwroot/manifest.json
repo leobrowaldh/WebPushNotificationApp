@@ -31,6 +31,6 @@
       "form_factor": "tall",
       "label": "Homescreen of WebPushChatApp App"
     }
-  ]
-
+  ],
+  "vibration": [ 200, 100, 200 ]
 }
