@@ -1,5 +1,6 @@
 ﻿using Database.EntityModels;
 using Database.Repositories;
+using Microsoft.AspNet.SignalR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -21,10 +22,18 @@ public class NotificationsController(
 	IConfiguration _configuration,
 	UserManager<AplicationUser> _userManager) : Controller
 {
-
+    
     [HttpGet("settings")]
+    [Authorize]
     public  IActionResult Settings()
     {
+        //manual authorize, since the attribute is not working
+        if (!User.Identity.IsAuthenticated)
+        {
+            _logger.LogWarning("User is not authenticated.");
+            // Redirect to the login page with a return URL
+            return RedirectToAction("Index", "Home");
+        }
         ViewBag.UserId = _userManager.GetUserId(User);
 		ViewBag.PublicKey = _configuration["VapidDetails:PublicKey"];
 		return View();
