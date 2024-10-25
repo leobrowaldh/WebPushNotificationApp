@@ -10,9 +10,9 @@ async function ManagingSubscriptionState() {
         console.log('Subscription exists');
         const isUserSub = await isUserSubscription(existingSubscription);
         if (isUserSub) {
-            pushButton.disabled = false; // Enable the button
+            pushButton.disabled = false; 
             document.getElementById('notification-switch').checked = true;
-            pushButton.classList.remove('disabled'); // Remove Bootstrap's disabled class
+            pushButton.classList.remove('disabled'); 
             document.getElementById('status-message').textContent = 'Notifications are enabled.';
         } else {
             await registerServiceWorker();
@@ -21,9 +21,9 @@ async function ManagingSubscriptionState() {
     } else {
         await registerServiceWorker();
         console.log('No subscription found');
-        pushButton.disabled = true; // Disable the button
+        pushButton.disabled = true; 
         document.getElementById('notification-switch').checked = false;
-        pushButton.classList.add('disabled'); // Add Bootstrap's disabled class
+        pushButton.classList.add('disabled');
         document.getElementById('status-message').textContent = 'Notifications are disabled.';
     }
 }
@@ -100,7 +100,6 @@ document.getElementById('push-button').addEventListener('click', async function 
         console.log('No userId available to send notification.');
     }
 })
-ManagingSubscriptionState();
 document.getElementById('notification-switch').addEventListener('change', function () {
     const pushButton = document.getElementById('push-button');
     if (this.checked) {
@@ -118,5 +117,30 @@ document.getElementById('notification-switch').addEventListener('change', functi
     }
 });
 
+ManagingSubscriptionState()
 
+let installPrompt = null;
+const installButton = document.querySelector("#install");
 
+window.addEventListener("beforeinstallprompt", (event) => {
+    event.preventDefault();
+    installPrompt = event;
+    installButton.removeAttribute("hidden");
+});
+
+installButton.addEventListener("click", async () => {
+    if (!installPrompt) {
+        return;
+    }
+    const result = await installPrompt.prompt();
+    console.log(`Install prompt was: ${result.outcome}`);
+    disableInAppInstallPrompt();
+});
+
+function disableInAppInstallPrompt() {
+    installPrompt = null;
+    installButton.setAttribute("hidden", "");
+}
+window.addEventListener("appinstalled", () => {
+    disableInAppInstallPrompt();
+});
