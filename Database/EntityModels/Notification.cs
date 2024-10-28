@@ -10,12 +10,11 @@ namespace Database.EntityModels
     {
         public int Id { get; set; }
         public DateTime Created { get; set; } = DateTime.Now;
-        public int SenderId { get; set; }
-        public int ReceiverId {get; set; }
+        public string SenderId { get; set; }
+        public string ReceiverId {get; set; }
         public string Why { get; set; }
-        public bool Sent { get; set; }
-        public bool Recieved { get; set; }
-        public bool Showed { get; set; }
+        public bool Sent { get; set; } = false;
+        public bool InteractedWith { get; set; } = false;
         public Subscription Subscription { get; set; }
     }
 }

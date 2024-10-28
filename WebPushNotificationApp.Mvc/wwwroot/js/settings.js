@@ -82,6 +82,12 @@ async function unsubscribeUser() {
 // send-notification button-listener:
 document.getElementById('push-button').addEventListener('click', async function () {
 
+    const notificatonId = 
+
+    const notificationPayload =
+    {
+        why: "Testing the button."
+    }
     // Wait for the service worker to be ready
     const registration = await navigator.serviceWorker.ready;
     console.log('Service Worker is ready:', registration);
@@ -96,6 +102,23 @@ document.getElementById('push-button').addEventListener('click', async function 
             body: formData
         });
         console.log('Notification response:', notificationResponse);
+
+
+
+        fetch(`/Notification/MarkAsInteracted?notificationId=${notificationId}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(notificationPayload)
+        })
+            .then(response => {
+                if (response.ok) {
+                    console.log("Notification interaction logged successfully.");
+                } else {
+                    console.error("Failed to log interaction.");
+                }
+            });
     } else {
         console.log('No userId available to send notification.');
     }
