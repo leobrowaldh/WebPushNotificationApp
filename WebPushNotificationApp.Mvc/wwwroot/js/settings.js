@@ -100,6 +100,7 @@ document.getElementById('push-button').addEventListener('click', async function 
         console.log('No userId available to send notification.');
     }
 })
+
 document.getElementById('notification-switch').addEventListener('change', function () {
     const pushButton = document.getElementById('push-button');
     if (this.checked) {
@@ -116,6 +117,37 @@ document.getElementById('notification-switch').addEventListener('change', functi
         unsubscribeUser();
     }
 });
+
+document.getElementById('vibration-switch').addEventListener('change', function () {
+    const isVibrationEnabled = this.checked;
+    localStorage.setItem('vibrationEnabled', isVibrationEnabled);
+
+    // Update status message
+    document.getElementById('status-message-vibration').textContent = isVibrationEnabled
+        ? 'Vibrating notifications are enabled.'
+        : 'Vibrating notifications are disabled.';
+
+    // Post the vibration setting to the service worker
+    if (navigator.serviceWorker && navigator.serviceWorker.controller) {
+        navigator.serviceWorker.controller.postMessage({ vibrationSet: isVibrationEnabled });
+    }
+});
+
+//getting vibration-switch current position on page load:
+document.addEventListener('DOMContentLoaded', function () {
+    const vibrationSwitch = document.getElementById('vibration-switch');
+    const vibrationStatus = document.getElementById('status-message-vibration');
+
+    // Check localStorage for the saved vibration setting
+    const isVibrationEnabled = localStorage.getItem('vibrationEnabled') === 'true';
+
+    // Set the switch and status message based on the setting
+    vibrationSwitch.checked = isVibrationEnabled;
+    vibrationStatus.textContent = isVibrationEnabled
+        ? 'Vibrating notifications are enabled.'
+        : 'Vibrating notifications are disabled.';
+});
+
 
 ManagingSubscriptionState()
 

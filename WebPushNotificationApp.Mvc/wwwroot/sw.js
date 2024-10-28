@@ -1,5 +1,11 @@
 ﻿
 const chatUrl = 'https://webpushchatapp-e7d5dac2fjdyfxaa.northeurope-01.azurewebsites.net/';
+let vibrationEnabled;
+
+//listening to vibration settings button in settings.cshtml
+self.addEventListener('message', event => {
+    vibrationEnabled = event.data;
+}); 
 self.addEventListener('push', async function (event) {
     console.log('Push event received in service worker:');
     let data;
@@ -16,7 +22,7 @@ self.addEventListener('push', async function (event) {
         body: data.message,
         icon: data.icon,
         badge: data.badge,
-        vibrate: [1000]
+        vibrate: vibrationEnabled ? [200, 100, 200] : undefined,
     };
     //retrieve browser tabs, or clients:
     const clientList = await self.clients.matchAll({
