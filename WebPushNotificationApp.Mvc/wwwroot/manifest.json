@@ -32,5 +32,5 @@
       "label": "Homescreen of WebPushChatApp App"
     }
   ],
-  "vibration": [ 200, 100, 200 ]
+  "vibration": [1000]
 }
