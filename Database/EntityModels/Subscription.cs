@@ -9,4 +9,5 @@ public class Subscription
     [Required]
     public string UserId { get; set; }
     public AplicationUser User { get; set; }
+    public ICollection<Notification> Notification { get; set; }
 }
