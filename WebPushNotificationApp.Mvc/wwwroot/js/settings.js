@@ -28,57 +28,47 @@ async function ManagingSubscriptionState() {
     }
 }
 
-let debounceTimeout;
 let buttonDisabled = false; // Flag to track button state
 
 async function subscribeUser() {
     if (buttonDisabled) return; // Prevent further clicks if the button is disabled
-    buttonDisabled = true; // Disable the button
+    buttonDisabled = true; // Disable the button immediately
 
-    // If debounce is active, cancel the previous subscription attempt
-    if (debounceTimeout) {
-        clearTimeout(debounceTimeout);
+    let permission = await Notification.requestPermission();
+
+    if (permission === 'granted') {
+        await registerServiceWorker();
+        const registration = await navigator.serviceWorker.ready;
+
+        const newSubscription = await registration.pushManager.subscribe({
+            userVisibleOnly: true,
+            applicationServerKey: urlBase64ToUint8Array(publicKey)
+        });
+
+        const response = await fetch('/Notifications/SavingSubscriptionToDb', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(newSubscription)
+        });
+
+        if (response.ok) {
+            document.getElementById('status-message').textContent = 'Notifications are enabled.';
+            ManagingSubscriptionState();
+        } else {
+            console.error('Failed to subscribe:', response.statusText);
+            document.getElementById('notification-switch').checked = false; // Revert switch on failure
+        }
+    } else {
+        console.log('Push Notifications - permission denied');
+        document.getElementById('notification-switch').checked = false; // Revert switch if denied
     }
 
-    // Set a debounce delay (e.g., 1 second)
-    debounceTimeout = setTimeout(async () => {
-        let permission = await Notification.requestPermission();
-
-        if (permission === 'granted') {
-            await registerServiceWorker();
-            const registration = await navigator.serviceWorker.ready;
-
-            const newSubscription = await registration.pushManager.subscribe({
-                userVisibleOnly: true,
-                applicationServerKey: urlBase64ToUint8Array(publicKey)
-            });
-
-            const response = await fetch('/Notifications/SavingSubscriptionToDb', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(newSubscription)
-            });
-
-            if (response.ok) {
-                document.getElementById('status-message').textContent = 'Notifications are enabled.';
-                ManagingSubscriptionState();
-            } else {
-                console.error('Failed to subscribe:', response.statusText);
-                document.getElementById('notification-switch').checked = false; // Revert switch on failure
-            }
-        } else {
-            console.log('Push Notifications - permission denied');
-            document.getElementById('notification-switch').checked = false; // Revert switch if denied
-        }
-
-        // Re-enable button after 1 second
-        setTimeout(() => {
-            buttonDisabled = false; // Reset flag after timeout
-        }, 1000);
-    }, 1000); // 1-second debounce delay
+    // Re-enable the button only after the operation completes
+    buttonDisabled = false; // Reset flag after operation
 }
+
 
 async function unsubscribeUser() {
     if (buttonDisabled) return; // Prevent further clicks if the button is disabled
