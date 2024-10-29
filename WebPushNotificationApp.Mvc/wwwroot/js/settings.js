@@ -53,6 +53,7 @@ async function subscribeUser() {
         });
 
         if (response.ok) {
+            console.log('subscription correctly saved to db.');
             document.getElementById('status-message').textContent = 'Notifications are enabled.';
             ManagingSubscriptionState();
         } else {
@@ -103,6 +104,7 @@ document.getElementById('push-button').addEventListener('click', async function 
         console.log('No userId available to send notification.');
     }
 })
+
 document.getElementById('notification-switch').addEventListener('change', async function () {
     this.disabled = true;
     const pushButton = document.getElementById('push-button');
