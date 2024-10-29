@@ -65,8 +65,10 @@ async function subscribeUser() {
         document.getElementById('notification-switch').checked = false; // Revert switch if denied
     }
 
-    // Re-enable the button only after the operation completes
-    buttonDisabled = false; // Reset flag after operation
+    // Re-enable button after 1 second
+    setTimeout(() => {
+        buttonDisabled = false; // Reset flag after timeout
+    }, 1000);
 }
 
 
