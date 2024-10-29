@@ -29,8 +29,12 @@ async function ManagingSubscriptionState() {
 }
 
 let debounceTimeout;
+let buttonDisabled = false; // Flag to track button state
 
 async function subscribeUser() {
+    if (buttonDisabled) return; // Prevent further clicks if the button is disabled
+    buttonDisabled = true; // Disable the button
+
     // If debounce is active, cancel the previous subscription attempt
     if (debounceTimeout) {
         clearTimeout(debounceTimeout);
@@ -62,18 +66,24 @@ async function subscribeUser() {
                 ManagingSubscriptionState();
             } else {
                 console.error('Failed to subscribe:', response.statusText);
-                document.getElementById('notification-switch').checked = false; // revert switch on failure
+                document.getElementById('notification-switch').checked = false; // Revert switch on failure
             }
         } else {
             console.log('Push Notifications - permission denied');
-            document.getElementById('notification-switch').checked = false; // revert switch if denied
+            document.getElementById('notification-switch').checked = false; // Revert switch if denied
         }
 
+        // Re-enable button after 1 second
+        setTimeout(() => {
+            buttonDisabled = false; // Reset flag after timeout
+        }, 1000);
     }, 1000); // 1-second debounce delay
 }
 
-
 async function unsubscribeUser() {
+    if (buttonDisabled) return; // Prevent further clicks if the button is disabled
+    buttonDisabled = true; // Disable the button
+
     const registration = await navigator.serviceWorker.ready;
     const existingSubscription = await registration.pushManager.getSubscription();
     if (existingSubscription) {
@@ -84,6 +94,11 @@ async function unsubscribeUser() {
             document.getElementById('status-message').textContent = 'Notifications are disabled.';
         }
     }
+
+    // Re-enable button after 1 second
+    setTimeout(() => {
+        buttonDisabled = false; // Reset flag after timeout
+    }, 1000);
 }
 
 // send-notification button-listener:
