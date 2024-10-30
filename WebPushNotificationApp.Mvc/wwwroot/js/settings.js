@@ -53,6 +53,7 @@ async function subscribeUser() {
         });
 
         if (response.ok) {
+            const data = await response.json();
             console.log('subscription correctly saved to db.');
             document.getElementById('status-message').textContent = 'Notifications are enabled.';
             ManagingSubscriptionState();
@@ -102,11 +103,7 @@ document.getElementById('push-button').addEventListener('click', async function 
         });
 
         if (notificationResponse.ok) {
-            const data = await notificationResponse.json();
-            const notificationId = data.notificationId; // Get the notification ID from the response
 
-            // Here you can also trigger the actual push notification if needed
-            console.log('Notification sent with ID:', notificationId);
             console.log('Notification response:', notificationResponse);
         }
         } else {
