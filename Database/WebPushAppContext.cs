@@ -31,7 +31,7 @@ public class WebPushAppContext(DbContextOptions<WebPushAppContext> options) : Id
             .HasForeignKey(n => n.SubscriptionId) 
             .OnDelete(DeleteBehavior.Cascade); 
       
-              //query filter to exclude softly deleted subscriptions from all queries
+        //query filter to exclude softly deleted subscriptions from all queries
         modelBuilder.Entity<Subscription>()
             .HasQueryFilter(s => !s.IsDeleted);
     }
