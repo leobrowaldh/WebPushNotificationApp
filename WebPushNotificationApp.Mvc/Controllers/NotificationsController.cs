@@ -145,7 +145,13 @@ public class NotificationsController(
                 badge = "https://static-00.iconduck.com/assets.00/message-icon-1023x1024-7pbl8unr.png",
             });
 
-            await _pushService.SendNotificationAsync(subscriptionToPushTo, payload);
+            bool removeSubscription = await _pushService.SendNotificationAsync(subscriptionToPushTo, payload);
+            if (removeSubscription)
+            {
+                bool removed = await _subscriptionRepository.RemoveSubscriptionAsync(subscription.SubscriptionJson);
+                if (removed) { _logger.LogInformation("faulty subscription id={subscriptionId} removed from database", subscription.Id); }
+                else { _logger.LogInformation("faulty subscription id={subscriptionId} not correctly removed from database", subscription.Id); }
+            }
         }
         return Ok("Notification Sent");
     }
@@ -204,11 +210,17 @@ public class NotificationsController(
                 badge = "https://static-00.iconduck.com/assets.00/message-icon-1023x1024-7pbl8unr.png", //the app logo
             });
 
-            await _pushService.SendNotificationAsync(subscriptionToPushTo, payload);
+            bool removeSubscription = await _pushService.SendNotificationAsync(subscriptionToPushTo, payload);
+            if (removeSubscription)
+            {
+                bool removed = await _subscriptionRepository.RemoveSubscriptionAsync(subscription.SubscriptionJson);
+                if (removed) { _logger.LogInformation("faulty subscription id={subscriptionId} removed from database", subscription.Id); }
+                else { _logger.LogInformation("faulty subscription id={subscriptionId} not correctly removed from database", subscription.Id); }
+            }
 
 
         }
-        return Ok( "Notification Sent");
+        return Ok( "Notifications Sent");
     }
 
     [HttpPost("Interact")]

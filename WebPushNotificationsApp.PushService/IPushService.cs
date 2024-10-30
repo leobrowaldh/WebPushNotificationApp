@@ -11,6 +11,6 @@ public interface IPushService
     /// </summary>
     /// <param name="subscription">A user subscription object to the web push, should have been stored when the user subscribed</param>
     /// <param name="payload">Specifies the information contained in the notification to send</param>
-    /// <returns></returns>
-    public Task SendNotificationAsync(PushSubscription subscription, string payload);
+    /// <returns>true if the subscription is faulty and need to be removed, false if not.</returns>
+    public Task<bool> SendNotificationAsync(PushSubscription subscription, string payload);
 }
