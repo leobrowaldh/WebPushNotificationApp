@@ -3,16 +3,13 @@
 namespace Database;
 
 //ApplicationUser will replace the normal inherited user entity from identity
-public class WebPushAppContext : IdentityDbContext<AplicationUser>
+public class WebPushAppContext(DbContextOptions<WebPushAppContext> options) : IdentityDbContext<AplicationUser>(options)
 {
-    public WebPushAppContext(DbContextOptions<WebPushAppContext> options)
-            : base(options)
-    {
-    }
-
     public DbSet<Subscription> Subscriptions { get; set; }
+    public DbSet<Message> Messages { get; set; }
 
-    // Handling the self referencing User relationship:
+
+    
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
@@ -34,10 +31,14 @@ public class WebPushAppContext : IdentityDbContext<AplicationUser>
             .HasForeignKey(d => d.UserId);
 
         modelBuilder.Entity<Notification>()
-            .HasOne(n => n.Subscription) // Assuming Notification has a Subscription navigation property
-            .WithMany(s => s.Notifications) // Assuming Subscription has a Notifications collection
-            .HasForeignKey(n => n.SubscriptionId) // Foreign key in Notification
-            .OnDelete(DeleteBehavior.Cascade); // Enable cascading delete for notifications
+            .HasOne(n => n.Subscription) 
+            .WithMany(s => s.Notifications) 
+            .HasForeignKey(n => n.SubscriptionId) 
+            .OnDelete(DeleteBehavior.Cascade); 
+      
+              //query filter to exclude softly deleted subscriptions from all queries
+        modelBuilder.Entity<Subscription>()
+            .HasQueryFilter(s => !s.IsDeleted);
     }
     public DbSet<Message> Messages { get; set; }
     public DbSet<Notification> Notifications { get; set; }

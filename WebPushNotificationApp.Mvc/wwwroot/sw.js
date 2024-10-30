@@ -16,8 +16,9 @@ self.addEventListener('push', async function (event) {
         body: data.message,
         icon: data.icon,
         badge: data.badge,
+
         data: { notificationId: data.notificationId },
-        vibrate: [200, 100, 200]
+        vibrate: [1000]
     };
     //retrieve browser tabs, or clients:
     const clientList = await self.clients.matchAll({

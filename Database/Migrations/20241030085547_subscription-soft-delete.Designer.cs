@@ -4,6 +4,7 @@ using Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Database.Migrations
 {
     [DbContext(typeof(WebPushAppContext))]
-    partial class WebPushAppContextModelSnapshot : ModelSnapshot
+    [Migration("20241030085547_subscription-soft-delete")]
+    partial class subscriptionsoftdelete
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -133,48 +136,6 @@ namespace Database.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Messages");
-                });
-
-            modelBuilder.Entity("Database.EntityModels.Notification", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("Created")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("InteractedWith")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("ReceiverId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("SenderId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("Sent")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("ServiceWorkerReceived")
-                        .HasColumnType("bit");
-
-                    b.Property<int?>("SubscriptionId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Why")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("SubscriptionId");
-
-                    b.ToTable("Notifications");
                 });
 
             modelBuilder.Entity("Database.EntityModels.Subscription", b =>
@@ -366,16 +327,6 @@ namespace Database.Migrations
                     b.Navigation("Sender");
                 });
 
-            modelBuilder.Entity("Database.EntityModels.Notification", b =>
-                {
-                    b.HasOne("Database.EntityModels.Subscription", "Subscription")
-                        .WithMany("Notifications")
-                        .HasForeignKey("SubscriptionId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.Navigation("Subscription");
-                });
-
             modelBuilder.Entity("Database.EntityModels.Subscription", b =>
                 {
                     b.HasOne("Database.EntityModels.AplicationUser", "User")
@@ -443,11 +394,6 @@ namespace Database.Migrations
                     b.Navigation("Messages");
 
                     b.Navigation("Subscriptions");
-                });
-
-            modelBuilder.Entity("Database.EntityModels.Subscription", b =>
-                {
-                    b.Navigation("Notifications");
                 });
 #pragma warning restore 612, 618
         }

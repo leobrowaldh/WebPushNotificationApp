@@ -49,7 +49,7 @@ public class SubscriptionRepository(WebPushAppContext _db, ILogger<SubscriptionR
         int success = 0;
         if (subscription is not null)
         {
-            _db.Subscriptions.Remove(subscription);
+            subscription.IsDeleted = true;
             success = await _db.SaveChangesAsync();
         }
         if (subscription != null && success != 0)
