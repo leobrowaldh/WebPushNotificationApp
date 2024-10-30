@@ -4,12 +4,7 @@ namespace Database;
 
 //ApplicationUser will replace the normal inherited user entity from identity
 public class WebPushAppContext(DbContextOptions<WebPushAppContext> options) : IdentityDbContext<AplicationUser>(options)
-{
-    public DbSet<Subscription> Subscriptions { get; set; }
-    public DbSet<Message> Messages { get; set; }
-
-
-    
+{    
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
@@ -40,6 +35,7 @@ public class WebPushAppContext(DbContextOptions<WebPushAppContext> options) : Id
         modelBuilder.Entity<Subscription>()
             .HasQueryFilter(s => !s.IsDeleted);
     }
+    public DbSet<Subscription> Subscriptions { get; set; }
     public DbSet<Message> Messages { get; set; }
     public DbSet<Notification> Notifications { get; set; }
 }
