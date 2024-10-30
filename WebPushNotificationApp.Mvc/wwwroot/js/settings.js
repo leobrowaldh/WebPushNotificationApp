@@ -86,6 +86,7 @@ async function unsubscribeUser() {
 // send-notification button-listener:
 document.getElementById('push-button').addEventListener('click', async function () {
 
+
     // Wait for the service worker to be ready
     const registration = await navigator.serviceWorker.ready;
     console.log('Service Worker is ready:', registration);
@@ -99,25 +100,35 @@ document.getElementById('push-button').addEventListener('click', async function 
             method: 'POST',
             body: formData
         });
-        console.log('Notification response:', notificationResponse);
-    } else {
-        console.log('No userId available to send notification.');
-    }
-})
+
+        if (notificationResponse.ok) {
+            const data = await notificationResponse.json();
+            const notificationId = data.notificationId; // Get the notification ID from the response
+
+            // Here you can also trigger the actual push notification if needed
+            console.log('Notification sent with ID:', notificationId);
+            console.log('Notification response:', notificationResponse);
+        }
+        } else {
+            console.log('No userId available to send notification.');
+        }
+    });
+
 
 document.getElementById('notification-switch').addEventListener('change', async function () {
     this.disabled = true;
+
     const pushButton = document.getElementById('push-button');
     if (this.checked) {
         pushButton.disabled = false; // Enable the button
         pushButton.classList.remove('disabled'); // Remove Bootstrap's disabled class
-        document.getElementById('status-message').textContent = 'Notifications are enabled';
         // Call the subscribeUser function if you want to subscribe immediately
+
         await subscribeUser();
+
     } else {
         pushButton.disabled = true; // Disable the button
         pushButton.classList.add('disabled'); // Add Bootstrap's disabled class
-        document.getElementById('status-message').textContent = 'Notifications are disabled';
         // Call the unsubscribeUser function if you want to unsubscribe immediately
         await unsubscribeUser();
     }

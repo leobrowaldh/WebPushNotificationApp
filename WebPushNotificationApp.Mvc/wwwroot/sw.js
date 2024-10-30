@@ -16,6 +16,8 @@ self.addEventListener('push', async function (event) {
         body: data.message,
         icon: data.icon,
         badge: data.badge,
+
+        data: { notificationId: data.notificationId },
         vibrate: [1000]
     };
     //retrieve browser tabs, or clients:
@@ -31,12 +33,42 @@ self.addEventListener('push', async function (event) {
     if (!isChatOpen) {
         await self.registration.showNotification(data.title, options);
     }
+    fetch(`/Notifications/ServiceWorkerReceivedPush/${data.notificationId}`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        }
+    }).then(response => {
+        if (response.ok) {
+            console.log('Acknowledgment sent for notification:', data.notificationId);
+        } else {
+            console.error('Failed to send acknowledgment:', response.status);
+        }
+    }).catch(error => {
+        console.error('Error sending acknowledgment:', error);
+    });
 });
-
 
 self.addEventListener('notificationclick', (event) => {
     console.log('User clicked on notification.');
     event.notification.close(); // Close the notification
+
+    const notificationId = event.notification.data.notificationId;
+    // Make a fetch request to update the database
+    fetch(`/Notifications/Interact?notificationId=${notificationId}`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    }).then(response => {
+        if (response.ok) {
+            console.log('Interaction logged successfully');
+        } else {
+            console.error('Failed to log interaction');
+        }
+    }).catch(error => {
+        console.error('Error logging interaction:', error);
+    });
 
     event.waitUntil(
         clients.matchAll({ type: 'window' }).then( (clientList) => {
@@ -53,4 +85,27 @@ self.addEventListener('notificationclick', (event) => {
             }
         })
     );
+});
+
+
+self.addEventListener('notificationclose', (event) => {
+    console.log('User dismissed the notification.');
+
+    const notificationId = event.notification.data.notificationId;
+
+    // Make a fetch request to update the database for dismissal interaction
+    fetch(`/Notifications/Interact?notificationId=${notificationId}`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    }).then(response => {
+        if (response.ok) {
+            console.log('Dismissal logged successfully');
+        } else {
+            console.error('Failed to log dismissal');
+        }
+    }).catch(error => {
+        console.error('Error logging dismissal:', error);
+    });
 });
