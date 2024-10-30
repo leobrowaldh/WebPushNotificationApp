@@ -66,6 +66,7 @@ async function subscribeUser() {
     }
 }
 
+
 async function unsubscribeUser() {
     const registration = await navigator.serviceWorker.ready;
     const existingSubscription = await registration.pushManager.getSubscription();
@@ -82,12 +83,7 @@ async function unsubscribeUser() {
 // send-notification button-listener:
 document.getElementById('push-button').addEventListener('click', async function () {
 
-    const notificatonId = 
 
-    const notificationPayload =
-    {
-        why: "Testing the button."
-    }
     // Wait for the service worker to be ready
     const registration = await navigator.serviceWorker.ready;
     console.log('Service Worker is ready:', registration);
@@ -101,42 +97,30 @@ document.getElementById('push-button').addEventListener('click', async function 
             method: 'POST',
             body: formData
         });
-        console.log('Notification response:', notificationResponse);
+        if (notificationResponse.ok) {
+            const data = await notificationResponse.json();
+            const notificationId = data.notificationId; // Get the notification ID from the response
 
-
-
-        fetch(`/Notification/MarkAsInteracted?notificationId=${notificationId}`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(notificationPayload)
-        })
-            .then(response => {
-                if (response.ok) {
-                    console.log("Notification interaction logged successfully.");
-                } else {
-                    console.error("Failed to log interaction.");
-                }
-            });
-    } else {
-        console.log('No userId available to send notification.');
-    }
-})
-document.getElementById('notification-switch').addEventListener('change', function () {
+            // Here you can also trigger the actual push notification if needed
+            console.log('Notification sent with ID:', notificationId);
+            console.log('Notification response:', notificationResponse);
+        }
+        } else {
+            console.log('No userId available to send notification.');
+        }
+    });
+document.getElementById('notification-switch').addEventListener('change', async function () {
     const pushButton = document.getElementById('push-button');
     if (this.checked) {
         pushButton.disabled = false; // Enable the button
         pushButton.classList.remove('disabled'); // Remove Bootstrap's disabled class
-        document.getElementById('status-message').textContent = 'Notifications are enabled';
         // Call the subscribeUser function if you want to subscribe immediately
-        subscribeUser();
+       await subscribeUser();
     } else {
         pushButton.disabled = true; // Disable the button
         pushButton.classList.add('disabled'); // Add Bootstrap's disabled class
-        document.getElementById('status-message').textContent = 'Notifications are disabled';
         // Call the unsubscribeUser function if you want to unsubscribe immediately
-        unsubscribeUser();
+        await unsubscribeUser();
     }
 });
 

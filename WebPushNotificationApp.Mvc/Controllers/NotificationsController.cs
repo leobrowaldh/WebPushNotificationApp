@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
+using NuGet.Protocol.Plugins;
 using System.Collections.Generic;
 using WebPush;
 using WebPushNotificationsApp.PushService;
@@ -123,9 +124,22 @@ public class NotificationsController(
                 _logger.LogWarning("Failed to deserialize SubscriptionJson for subscription with ID {SubscriptionId}.", subscription.Id);
                 continue; // Skipping this subscription if deserialization fails
             }
-
+            var notification = new Notification
+            {
+                Created = DateTime.Now,
+                SenderId = userId,
+                ReceiverId = subscription.UserId,
+                Why = "Clicked the 'Test Notification' button.",
+                Sent = true,
+                InteractedWith = false,
+                SubscriptionId = subscription.Id
+               
+            };
+            webPushAppContext.Notifications.Add(notification);
+            await webPushAppContext.SaveChangesAsync();
             var payload = JsonConvert.SerializeObject(new
             {
+                notificationId = notification.Id,
                 title = "Test Notification",
                 message = "This is a test Notification",
                 icon = "https://static-00.iconduck.com/assets.00/slightly-smiling-face-emoji-2048x2048-p8h7zhgm.png",
@@ -148,7 +162,6 @@ public class NotificationsController(
 
         // Retrieve subscriptions from database
         List<Subscription> subscriptions = await _subscriptionRepository.GetAllNonSenderSubscriptionsAsync(sender.Id);
-
         if (subscriptions.Count == 0)
         {
             return BadRequest("No subscription found in database.");
@@ -170,31 +183,37 @@ public class NotificationsController(
             }
             var notification = new Notification
             {
+                Created = DateTime.Now,
                 SenderId = sender.Id,
                 ReceiverId = subscription.UserId,
-                Why = "",
-                Sent = true
+                Why = "Sent message to chat.",
+                Sent = true,
+                InteractedWith = false,
+                SubscriptionId = subscription.Id
+
             };
+            webPushAppContext.Notifications.Add(notification);
+            await webPushAppContext.SaveChangesAsync();
 
             var payload = JsonConvert.SerializeObject(new
             {
-                notificatonId = notification.Id, 
+                notificationId = notification.Id,
                 //pictures need to be urls to accessible pictures in the correct format for icon and badge.
                 title = "New Message from " + sender.UserName,
                 message = _messageRepository.GetLastMessageAsync().Result,
                 icon = sender.ProfilePicture,
                 badge = "https://static-00.iconduck.com/assets.00/message-icon-1023x1024-7pbl8unr.png", //the app logo
             });
-            ViewBag.NotificationPayload = JsonConvert.SerializeObject(payload);
+
             await _pushService.SendNotificationAsync(subscriptionToPushTo, payload);
-            webPushAppContext.Notifications.Add(notification);
+
+
         }
-        await webPushAppContext.SaveChangesAsync();
-        return Ok("Notification Sent");
+        return Ok( "Notification Sent");
     }
 
-    [HttpPost]
-    public async Task<IActionResult> MarkAsInteracted(int notificationId)
+    [HttpPost("Interact")]
+    public async Task<IActionResult> MarkAsInteracted([FromQuery] int notificationId)
     {
         // Find the notification by ID
         var notification = await webPushAppContext.Notifications.FindAsync(notificationId);
@@ -211,6 +230,27 @@ public class NotificationsController(
         return Ok("Notification marked as interacted.");
     }
 
+    [HttpPost("ServiceWorkerReceivedPush/{notificationId}")]
+    public async Task<IActionResult> AcknowledgeNotification(int notificationId)
+    {
+        // Find the notification by ID
+        var notification = await webPushAppContext.Notifications.FindAsync(notificationId);
+        if (notification == null)
+        {
+            return NotFound("Notification not found.");
+        }
+
+        // Update the Acknowledged property
+        notification.ServiceWorkerReceived = true;
+
+        // Save changes to the database
+        await webPushAppContext.SaveChangesAsync();
+
+        // Log the acknowledgment
+        _logger.LogInformation($"Notification {notificationId} acknowledged by service worker.");
+
+        return Ok("Acknowledgment received.");
+    }
 
     [HttpPost("CheckUserSubscriptionAsync")]
     public async Task<IActionResult> CheckUserSubscriptionAsync([FromBody] PushSubscriptionDto subscriptionDto)

@@ -160,7 +160,10 @@ namespace Database.Migrations
                     b.Property<bool>("Sent")
                         .HasColumnType("bit");
 
-                    b.Property<int>("SubscriptionId")
+                    b.Property<bool>("ServiceWorkerReceived")
+                        .HasColumnType("bit");
+
+                    b.Property<int?>("SubscriptionId")
                         .HasColumnType("int");
 
                     b.Property<string>("Why")
@@ -171,7 +174,7 @@ namespace Database.Migrations
 
                     b.HasIndex("SubscriptionId");
 
-                    b.ToTable("Notification");
+                    b.ToTable("Notifications");
                 });
 
             modelBuilder.Entity("Database.EntityModels.Subscription", b =>
@@ -363,10 +366,9 @@ namespace Database.Migrations
             modelBuilder.Entity("Database.EntityModels.Notification", b =>
                 {
                     b.HasOne("Database.EntityModels.Subscription", "Subscription")
-                        .WithMany("Notification")
+                        .WithMany("Notifications")
                         .HasForeignKey("SubscriptionId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.Navigation("Subscription");
                 });
@@ -442,7 +444,7 @@ namespace Database.Migrations
 
             modelBuilder.Entity("Database.EntityModels.Subscription", b =>
                 {
-                    b.Navigation("Notification");
+                    b.Navigation("Notifications");
                 });
 #pragma warning restore 612, 618
         }

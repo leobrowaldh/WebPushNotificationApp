@@ -32,6 +32,12 @@ public class WebPushAppContext : IdentityDbContext<AplicationUser>
             .HasOne<AplicationUser>(a => a.Sender)
             .WithMany(d => d.Messages)
             .HasForeignKey(d => d.UserId);
+
+        modelBuilder.Entity<Notification>()
+            .HasOne(n => n.Subscription) // Assuming Notification has a Subscription navigation property
+            .WithMany(s => s.Notifications) // Assuming Subscription has a Notifications collection
+            .HasForeignKey(n => n.SubscriptionId) // Foreign key in Notification
+            .OnDelete(DeleteBehavior.Cascade); // Enable cascading delete for notifications
     }
     public DbSet<Message> Messages { get; set; }
     public DbSet<Notification> Notifications { get; set; }

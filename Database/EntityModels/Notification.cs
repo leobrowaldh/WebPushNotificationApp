@@ -14,7 +14,9 @@ namespace Database.EntityModels
         public string ReceiverId {get; set; }
         public string Why { get; set; }
         public bool Sent { get; set; } = false;
+        public bool ServiceWorkerReceived { get; set; } = false;
         public bool InteractedWith { get; set; } = false;
-        public Subscription Subscription { get; set; }
+        public int? SubscriptionId { get; set; } 
+        public virtual Subscription Subscription { get; set; }
     }
 }
