@@ -27,7 +27,7 @@ self.addEventListener('push', async function (event) {
     });
 
     // Check if a client with the chat is already focused
-    const isChatOpen = clientList.some(client => client.url.includes(chatUrl) && client.focused);
+    const isChatOpen = clientList.some(client => client.url === chatUrl && client.focused);
 
     // Only show notification if the chat tab is not open and focused
     if (!isChatOpen) {

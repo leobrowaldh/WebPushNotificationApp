@@ -106,10 +106,11 @@ document.getElementById('push-button').addEventListener('click', async function 
 
             console.log('Notification response:', notificationResponse);
         }
-        } else {
-            console.log('No userId available to send notification.');
-        }
-    });
+    } else {
+        console.log('No userId available to send notification.');
+    }
+
+});
 
 
 document.getElementById('notification-switch').addEventListener('change', async function () {
