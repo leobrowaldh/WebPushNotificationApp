@@ -14,7 +14,7 @@ public interface ISubscriptionRepository
     /// </summary>
     /// <param name="subscriptionString">a JsonString that represent the subscription object being passed to the database</param>
     /// <param name="userId">The id of the user that is going to subscribe.</param>
-    /// <returns>The subscriptionId, null if user not found, or if the subscription was not correctly saved to the database.</returns>
+    /// <returns>The subscriptionId, cero if user not found, or if the subscription was not correctly saved to the database, and -1 if the subscription allready exists in the database.</returns>
     public Task<int> SaveSubscriptionAsync(string subscriptionString, string userId);
     /// <summary>
     /// Retrieves the subscription from database

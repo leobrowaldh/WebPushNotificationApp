@@ -53,8 +53,7 @@ async function subscribeUser() {
         });
 
         if (response.ok) {
-            const data = await response.json();
-            console.log('subscription correctly saved to db.');
+            console.log('subscription correctly saved to db, or already was there.');
             document.getElementById('status-message').textContent = 'Notifications are enabled.';
             ManagingSubscriptionState();
         } else {

@@ -85,11 +85,16 @@ public class NotificationsController(
         {
             subscriptionId = await _subscriptionRepository.SaveSubscriptionAsync(JsonConvert.SerializeObject(dbSubscription), userId);
         }
-        if (subscriptionId != 0)
+        if (subscriptionId > 0)
         {
             _logger.LogInformation("Successfully saved the subscription for: {Endpoint}", dbSubscription.Endpoint);
             //this c# anonymous object will be automatically serialized into JSON by asp.net core:
             return Ok(new { message = "Subscription saved to database.", id = subscriptionId });
+        }
+        else if (subscriptionId == -1)
+        {
+            _logger.LogWarning("Subscription allready exists in database, no additional subscription added.");
+            return Ok("Subscription already exists in database");
         }
         else
         {

@@ -72,6 +72,18 @@ public class SubscriptionRepository(WebPushAppContext _db, ILogger<SubscriptionR
             _logger.LogError("user with id = {userId} was not found in database", userId);
             return 0;
         }
+        List<Subscription> subscriptions = user.Subscriptions.ToList();
+        foreach(Subscription sub in subscriptions)
+        {
+            if (sub.SubscriptionJson.Equals(subscriptionString))
+            {
+                _logger.LogError("Subscription already exists in the database with id = {SubscriptionId}", sub.Id);
+                return -1; //representing no change, but existing subscription.
+            }
+        }
+
+
+
         Subscription subscription = new() { SubscriptionJson = subscriptionString };
         user.Subscriptions.Add(subscription);
         int success = await _db.SaveChangesAsync();
