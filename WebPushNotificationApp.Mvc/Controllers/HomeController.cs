@@ -1,20 +1,14 @@
-using Database;
 using Database.EntityModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Identity.Client;
-using Newtonsoft.Json;
+
 using System.Diagnostics;
-using WebPush;
-using WebPushNotificationsApp.PushService;
-using static System.Net.WebRequestMethods;
 
 namespace WebPushNotificationApp.Mvc.Controllers;
 
 public class HomeController(
-    ILogger<HomeController> _logger,
     IConfiguration _configuration,
     IMessageRepository _messageRepository,
     UserManager<AplicationUser> _userManager) : Controller
@@ -22,6 +16,7 @@ public class HomeController(
     [Authorize]
     public async Task<IActionResult> Index()
     {
+        //gets the current user
         var currentUser = await _userManager.GetUserAsync(User);
         ViewBag.PublicKey = _configuration["VapidDetails:PublicKey"];
         var messageList = await _messageRepository.GetAllMessagesAsync();
@@ -33,7 +28,6 @@ public class HomeController(
         {
             _messageRepository.ReloadEntity(message);
         }
-
 
         HomeIndexViewModel model = new
         (
@@ -51,7 +45,7 @@ public class HomeController(
 
     public async Task<IActionResult> Create(Message message)
     {
-
+        //sends the chat message to our database
         message.UserName = User.Identity.Name;
         var sender = await _userManager.GetUserAsync(User);
         message.UserId = sender.Id;

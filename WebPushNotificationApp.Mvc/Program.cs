@@ -1,12 +1,8 @@
 using Database;
 using Database.EntityModels;
-using Database.Repositories;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using WebPushNotificationsApp.PushService;
 using WebPushNotificationApp.Mvc.Hubs;
-using Microsoft.AspNet.SignalR;
-using dotenv;
 using dotenv.net;
 
 var builder = WebApplication.CreateBuilder(args);

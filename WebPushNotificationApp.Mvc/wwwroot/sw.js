@@ -16,7 +16,7 @@ self.addEventListener('push', async function (event) {
         body: data.message,
         icon: data.icon,
         badge: data.badge,
-
+        //extracts the notification ID that was sent
         data: { notificationId: data.notificationId },
         vibrate: [1000]
     };
@@ -33,6 +33,9 @@ self.addEventListener('push', async function (event) {
     if (!isChatOpen) {
         await self.registration.showNotification(data.title, options);
     }
+
+    //calls the method to set ServiceWorkerReveicved prop to true
+    //this will only happen if the service gets a push from the server
     fetch(`/Notifications/ServiceWorkerReceivedPush/${data.notificationId}`, {
         method: 'POST',
         headers: {
@@ -51,10 +54,10 @@ self.addEventListener('push', async function (event) {
 
 self.addEventListener('notificationclick', (event) => {
     console.log('User clicked on notification.');
-    event.notification.close(); // Close the notification
+    event.notification.close(); 
 
     const notificationId = event.notification.data.notificationId;
-    // Make a fetch request to update the database
+    // Make a fetch request to our method in our controllet to update the database and set InteractWith prop to true
     fetch(`/Notifications/Interact?notificationId=${notificationId}`, {
         method: 'POST',
         headers: {
@@ -93,7 +96,7 @@ self.addEventListener('notificationclose', (event) => {
 
     const notificationId = event.notification.data.notificationId;
 
-    // Make a fetch request to update the database for dismissal interaction
+    // Make a fetch request to our method in our controllet to update the database and set InteractWith prop to true
     fetch(`/Notifications/Interact?notificationId=${notificationId}`, {
         method: 'POST',
         headers: {
