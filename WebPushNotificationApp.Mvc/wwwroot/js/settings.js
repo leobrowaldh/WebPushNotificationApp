@@ -17,8 +17,12 @@ async function ManagingSubscriptionState() {
             pushButton.classList.remove('disabled'); 
             document.getElementById('status-message').textContent = 'Notifications are enabled.';
         } else {
+            console.log('The subscription does not belong to this user');
             await registerServiceWorker();
-            console.log('The subscription does not belong to this user, ask them to subscribe');
+            pushButton.disabled = true;
+            document.getElementById('notification-switch').checked = false;
+            pushButton.classList.add('disabled');
+            document.getElementById('status-message').textContent = 'Notifications are disabled.';
         }
     } else {
         await registerServiceWorker();
