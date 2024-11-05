@@ -3,11 +3,12 @@ using Database.EntityModels;
 using Microsoft.EntityFrameworkCore;
 using WebPushNotificationsApp.PushService;
 using WebPushNotificationApp.Mvc.Hubs;
+using Microsoft.AspNet.SignalR;
+using dotenv;
 using dotenv.net;
 
 var builder = WebApplication.CreateBuilder(args);
 
-DotEnv.Load();
 // Add services to the container.
 builder.Services.AddDbContext<WebPushAppContext>(
     options =>
@@ -29,10 +30,7 @@ builder.Services.AddScoped<ISubscriptionRepository, SubscriptionRepository>();
 builder.Services.AddScoped<IMessageRepository, MessageRepository>();
 
 builder.Services.AddControllersWithViews();
-
-builder.Services.AddSignalR();
 //Before using db we will store subscription in session, for testing purposes.
-
 builder.Services.AddSession();
 
 var app = builder.Build();

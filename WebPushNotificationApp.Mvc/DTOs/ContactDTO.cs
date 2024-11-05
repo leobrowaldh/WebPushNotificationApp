@@ -2,7 +2,7 @@
 {
     public record ContactDTO
     (
-        string userName,
-        string profilePicture
+        string UserName,
+        string ProfilePicture
     );
 }

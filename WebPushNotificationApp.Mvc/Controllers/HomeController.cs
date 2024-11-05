@@ -31,14 +31,12 @@ public class HomeController(
 
         HomeIndexViewModel model = new
         (
-            Users: await _userManager.Users.ToListAsync(),
+            Contacts: await _userManager.Users
+                .Select(u => new ContactDTO ( (u.UserName ?? u.Email) ?? "Unamed User", u.ProfilePicture ?? "" ))
+                .ToListAsync(),
             Messages: messageList,
-            UserId: _userManager.GetUserId(User)!, //if authorized, the id is present, not null, safe !
-            ProfilePicture: "https://static-00.iconduck.com/assets.00/slightly-smiling-face-emoji-2048x2048-p8h7zhgm.png",
-            Contacts: new List<ContactDTO>() {
-                new ContactDTO("Olle Persson", "https://static-00.iconduck.com/assets.00/slightly-smiling-face-emoji-2048x2048-p8h7zhgm.png"),
-                new ContactDTO("Lilly Torrvik", "https://static-00.iconduck.com/assets.00/slightly-smiling-face-emoji-2048x2048-p8h7zhgm.png")
-            }
+            UserId: currentUser!.Id,
+            ProfilePicture: currentUser.ProfilePicture ?? ""
         );
         return View(model);
     }

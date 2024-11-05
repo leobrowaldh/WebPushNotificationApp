@@ -96,16 +96,13 @@ async function ManagingSubscriptionState() {
             if (isUserSub) {
                 console.log('The subscription belongs to the logged-in user.');
             } else if (isUserSub === false) {
-                console.log('The subscription does not belong to this user, ask him to subscribe');
+                console.log('The subscription does not belong to this user');
             } else {
                 console.log('Could not verify subscription');
-                // Handle the case of subscription verification failure
             }
         }
     } catch (error) {
         console.error('Error getting subscription:', error);
-        // Show modal to ask for subscription in case of error
-        notificationModal.show();
     }
 }
 
