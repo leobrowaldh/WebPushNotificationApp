@@ -37,7 +37,9 @@ document.getElementById('subscribe-button').addEventListener('click', async func
             userVisibleOnly: true, // visible notifications for the user
             applicationServerKey: urlBase64ToUint8Array(publicKey) // Convert public key to the expected format.
         });
-        console.log('New subscription');
+        if (newSubscription) {
+            console.log('New subscription added to service worker');
+        }
 
         // **************Sending subscription to the server**************
 
@@ -50,9 +52,7 @@ document.getElementById('subscribe-button').addEventListener('click', async func
             body: JSON.stringify(newSubscription)
         });
         if (response.ok) {
-            // Extract JSON from the response to retrieve the userId
-            const data = await response.json();
-            ManagingSubscriptionState();
+            console.log('subscription saved to database');
         } else {
             console.error('Failed to subscribe:', response.statusText);
         }
@@ -77,32 +77,4 @@ document.getElementById('no-thanks').addEventListener('click', function () {
 });
 
 
-//checks the current state of webPush subscriptions in this browser and acts accordingly
-async function ManagingSubscriptionState() {
-
-    let registration = await navigator.serviceWorker.ready;
-
-    // Check the state of subscription in the worker
-    let existingSubscription = null;
-    try {
-        existingSubscription = await registration.pushManager.getSubscription();
-        if (!existingSubscription) {
-            console.log('No subscription found');
-            // Show modal to ask for subscription
-        } else {
-            console.log('Subscription exists');
-            // Check that subscription corresponds to the logged-in user
-            const isUserSub = await isUserSubscription(existingSubscription);
-            if (isUserSub) {
-                console.log('The subscription belongs to the logged-in user.');
-            } else if (isUserSub === false) {
-                console.log('The subscription does not belong to this user');
-            } else {
-                console.log('Could not verify subscription');
-            }
-        }
-    } catch (error) {
-        console.error('Error getting subscription:', error);
-    }
-}
 
