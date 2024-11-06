@@ -1,17 +1,11 @@
 ﻿using Database;
 using Database.EntityModels;
-using Database.Repositories;
-using Microsoft.AspNet.SignalR;
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
-using NuGet.Protocol.Plugins;
-using System.Collections.Generic;
 using WebPush;
 using WebPushNotificationsApp.PushService;
-using static System.Net.WebRequestMethods;
 
 namespace WebPushNotificationApp.Mvc.Controllers;
 
@@ -53,11 +47,10 @@ public class NotificationsController(
             Auth = subscriptionDto.Keys.Auth
         };
 
-        _logger.LogInformation("Received subscription: Endpoint = {Endpoint}, P256dh = {P256dh}, Auth = {Auth}",
-        dbSubscription.Endpoint, dbSubscription.P256DH, dbSubscription.Auth);
-
         // Save the subscription object to database.
         // This object contains the endpoint and keys to send push notifications.
+        _logger.LogInformation("Received subscription: Endpoint = {Endpoint}, P256dh = {P256dh}, Auth = {Auth}",
+        dbSubscription.Endpoint, dbSubscription.P256DH, dbSubscription.Auth);
 
         // Ensure keys are not null
         if (string.IsNullOrEmpty(dbSubscription.P256DH) || string.IsNullOrEmpty(dbSubscription.Auth))
@@ -128,6 +121,8 @@ public class NotificationsController(
                 _logger.LogWarning("Failed to deserialize SubscriptionJson for subscription with ID {SubscriptionId}.", subscription.Id);
                 continue; // Skipping this subscription if deserialization fails
             }
+
+            //Loggs some data to database if the notification is sent
             var notification = new Notification
             {
                 Created = DateTime.Now,
@@ -139,8 +134,10 @@ public class NotificationsController(
                 SubscriptionId = subscription.Id
                
             };
+            
             webPushAppContext.Notifications.Add(notification);
             await webPushAppContext.SaveChangesAsync();
+
             var payload = JsonConvert.SerializeObject(new
             {
                 notificationId = notification.Id,
@@ -150,6 +147,7 @@ public class NotificationsController(
                 badge = "https://static-00.iconduck.com/assets.00/message-icon-1023x1024-7pbl8unr.png",
             });
 
+            //removes a sub from database if it's faulty
             bool removeSubscription = await _pushService.SendNotificationAsync(subscriptionToPushTo, payload);
             if (removeSubscription)
             {
@@ -191,6 +189,9 @@ public class NotificationsController(
                 _logger.LogWarning("Failed to deserialize SubscriptionJson for subscription with ID {SubscriptionId}.", subscription.Id);
                 continue; // Skipping this subscription if deserialization fails
             }
+
+            //Loggs some data to database if the notification is sent
+
             var notification = new Notification
             {
                 Created = DateTime.Now,
@@ -207,6 +208,7 @@ public class NotificationsController(
 
             var payload = JsonConvert.SerializeObject(new
             {
+                //sends the ID of the created notification in the payload so we can extract it later. 
                 notificationId = notification.Id,
                 //pictures need to be urls to accessible pictures in the correct format for icon and badge.
                 title = "New Message from " + sender.UserName,
@@ -228,6 +230,7 @@ public class NotificationsController(
         return Ok( "Notifications Sent");
     }
 
+    //sets InteractedWith prop in our database to true so we know if the user have interacted with out notification
     [HttpPost("Interact")]
     public async Task<IActionResult> MarkAsInteracted([FromQuery] int notificationId)
     {
@@ -246,6 +249,7 @@ public class NotificationsController(
         return Ok("Notification marked as interacted.");
     }
 
+    //sets ServiceWorkerReceived prop to true if the targeted Service Workerd recieved the push from Endpoint server.
     [HttpPost("ServiceWorkerReceivedPush/{notificationId}")]
     public async Task<IActionResult> AcknowledgeNotification(int notificationId)
     {
@@ -256,16 +260,16 @@ public class NotificationsController(
             return NotFound("Notification not found.");
         }
 
-        // Update the Acknowledged property
+        // Update the ServiceWorkerReceived property
         notification.ServiceWorkerReceived = true;
 
         // Save changes to the database
         await webPushAppContext.SaveChangesAsync();
 
         // Log the acknowledgment
-        _logger.LogInformation($"Notification {notificationId} acknowledged by service worker.");
+        _logger.LogInformation($"Notification {notificationId} recieved by service worker.");
 
-        return Ok("Acknowledgment received.");
+        return Ok("Service Worker received the push.");
     }
 
     [HttpPost("CheckUserSubscriptionAsync")]

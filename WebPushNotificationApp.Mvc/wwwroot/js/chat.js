@@ -6,7 +6,7 @@
     }
 }
 
-// userName is declared in razor page.
+// userName is declared on the page
 const username = userName;
 const textInput = document.getElementById('messageText');
 const whenInput = document.getElementById('when');
@@ -44,10 +44,10 @@ function sendMessage() {
     sendMessageToHub(message);
 }
 
+//Just adds date and time
 function formatDate(date) {
     const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are zero-indexed
-    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0');
     const hours = String(date.getHours()).padStart(2, '0');
     const minutes = String(date.getMinutes()).padStart(2, '0');
     const seconds = String(date.getSeconds()).padStart(2, '0');
@@ -68,7 +68,7 @@ function addMessageToChat(message) {
     let span = document.createElement('span');
 
     // Use the custom formatDate function
-    let formattedDate = formatDate(new Date(message.when)); // Ensure message.when is a Date object
+    let formattedDate = formatDate(new Date(message.when));
 
     span.innerHTML = `<strong>${message.userName}</strong> - ${formattedDate}`;
 
@@ -86,6 +86,6 @@ function addMessageToChat(message) {
     document.getElementById('chat').appendChild(container);
 
     const chats = document.getElementById('chat');
-    chats.scrollTop = chats.scrollHeight; // Scroll to the bottom
+    chats.scrollTop = chats.scrollHeight; // Scroll to the bottom for a better user experiance
 }
 
