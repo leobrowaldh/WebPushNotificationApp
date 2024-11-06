@@ -80,7 +80,6 @@ public class NotificationsController(
         }
         if (subscriptionId != 0)
         {
-            if (dbSubscription.Endpoint ==)
             _logger.LogInformation("Successfully saved the subscription for: {Endpoint}", dbSubscription.Endpoint);
             //this c# anonymous object will be automatically serialized into JSON by asp.net core:
             return Ok(new { message = "Subscription saved to database.", id = subscriptionId });
