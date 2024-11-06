@@ -18,7 +18,6 @@ builder.Configuration["VapidDetails:Subject"] = Environment.GetEnvironmentVariab
 builder.Configuration["VapidDetails:PublicKey"] = Environment.GetEnvironmentVariable("VAPID_PUBLIC_KEY") ?? builder.Configuration["VapidDetails:PublicKey"];
 builder.Configuration["VapidDetails:PrivateKey"] = Environment.GetEnvironmentVariable("VAPID_PRIVATE_KEY") ?? builder.Configuration["VapidDetails:PrivateKey"];
 
-
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 builder.Services.AddDefaultIdentity<AplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
@@ -31,11 +30,10 @@ builder.Services.AddScoped<IMessageRepository, MessageRepository>();
 
 builder.Services.AddControllersWithViews();
 
-
 builder.Services.AddSignalR();
 //Before using db we will store subscription in session, for testing purposes.
-builder.Services.AddSession();
 
+builder.Services.AddSession();
 
 var app = builder.Build();
 
