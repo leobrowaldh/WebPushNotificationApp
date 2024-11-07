@@ -3,9 +3,6 @@ using Database.EntityModels;
 using Microsoft.EntityFrameworkCore;
 using WebPushNotificationsApp.PushService;
 using WebPushNotificationApp.Mvc.Hubs;
-using Microsoft.AspNet.SignalR;
-using dotenv;
-using dotenv.net;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -30,8 +27,7 @@ builder.Services.AddScoped<ISubscriptionRepository, SubscriptionRepository>();
 builder.Services.AddScoped<IMessageRepository, MessageRepository>();
 
 builder.Services.AddControllersWithViews();
-//Before using db we will store subscription in session, for testing purposes.
-builder.Services.AddSession();
+builder.Services.AddSignalR();
 
 var app = builder.Build();
 
@@ -43,7 +39,6 @@ if (app.Environment.IsDevelopment())
 else
 {
     app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 
@@ -58,9 +53,6 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 app.MapRazorPages();
-app.UseEndpoints(endpoints =>
-{
-    endpoints.MapHub<ChatHub>("/Home/Index");
-});
+app.MapHub<ChatHub>("/Home/Index");  // Map SignalR hub
 
 app.Run();
