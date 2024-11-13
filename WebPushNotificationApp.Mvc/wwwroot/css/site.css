@@ -7,19 +7,11 @@
 body {
     display: flex;
     flex-direction: column;
-    font-family: 'Garamond', serif;
+    font-family: 'Global Monospace', serif;
     background-color: white;
     color: #3e3e3e;
     line-height: 1.6;
     min-height: 100vh;
-}
-
-
-
-h1, h2, h3 {
-    font-family: 'Old English Text MT', cursive; 
-    color:cornflowerblue;
-    text-shadow: 2px 2px 1px #d1b48c;
 }
 
 h1 {
@@ -45,7 +37,7 @@ p {
 
 
 a {
-    color: #b22222; 
+    color: blue; 
     text-decoration: none;
 }
 
@@ -77,3 +69,26 @@ li {
     flex-direction: column; 
     flex-grow: 1; 
 }
+.nav-item {
+    font-size: 16px;
+}
+
+    .nav-item:hover {
+        text-decoration: underline;
+    }
+
+.nav-item-user {
+    font-size: 16px;
+    font-weight:bold;
+}
+
+    .nav-item-user:hover {
+        text-decoration: underline;
+    }
+nav{
+    opacity: 0;
+    transition: all 0.2s ease-in;
+}
+    nav:hover {
+        opacity: 1;
+    }
