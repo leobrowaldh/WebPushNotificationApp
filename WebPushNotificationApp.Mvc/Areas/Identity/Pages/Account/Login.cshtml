@@ -5,13 +5,29 @@
     ViewData["Title"] = "Log in";
 }
 
-<h1>@ViewData["Title"]</h1>
+<h1>ChatMaster</h1>
+<hr />
+<h3>
+    This website shows how notifiction works with the help of a public chat that's based on SignalR. <br />
+    The main reason why we built this website is to understand how Web Push Notification works.
+</h3>
+    <img src="https://qodeinteractive.com/magazine/wp-content/uploads/2021/03/What-Are-Push-Notifications.jpg" alt="notification" style="max-width:100%; height:auto; background-color:transparent;" /> <br />
+<h3>
+    You can also install it as an app on both your computer and on your phone. <br />
+    How to do that depends on what browser you're on. <br />
+    On most phones you get the option to install it by default.
+</h3>
+<h2></h2>
+<hr />
 <div class="row">
     <div class="col-md-4">
         <section>
+
+            <h2 id="toggle-form" style="cursor: pointer;">Would you like to test our web app? Click here!</h2>
+            <div id="form-container" style="display:none;">
             <form id="account" method="post">
-                <h2>Use a local account to log in.</h2>
                 <hr />
+                <h3>Please log in if you want test it out.</h3>
                 <div asp-validation-summary="All" class="text-danger"></div>
                 <div class="form-group">
                     <label asp-for="Input.Email"></label>
@@ -46,19 +62,26 @@
                     </p>
                 </div>
             </form>
+            </div>
         </section>
     </div>
     <div class="col-md-6 col-md-offset-2">
         <section>
-            <h3>Use another service to log in.</h3>
-            <hr />
+            <h3></h3>
             @{
                 if ((Model.ExternalLogins?.Count ?? 0) == 0)
                 {
                     <div>
+                        <h3>What is Push Notification?</h3>
                         <p>
-                            There are no external authentication services configured. See this <a href="https://go.microsoft.com/fwlink/?LinkID=532715">article
-                            about setting up this ASP.NET application to support logging in via external services</a>.
+                            A push notification is a message or alert sent from a server to a device (like a smartphone, tablet, or desktop) to deliver real-time updates or notifications, even when the app or website isn't open. <br />
+                            Push notifications "push" information to users in a way that is direct and engaging, often prompting them to take an action, like opening an app, checking a message, or responding to an alert.
+                        </p>
+                        <hr />
+                        <h3>What is SignalR?</h3>
+                        <p>
+                            SignalR is an open-source library for ASP.NET that enables real-time web functionality in your applications. It allows servers to push content to connected clients instantly, rather than having clients repeatedly request data from the server (polling). <br />
+                            SignalR is designed to make it easier to implement real-time communication between the server and clients, which is useful for applications that require frequent updates, such as live chat, real-time notifications, multiplayer games, or live data feeds.
                         </p>
                     </div>
                 }
@@ -82,4 +105,15 @@
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+    <script>
+        document.getElementById("toggle-form").addEventListener("click", function() {
+            var formContainer = document.getElementById("form-container");
+            // Toggle the form visibility
+            if (formContainer.style.display === "none") {
+                formContainer.style.display = "block";
+            } else {
+                formContainer.style.display = "none";
+            }
+        });
+    </script>
 }
