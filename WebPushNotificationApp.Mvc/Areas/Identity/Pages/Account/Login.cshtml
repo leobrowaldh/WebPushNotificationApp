@@ -5,15 +5,21 @@
     ViewData["Title"] = "Log in";
 }
 
-<h1>Hello World!</h1>
+<h1>What is Push Notification?</h1>
+<hr />
+<h3>A push notification is a message or alert sent from a server to a device (like a smartphone, tablet, or desktop) to deliver real-time updates or notifications, even when the app or website isn't open.</h3>
+    <img src="https://qodeinteractive.com/magazine/wp-content/uploads/2021/03/What-Are-Push-Notifications.jpg" alt="notification" style="max-width:100%; height:auto; " /> <br />
+<h3>Push notifications "push" information to users in a way that is direct and engaging, often prompting them to take an action, like opening an app, checking a message, or responding to an alert.</h3>
+<hr />
 <div class="row">
     <div class="col-md-4">
         <section>
+
+            <h2 id="toggle-form" style="cursor: pointer;">Would you like to test our web app?</h2>
+            <div id="form-container" style="display:none;">
             <form id="account" method="post">
-                <h2>Would you like to test our web app?</h2> 
-                <br />
-                <h3>Please log in if you want test it out.</h3>
                 <hr />
+                <h3>Please log in if you want test it out.</h3>
                 <div asp-validation-summary="All" class="text-danger"></div>
                 <div class="form-group">
                     <label asp-for="Input.Email"></label>
@@ -48,19 +54,20 @@
                     </p>
                 </div>
             </form>
+            </div>
         </section>
     </div>
     <div class="col-md-6 col-md-offset-2">
         <section>
             <h3></h3>
-            <hr />
             @{
                 if ((Model.ExternalLogins?.Count ?? 0) == 0)
                 {
                     <div>
                         <p>
-                            There are no external authentication services configured. See this <a href="https://go.microsoft.com/fwlink/?LinkID=532715">article
-                            about setting up this ASP.NET application to support logging in via external services</a>.
+                            Our app shows how notifiction works with the help of a public chat.
+                            You can chat all you want!
+                            
                         </p>
                     </div>
                 }
@@ -84,4 +91,15 @@
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+    <script>
+        document.getElementById("toggle-form").addEventListener("click", function() {
+            var formContainer = document.getElementById("form-container");
+            // Toggle the form visibility
+            if (formContainer.style.display === "none") {
+                formContainer.style.display = "block";
+            } else {
+                formContainer.style.display = "none";
+            }
+        });
+    </script>
 }

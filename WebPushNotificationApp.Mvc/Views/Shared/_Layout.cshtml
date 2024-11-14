@@ -12,6 +12,8 @@
 </head>
 <body>
     <header>
+                                @if (User.Identity.IsAuthenticated)
+                        {
         <nav class="navbar navbar-expand-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container-fluid">
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
@@ -20,20 +22,19 @@
                 </button>
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav flex-grow-1">
-                        @if (User.Identity.IsAuthenticated)
-                        {
+
                             <li class="nav-link">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Public Chat</a>
                         </li>
                         <li class="nav-link">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Notifications" asp-action="Settings">Notification Settings</a>
-                        </li>}
+                        </li>
                     </ul>
                     <partial name="_LoginPartial" />
                 </div>
             </div>
         </nav>
-
+                        }
     </header>
     <div class="container">
         <main role="main" class="pb-3">
@@ -48,7 +49,7 @@
 
     <footer class="border-top footer text-muted">
         <div class="container">
-            &copy; 2024 - Web Push Notification Chat App
+            &copy; 2024 - ChatMaster
         </div>
     </footer>
 </body>

@@ -45,8 +45,12 @@ button.accept-policy {
   line-height: 60px;
 }
 nav {
+    position: sticky;
+    top: 0;
+    left: 0;
+    width: 100%;
     flex-shrink: 0;
-    z-index: 1000; 
+    z-index: 1000;
 }
 
 .nav-link {
