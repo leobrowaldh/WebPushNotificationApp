@@ -1,19 +1,19 @@
 ﻿{
-  "name": "WebPushChatApp",
-  "short_name": "Chat",
+  "name": "ChatMaster",
+  "short_name": "ChatMaster",
   "icons": [
     {
-      "src": "/images/icon-48x48.png",
+      "src": "/images/logo-ChatMaster2.jpg",
       "sizes": "48x48",
       "type": "image/png"
     },
     {
-      "src": "/images/icon-512x512.png",
+      "src": "/images/logo-ChatMaster2.jpg",
       "sizes": "512x512",
       "type": "image/png"
     },
     {
-      "src": "/images/icon-192x192.png",
+      "src": "/images/logo-ChatMaster2.jpg",
       "sizes": "192x192",
       "type": "image/png"
     }
@@ -22,15 +22,15 @@
   "display": "standalone",
   "background_color": "#959595",
   "theme_color": "#0F67B1",
-  "description": "With the ChatPushApp you can more easily access your favorite chat application from your homescreen/desktop, and having it installed makes it easier for the app to notify you if you have new messages.",
+  "description": "With ChatMaster you can more easily access your favorite chat application from your homescreen/desktop, and having it installed makes it easier for the app to notify you if you have new messages.",
   "screenshots": [
     {
-      "src": "https://webpushchatapp-e7d5dac2fjdyfxaa.northeurope-01.azurewebsites.net/images/screenshots/PWA.png",
-      "sizes": "571x907",
+      "src": "https://webpushchatapp-e7d5dac2fjdyfxaa.northeurope-01.azurewebsites.net/images/pwa-screenshot.png",
+      "sizes": "884x863",
       "type": "image/png",
       "form_factor": "tall",
-      "label": "Homescreen of WebPushChatApp App"
+      "label": "Homescreen of ChatMaster App"
     }
   ],
-  "vibration": [1000]
+  "vibration": [ 1000 ]
 }
