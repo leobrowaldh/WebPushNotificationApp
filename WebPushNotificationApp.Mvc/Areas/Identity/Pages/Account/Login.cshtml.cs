@@ -18,6 +18,7 @@ namespace WebPushNotificationApp.Mvc.Areas.Identity.Pages.Account
     [AllowAnonymous]
     public class LoginModel : PageModel
     {
+        public bool LoginFailed { get; set; }
         private readonly UserManager<AplicationUser> _userManager;
         private readonly SignInManager<AplicationUser> _signInManager;
         private readonly ILogger<LoginModel> _logger;
@@ -103,13 +104,15 @@ namespace WebPushNotificationApp.Mvc.Areas.Identity.Pages.Account
                     else
                     {
                         ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+                        LoginFailed = true;
                         return Page();
                     }
 				}
 				else
 				{
 					ModelState.AddModelError(string.Empty, "Invalid login attempt.");
-					return Page();
+                    LoginFailed = true;
+                    return Page();
 				}
             }
 

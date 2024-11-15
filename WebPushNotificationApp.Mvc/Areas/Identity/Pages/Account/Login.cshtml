@@ -58,13 +58,7 @@
                 </div>
                 <div class="form-group">
                     <p>
-                        <a id="forgot-password" asp-page="./ForgotPassword">Forgot your password?</a>
-                    </p>
-                    <p>
                         <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl">Register as a new user</a>
-                    </p>
-                    <p>
-                        <a id="resend-confirmation" asp-page="./ResendEmailConfirmation">Resend email confirmation</a>
                     </p>
                 </div>
             </form>
@@ -112,6 +106,17 @@
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
     <script>
+        function scrollToElement(element) {
+            const rect = element.getBoundingClientRect();
+            const offsetTop = rect.top + window.scrollY;
+
+            window.scrollTo({
+                top: offsetTop,
+                behavior: "smooth"
+            });
+        }
+
+        // Toggle the login form
         document.getElementById("toggle-form").addEventListener("click", function () {
             var formContainer = document.getElementById("form-container");
 
@@ -120,11 +125,9 @@
             } else {
                 formContainer.style.display = "none";
             }
-            window.scrollTo({
-                top: document.body.scrollHeight,  
-                behavior: "smooth"  
-            });
+            scrollToElement(formContainer);
         });
+
         document.getElementById("toggle-signalr").addEventListener("click", function () {
             var formContainer = document.getElementById("form-signalr");
 
@@ -133,11 +136,9 @@
             } else {
                 formContainer.style.display = "none";
             }
-            window.scrollTo({
-                top: document.body.scrollHeight,
-                behavior: "smooth"
-            });
+            scrollToElement(formContainer);
         });
+
         document.getElementById("toggle-webpush").addEventListener("click", function () {
             var formContainer = document.getElementById("form-webpush");
 
@@ -146,10 +147,21 @@
             } else {
                 formContainer.style.display = "none";
             }
-            window.scrollTo({
-                top: document.body.scrollHeight,
-                behavior: "smooth"
-            });
+            scrollToElement(formContainer);
+        });
+
+        // Automatically open and scroll to the login form if login failed
+        document.addEventListener("DOMContentLoaded", function () {
+            const loginFailed = @Json.Serialize(Model.LoginFailed);
+            if (loginFailed) {
+                const formContainer = document.getElementById("form-container");
+                const toggleForm = document.getElementById("toggle-form");
+
+                formContainer.style.display = "block";
+
+                scrollToElement(toggleForm);
+            }
         });
     </script>
 }
+
