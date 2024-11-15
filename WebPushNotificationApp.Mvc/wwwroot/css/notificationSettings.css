@@ -58,3 +58,21 @@ input:checked + .slider {
         background-color: #6c757d;
         border-color: #6c757d;
     }
+@media (max-width: 550px) {
+    nav {
+        text-align: left;
+    }
+
+    .img-fluid {
+        display: none;
+    }
+
+    .img-nav {
+        display: block;
+    }
+
+    .nav-link {
+        display: flex;
+        justify-content: flex-start;
+    }
+}

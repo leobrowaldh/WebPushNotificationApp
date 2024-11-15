@@ -15,14 +15,16 @@
         @if (User.Identity.IsAuthenticated)
         {
             <nav class="navbar navbar-expand-sm navbar-light bg-white border-bottom box-shadow mb-3">
+
                 <div class="container-fluid">
+                    <img src="~/images/logo-ChatMaster2.jpg" class="img-nav" style="max-width: 60px; height: auto; border-radius:15px;" />
                     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
                             aria-expanded="false" aria-label="Toggle navigation">
                         <span class="navbar-toggler-icon"></span>
                     </button>
                     <div class="collapse navbar-collapse" id="navbarSupportedContent">
                         <ul class="navbar-nav flex-grow-1">
-                            <img src="~/images/logo-ChatMaster2.jpg" class="img-fluid" style="max-width: 60px; height: auto; border-radius:15px" />
+                            <img src="~/images/logo-ChatMaster2.jpg" class="img-fluid" style="max-width: 60px; height: 60px; margin-top:8px; border-radius:15px" />
                             <li class="nav-link">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Public Chat</a>
                             </li>
