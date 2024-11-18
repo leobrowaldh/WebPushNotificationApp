@@ -36,8 +36,9 @@ blockquote {
     word-wrap: break-word;
     white-space: normal;
     overflow: hidden;
-    background-color: #0F67B1;
+    background-color: #25ccae;
     color: white;
+    text-shadow: 2px 2px 4px black;
     box-shadow: 4px 6px 6px rgba(0, 0, 0, 0.5);
     border-radius: 5px;
     text-align: left;

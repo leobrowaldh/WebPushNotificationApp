@@ -1,5 +1,7 @@
 ﻿
-const chatUrl = 'https://webpushchatapp-e7d5dac2fjdyfxaa.northeurope-01.azurewebsites.net/';
+//the homepage to where we will send the users when clicking on the notification:
+const chatUrl = `${self.location.origin}/`; 
+
 self.addEventListener('push', async function (event) {
     console.log('Push event received in service worker:');
     let data;
@@ -54,6 +56,7 @@ self.addEventListener('push', async function (event) {
 
 self.addEventListener('notificationclick', (event) => {
     console.log('User clicked on notification.');
+    event.preventDefault();
     event.notification.close(); 
 
     const notificationId = event.notification.data.notificationId;
@@ -74,7 +77,7 @@ self.addEventListener('notificationclick', (event) => {
     });
 
     event.waitUntil(
-        clients.matchAll({ type: 'window' }).then( (clientList) => {
+        clients.matchAll({ type: 'window', includeUncontrolled: true }).then( (clientList) => {
             // Check if the app is already open in a tab
             for (var i = 0; i < clientList.length; i++) {
                 var client = clientList[i];
