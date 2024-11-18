@@ -110,9 +110,6 @@ blockquote {
     margin-bottom: 10px;
     box-shadow: 2px 3px 3px rgba(0, 0, 0, 0.3);
 }
-.img-nav{
-    display:none;
-}
 
 .chat-window {
     display: flex;
@@ -160,12 +157,6 @@ blockquote {
     }
     nav{
         text-align:left;
-    }
-    .img-fluid{
-        display:none;
-    }
-    .img-nav{
-        display:block;
     }
     .nav-link  {
         display:flex;
