@@ -15,16 +15,19 @@
         @if (User.Identity.IsAuthenticated)
         {
             <nav class="navbar navbar-expand-sm navbar-light bg-white border-bottom box-shadow mb-3">
-
                 <div class="container-fluid">
-                    <img src="~/images/logo-ChatMaster2.jpg" class="img-nav" style="max-width: 60px; height: auto; border-radius:15px;" />
+                    <!-- Logo visible on smaller screens (hamburger menu) -->
+                    <img src="~/images/logo-ChatMaster2.jpg" class="img-nav d-sm-none" style="max-width: 60px; height: auto; border-radius:15px;" />
+
                     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
                             aria-expanded="false" aria-label="Toggle navigation">
                         <span class="navbar-toggler-icon"></span>
                     </button>
+
                     <div class="collapse navbar-collapse" id="navbarSupportedContent">
                         <ul class="navbar-nav flex-grow-1">
-                            <img src="~/images/logo-ChatMaster2.jpg" class="img-fluid" style="max-width: 60px; height: 60px; margin-top:8px; border-radius:15px" />
+                            <!-- Logo visible on larger screens -->
+                            <img src="~/images/logo-ChatMaster2.jpg" class="img-fluid d-none d-sm-block" style="max-width: 60px; height: 60px; margin-top:8px; border-radius:15px" />
                             <li class="nav-link">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Public Chat</a>
                             </li>
@@ -32,13 +35,14 @@
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Notifications" asp-action="Settings">Notification Settings</a>
                             </li>
                             <li class="nav-link">
-                                <a href="/pages/AboutUs.html" class="nav-link text-dark">About Us</a>
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="AboutUs">About Us</a>
                             </li>
                         </ul>
                         <partial name="_LoginPartial" />
                     </div>
                 </div>
             </nav>
+
         }
     </header>
     <div class="container">
