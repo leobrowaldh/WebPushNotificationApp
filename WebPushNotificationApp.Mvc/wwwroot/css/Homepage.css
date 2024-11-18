@@ -23,6 +23,15 @@
     height: 70vh;
     margin-left:300px;
 }
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+    background-color: black;
+}
+
+.carousel-control-prev,
+.carousel-control-next {
+    filter: invert(1); /* This will ensure the arrows are visible on light backgrounds */
+}
 @media (max-width: 550px) {
     .slide-2{
         width:100vw;
