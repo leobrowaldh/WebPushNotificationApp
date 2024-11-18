@@ -24,9 +24,9 @@
 
                     <div class="collapse navbar-collapse" id="navbarSupportedContent">
                         <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-link">
+@*                         <li class="nav-link">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Homepage">Home</a>
-                        </li>
+                        </li> *@
                         @if (User.Identity.IsAuthenticated)
                         {
                             <li class="nav-link">
@@ -36,10 +36,17 @@
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Notifications" asp-action="Settings">Notification Settings</a>
                             </li>
                             }
+                        else
+                        {
+                            <li class="nav-link">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Homepage">Home</a>
+                            </li>
+                        }
                             <li class="nav-link">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="AboutUs">About Us</a>
                             </li>
                         </ul>
+
                         <partial name="_LoginPartial" />
                     </div>
                 </div>
