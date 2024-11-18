@@ -1,14 +1,20 @@
 {
   "dependencies": {
-    "mssql3": {
-      "type": "mssql",
-      "connectionId": "ConnectionStrings:WebPushAppConecction",
-      "dynamicId": null
-    },
     "mssql1": {
       "ignored": "true",
       "type": "mssql",
       "connectionId": "ConnectionStrings:DefaultConnection"
+    },
+    "mssql3": {
+      "ignored": "true",
+      "type": "mssql",
+      "connectionId": "ConnectionStrings:WebPushAppConecction",
+      "dynamicId": null
+    },
+    "mssql2": {
+      "ignored": "true",
+      "type": "mssql",
+      "connectionId": "ConnectionStrings:WebPushAppContextConnection"
     }
   }
 }
