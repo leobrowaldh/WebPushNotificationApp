@@ -1,0 +1,45 @@
+﻿.carousel-caption {
+    color: black;
+    background-color: rgba(128, 128, 128, 0.6);
+    border-radius: 10px;
+    margin-bottom:100px;
+}
+.slide-1{
+    width:50vw;
+    height:70vh;
+}
+.slide-2 {
+    width: 25vw;
+    height: 70vh;
+    margin-left: 320px;
+}
+.slide-4 {
+    width: 40vw;
+    height: 70vh;
+    margin-left: 170px;
+}
+.slide-3 {
+    width: 30vw;
+    height: 70vh;
+    margin-left:300px;
+}
+@media (max-width: 550px) {
+    .slide-2{
+        width:100vw;
+        margin-left:auto;
+    }
+    .slide-3 {
+        width: 100vw;
+        height: 70vh;
+        margin-left: auto;
+    }
+    .slide-1 {
+        width: 100vw;
+        height: 50vh;
+    }
+    .slide-4 {
+        width: 100vw;
+        height: 60vh;
+        margin-left: auto;
+    }
+}

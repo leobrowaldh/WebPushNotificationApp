@@ -1,6 +1,6 @@
 @model HomeIndexViewModel
 @{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Public Chat";
     var userName = User.Identity?.Name;
 }
 @section Styles {
@@ -40,12 +40,12 @@
             </div>
 
             <div class="under-chat-container row">
-                <img src="@Model.ProfilePicture" alt="Profile Picture" class="img-fluid profile-picture" />
+                <img src="@Model.ProfilePicture" alt="Profile Picture" class="img-fluid profile-picture" style="margin-bottom:70px;" />
                 <form asp-controller="Home" asp-action="Create" data-ajax-begin="clearInputField" data-ajax-complete=""
                       data-ajax-failure="alert('fail')" data-ajax-success="sendMessage" data-ajax="true" data-ajax-method="POST">
                     <div asp-validation-summary="ModelOnly"></div>
-                    <input style="width:300px" name="Text" id="messageText" />
-                    <input type="submit" value="Send" id="submitButton" class="btn btn-primary" />
+                    <textarea style="width:300px; height: 80px; overflow-y: auto; resize:none;" name="Text" id="messageText"></textarea>
+                    <input type="submit" value="Send" id="submitButton" class="btn btn-primary" style="margin-bottom:70px;"/>
                     <input type="hidden" value="@userName" name="username" />
                 </form>
             </div>

@@ -51,8 +51,8 @@ app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+    pattern: "{controller=Home}/{action=Homepage}/{id?}");
 app.MapRazorPages();
-app.MapHub<ChatHub>("/Home/Index");  // Map SignalR hub
+app.MapHub<ChatHub>("/chatHub");  // Map SignalR hub
 
 app.Run();

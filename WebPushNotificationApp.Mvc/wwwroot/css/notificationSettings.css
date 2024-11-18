@@ -63,14 +63,6 @@ input:checked + .slider {
         text-align: left;
     }
 
-    .img-fluid {
-        display: none;
-    }
-
-    .img-nav {
-        display: block;
-    }
-
     .nav-link {
         display: flex;
         justify-content: flex-start;
