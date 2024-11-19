@@ -141,6 +141,7 @@ ManagingSubscriptionState()
 let installPrompt = null;
 const installButton = document.querySelector("#install");
 
+//beforeinstallprompt is triggered when the browser determines the app meet the PWA installation criteria.
 window.addEventListener("beforeinstallprompt", (event) => {
     event.preventDefault();
     installPrompt = event;

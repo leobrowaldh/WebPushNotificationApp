@@ -100,7 +100,14 @@ nav {
     transition: color 0.5s ease-in;
 }
 
-    #toggle-form:hover {
-        color: #007bff; 
-        text-decoration: underline;
-    }
+#toggle-form:hover {
+    color: #007bff; 
+    text-decoration: underline;
+}
+
+#collapseLogo {
+    position: absolute;
+    top: 100%; /* Place it directly below the button */
+    left: 0;
+    z-index: 1050; /* Ensure it appears above other content */
+}
