@@ -1,12 +1,14 @@
-﻿.carousel-caption {
+﻿.text {
+    position: sticky;
     color: black;
-    background-color: rgba(128, 128, 128, 0.6);
+    background-color: rgba(175, 238, 238, 0.5);
     border-radius: 10px;
-    margin-bottom:100px;
+    margin-bottom: 10px;
 }
 .slide-1{
     width:50vw;
     height:70vh;
+    margin-left:70px;
 }
 .slide-2 {
     width: 25vw;
@@ -23,16 +25,46 @@
     height: 70vh;
     margin-left:300px;
 }
-.carousel-control-prev-icon,
-.carousel-control-next-icon {
+
+.carousel-control-next-icon,
+.carousel-control-prev-icon {
+    border-radius: 50%;
     background-color: black;
 }
-
 .carousel-control-prev,
 .carousel-control-next {
     filter: invert(1); /* This will ensure the arrows are visible on light backgrounds */
 }
+@media (max-width: 990px) {
+    .slide-1 {
+        width: 90vw;
+        height: 70vh;
+    }
+
+    .slide-2 {
+        width: 55vw;
+        height: 70vh;
+        margin-left: 90px;
+    }
+
+    .slide-3 {
+        width: 60vw;
+        height: 70vh;
+        margin-left: 80px;
+    }
+
+    .slide-4 {
+        width: 60vw;
+        height: 60vh;
+        margin-left: 80px;
+    }
+}
+
 @media (max-width: 550px) {
+    .slide-1 {
+        width: 140vw;
+        height: 60vh;
+    }
     .slide-2{
         width:100vw;
         margin-left:auto;
@@ -42,10 +74,7 @@
         height: 70vh;
         margin-left: auto;
     }
-    .slide-1 {
-        width: 100vw;
-        height: 50vh;
-    }
+
     .slide-4 {
         width: 100vw;
         height: 60vh;
