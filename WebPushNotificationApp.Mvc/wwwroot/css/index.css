@@ -1,4 +1,5 @@
-﻿.under-chat-container {
+﻿
+.under-chat-container {
     margin: 10px;
     display: flex;
     align-items: center;
@@ -30,17 +31,18 @@ blockquote {
 }
 
 
-
+.list-group {
+    border-radius: 5px;
+    border: none;
+}
 
 .list-group-item {
     word-wrap: break-word;
     white-space: normal;
     overflow: hidden;
-    background-color: #25ccae;
-    color: white;
-    text-shadow: 2px 2px 4px black;
-    box-shadow: 4px 6px 6px rgba(0, 0, 0, 0.5);
-    border-radius: 5px;
+    color: black;
+    text-shadow: 1px 1px 5px black;
+    border: none;
     text-align: left;
     display: flex;
     align-items: center;
@@ -59,7 +61,7 @@ blockquote {
 }
 
 .sender {
-    background-color: paleturquoise;
+    background-color: #d8eced;
     color: black;
     padding: 10px 15px;
     border-radius: 10px;
@@ -69,18 +71,18 @@ blockquote {
     box-shadow: 10px 5px 5px;
 }
 
-    .sender::after {
-        content: '';
-        position: absolute;
-        top: 10px;
-        right: -10px;
-        border-width: 10px;
-        border-style: solid;
-        border-color: transparent;
-    }
+.sender::after {
+    content: '';
+    position: absolute;
+    top: 10px;
+    right: -10px;
+    border-width: 10px;
+    border-style: solid;
+    border-color: transparent;
+}
 
 .receiver {
-    background-color: #B6FFA1;
+    background-color: #66cfb8;
     color: #3e3e3e;
     padding: 10px 15px;
     border-radius: 10px;
@@ -90,15 +92,15 @@ blockquote {
     box-shadow: 10px 5px 5px;
 }
 
-    .receiver::after {
-        content: '';
-        position: absolute;
-        top: 10px;
-        left: -10px;
-        border-width: 10px;
-        border-style: solid;
-        border-color: transparent;
-    }
+.receiver::after {
+    content: '';
+    position: absolute;
+    top: 10px;
+    left: -10px;
+    border-width: 10px;
+    border-style: solid;
+    border-color: transparent;
+}
 
 #chat {
     flex-grow: 1;
@@ -131,6 +133,24 @@ blockquote {
     #submitButton {
         margin-top: 5px;
     }
+}
+
+@media (min-width: 770px) {
+    .chat-window {
+        display: flex;
+        flex-direction: column;
+        min-height: calc(100vh - 167px);
+    }
+    #chat {
+        flex-grow: 0.7; 
+        min-height: 300px; 
+        overflow-y: auto; /* Scrollable content */
+    }
+    .under-chat-container {
+        flex-grow: 0.3;
+        flex-shrink: 0; /* Ensure it doesn't shrink */
+    }
+
 }
 
 @media (max-width: 750px) {

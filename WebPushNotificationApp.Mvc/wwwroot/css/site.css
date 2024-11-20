@@ -11,7 +11,7 @@ body {
     background-color: white;
     color: #3e3e3e;
     line-height: 1.6;
-    min-height: 100vh;
+    min-height: calc(100vh - 167px);
 }
 
 h1 {
@@ -52,6 +52,10 @@ button {
     font-size: 1em;
     cursor: pointer;
     border-radius: 5px;
+}
+
+.btn-primary {
+    background-color: #11b281
 }
 
 ul {

@@ -1,6 +1,7 @@
 ﻿.form-check-input {
     margin-right: 10px;
 }
+
 .switch {
     position: relative;
     display: inline-block;
@@ -21,8 +22,8 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: #ccc;
-    transition: .4s;
+    background-color: #ccc; /* Default background */
+    transition: 0.4s;
     border-radius: 34px;
 }
 
@@ -33,21 +34,21 @@
         width: 26px;
         left: 4px;
         bottom: 4px;
-        background-color: white;
+        background-color: white; /* Slider handle color */
         border-radius: 50%;
-        transition: .4s;
+        transition: 0.4s;
     }
 
 input:checked + .slider {
-    background-color: #2196F3;
+    background-color: #11b281; /* Background when toggled on */
 }
 
     input:checked + .slider:before {
-        transform: translateX(26px);
+        transform: translateX(26px); /* Moves slider handle */
     }
 
 #status-message {
-    margin-left: 10px; 
+    margin-left: 10px;
 }
 
 #push-button {
@@ -58,6 +59,7 @@ input:checked + .slider {
         background-color: #6c757d;
         border-color: #6c757d;
     }
+
 @media (max-width: 550px) {
     nav {
         text-align: left;

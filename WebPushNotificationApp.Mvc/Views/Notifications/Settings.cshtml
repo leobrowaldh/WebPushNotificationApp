@@ -3,21 +3,9 @@
 }
 @section Styles {
     <link rel="stylesheet" href="~/css/index.css" />
+    <link rel="stylesheet" href="~/css/notificationSettings.css" />
 }
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Notification Subscription</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-    <link rel="stylesheet" href="~/css/notificationSettings.css" />
-    <script>
-        var publicKey = '@ViewBag.PublicKey';
-        var userId = '@ViewBag.UserId';
-    </script>
-</head>
 <body>
     <div>
         <button id="install" class="btn btn-primary btn-sm" hidden>Install app</button>
@@ -36,6 +24,9 @@
 
 <script type="module" src="~/js/settings.js"></script>
 <script src="~/sw.js"></script>
+<script>
+    var publicKey = '@ViewBag.PublicKey';
+    var userId = '@ViewBag.UserId';
+</script>
 
 </body>
-</html>
