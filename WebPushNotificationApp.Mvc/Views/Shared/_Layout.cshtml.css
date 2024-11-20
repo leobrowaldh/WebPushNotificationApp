@@ -68,6 +68,9 @@ nav {
     color: black;
     border-color: rgba(175, 238, 238, 1);
 }
+#register {
+    background-color: rgba(175, 238, 238, 1);
+}
 @media (max-width: 550px) {
     nav {
         text-align: left;

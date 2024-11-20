@@ -118,6 +118,11 @@ blockquote {
     justify-content: space-between;
 }
 
+#submitButton {
+    background-color: rgba(175, 238, 238, 1);
+    color:black;
+    border:none
+}
 @media (max-width: 990px) {
     .list-group-item {
         padding: 12px 20px;
