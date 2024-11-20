@@ -107,7 +107,6 @@ nav {
 
 #collapseLogo {
     position: absolute;
-    top: 100%; /* Place it directly below the button */
+    top: 100%;
     left: 0;
-    z-index: 1050; /* Ensure it appears above other content */
-}
+    z-index: 1050; 

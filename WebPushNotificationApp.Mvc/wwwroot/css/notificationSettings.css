@@ -39,7 +39,7 @@
     }
 
 input:checked + .slider {
-    background-color: #2196F3;
+    background-color: rgba(175, 238, 238, 1);
 }
 
     input:checked + .slider:before {
@@ -49,9 +49,16 @@ input:checked + .slider {
 #status-message {
     margin-left: 10px; 
 }
-
+#install {
+    background-color: rgba(175, 238, 238, 1);
+    border-color: rgba(175, 238, 238, 1);
+    color:black
+}
 #push-button {
     margin-top: 10px;
+    background-color: rgba(175, 238, 238, 1);
+    border-color: rgba(175, 238, 238, 1);
+    color:black;
 }
 
     #push-button:disabled {

@@ -62,6 +62,12 @@ nav {
         color: #a00000;
         text-decoration: underline;
     }
+
+#installPWA {
+    background-color: rgba(175, 238, 238, 1);
+    color: black;
+    border-color: rgba(175, 238, 238, 1);
+}
 @media (max-width: 550px) {
     nav {
         text-align: left;

@@ -40,7 +40,7 @@
             </div>
 
             <div class="under-chat-container row">
-                <img src="@Model.ProfilePicture" alt="Profile Picture" class="img-fluid profile-picture" style="margin-bottom:70px;" />
+                <img src="@Model.ProfilePicture" alt="Profile Picture" class="img-fluid profile-picture" style="margin-bottom:70px; width:auto; height:60px;" />
                 <form asp-controller="Home" asp-action="Create" data-ajax-begin="clearInputField" data-ajax-complete=""
                       data-ajax-failure="alert('fail')" data-ajax-success="sendMessage" data-ajax="true" data-ajax-method="POST">
                     <div asp-validation-summary="ModelOnly"></div>
