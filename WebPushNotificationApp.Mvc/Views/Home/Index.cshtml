@@ -39,13 +39,15 @@
                 }
             </div>
 
-            <div class="under-chat-container row">
-                <img src="@Model.ProfilePicture" alt="Profile Picture" class="img-fluid profile-picture rounded-circle" style="margin-bottom:70px;" />
-                <form asp-controller="Home" asp-action="Create" data-ajax-begin="clearInputField" data-ajax-complete=""
+            <div class="under-chat-container">
+                <div class="profile-picture">
+                    <img src="@Model.ProfilePicture" alt="Profile Picture" />
+                </div>
+                <form asp-controller="Home" asp-action="Create" data-ajax-begin="clearInputField" data-ajax-complete="" id="message-form"
                       data-ajax-failure="alert('fail')" data-ajax-success="sendMessage" data-ajax="true" data-ajax-method="POST">
                     <div asp-validation-summary="ModelOnly"></div>
-                    <textarea style="width:300px; height: 80px; overflow-y: auto; resize:none;" name="Text" id="messageText"></textarea>
-                    <input type="submit" value="Send" id="submitButton" class="btn btn-primary" style="margin-bottom:70px;"/>
+                    <textarea id="messageText" name="Text"></textarea>
+                    <input type="submit" value="Send" id="submitButton" class="btn btn-primary" />
                     <input type="hidden" value="@userName" name="username" />
                 </form>
             </div>
@@ -59,7 +61,9 @@
                     @foreach (var user in Model.Contacts.Where(u => u.UserName != userName).OrderBy(u => u.UserName))
                     {
                         <li class="list-group-item">
-                            <img src="@user.ProfilePicture" alt="Profile Picture" class="img-fluid profile-picture rounded-circle" style="max-width: 60px; height: auto; margin-right: 10px;" />
+                            <div class="profile-picture">
+                                <img src="@user.ProfilePicture" alt="Profile Picture" />
+                            </div>
                             @user.UserName
                         </li>
                     }

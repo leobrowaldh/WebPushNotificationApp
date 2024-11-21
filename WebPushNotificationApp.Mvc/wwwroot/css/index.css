@@ -1,18 +1,59 @@
-﻿
+﻿h1, h2 {
+    text-shadow: 3px 3px 5px #b4cccc
+}
+
 .under-chat-container {
-    margin: 10px;
     display: flex;
-    align-items: center;
-    flex-wrap: nowrap;
+    align-items: center; /* Centers elements vertically */
+    justify-content: center; /* Centers elements horizontally */
+    gap: 10px; /* Adds spacing between the profile picture, text field, and button */
+    padding: 10px;
+    box-sizing: border-box; /* Includes padding in width calculations */
+    width: 100%;
 }
 
 .profile-picture {
-    width: 60px;
-    max-height: 60px;
-    margin-right: 10px;
-    border-radius: 5px;
-    object-fit: cover;
+    flex-shrink: 0; /* Prevents the profile picture from shrinking */
+    width: 60px; /* Fixed width */
+    height: 60px; /* Fixed height */
+    border-radius: 50%; /* Makes it circular */
+    overflow: hidden; /* Hides any part of the image outside the circle */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
 }
+
+    .profile-picture img {
+        width: 100%; /* Make the image fill the container */
+        height: 100%; /* Ensure it fills both width and height */
+        object-fit: cover; /* Ensures the image covers the square container */
+    }
+
+
+#message-form {
+    display: flex;
+    align-items: center; /* Centers the text field and button vertically */
+    gap: 10px; /* Adds spacing between the text field and button */
+    flex-grow: 1; /* Allows the form to expand as needed */
+}
+
+textarea#messageText {
+    flex-grow: 1; /* Expands the text field to fill available space */
+    height: 50px; /* Keeps the height consistent */
+    resize: none; /* Prevents manual resizing */
+    padding: 10px; /* Adds padding for better usability */
+    box-sizing: border-box; /* Includes padding in width calculations */
+}
+
+#submitButton {
+    height: 50px; /* Matches the text field's height */
+    padding: 0 15px; /* Adds padding for button text */
+    box-sizing: border-box; /* Includes padding in width calculations */
+    flex-shrink: 0; /* Prevents the button from shrinking */
+}
+
+
 
 blockquote {
     font-style: italic;
@@ -32,8 +73,7 @@ blockquote {
 
 
 .list-group {
-    border-radius: 5px;
-    border: none;
+    padding:5px;
 }
 
 .list-group-item {
@@ -42,10 +82,15 @@ blockquote {
     overflow: hidden;
     color: black;
     text-shadow: 1px 1px 5px black;
-    border: none;
     text-align: left;
     display: flex;
     align-items: center;
+    margin-top: 3px;
+    margin-bottom: 3px;
+    border-radius: 5px;
+    box-shadow: 1px 1px 5px #131616;
+    background: linear-gradient(to right, #8ccca9, #ffffff);
+    gap:15px;
 }
 
 #button-modal:hover {
@@ -82,7 +127,7 @@ blockquote {
 }
 
 .receiver {
-    background-color: #66cfb8;
+    background-color: #b5eddd;
     color: #3e3e3e;
     padding: 10px 15px;
     border-radius: 10px;
@@ -112,27 +157,13 @@ blockquote {
     padding: 10px;
     margin-bottom: 10px;
     box-shadow: 2px 3px 3px rgba(0, 0, 0, 0.3);
+    background-image: url('/images/watercolor-hand-drawn-background-with-plants.jpg');
 }
 
 .chat-window {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-}
-
-@media (max-width: 990px) {
-    .list-group-item {
-        padding: 12px 20px;
-        min-width: 250px;
-    }
-
-    .under-chat-container {
-        flex-wrap: nowrap;
-    }
-
-    #submitButton {
-        margin-top: 5px;
-    }
 }
 
 @media (min-width: 770px) {
