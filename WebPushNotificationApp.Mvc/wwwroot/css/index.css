@@ -16,12 +16,16 @@
     flex-shrink: 0; /* Prevents the profile picture from shrinking */
     width: 60px; /* Fixed width */
     height: 60px; /* Fixed height */
+    border: solid;
+    border-width: 2px;
+    border-color: #000000;
     border-radius: 50%; /* Makes it circular */
     overflow: hidden; /* Hides any part of the image outside the circle */
     display: flex;
     justify-content: center;
     align-items: center;
     position: relative;
+    box-shadow: 4px 4px 2px black;
 }
 
     .profile-picture img {
@@ -80,17 +84,17 @@ blockquote {
     word-wrap: break-word;
     white-space: normal;
     overflow: hidden;
-    color: black;
-    text-shadow: 1px 1px 5px black;
+    color: #ffffff;
+    text-shadow: 2px 2px 3px black;
     text-align: left;
     display: flex;
     align-items: center;
     margin-top: 3px;
     margin-bottom: 3px;
-    border-radius: 5px;
+    border-radius: 15px;
     box-shadow: 1px 1px 5px #131616;
-    background: linear-gradient(to right, #817042, #ffffff);
-    gap:15px;
+    background: linear-gradient(to right,#55988c, #ffffff);
+    gap: 15px;
 }
 
 #button-modal:hover {
@@ -166,7 +170,7 @@ blockquote {
     justify-content: space-between;
 }
 
-@media (min-width: 770px) {
+/*@media (min-width: 770px) {
     .chat-window {
         display: flex;
         flex-direction: column;
@@ -175,12 +179,12 @@ blockquote {
     #chat {
         flex-grow: 0.7; 
         min-height: 300px; 
-        overflow-y: auto; /* Scrollable content */
-    }
+        overflow-y: auto;*/ /* Scrollable content */
+    /*}
     .under-chat-container {
         flex-grow: 0.3;
-        flex-shrink: 0; /* Ensure it doesn't shrink */
-    }
+        flex-shrink: 0;*/ /* Ensure it doesn't shrink */
+    /*}
 
 }
 
@@ -215,4 +219,4 @@ blockquote {
         justify-content:flex-start;
     }
     
-}
+}*/
