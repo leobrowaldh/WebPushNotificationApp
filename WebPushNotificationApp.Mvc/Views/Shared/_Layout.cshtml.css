@@ -74,6 +74,7 @@ nav {
 }
 
 #notification-settings-link {
+    margin-top:10px;
     text-align: center;
     font-size: 22px;
     color: #b22222;
@@ -81,7 +82,6 @@ nav {
     width: 100%;
     box-sizing: border-box;
     cursor: pointer;
-    font-weight: bold;
 }
 
 #notification-settings-container {
@@ -100,14 +100,14 @@ nav {
 
     nav {
         width: 250px;
-        position: fixed;
+        position: absolute;
         top: 0;
         left: -250px; 
         height: 100%;
         z-index: 1000;
         display: flex;
         flex-direction: column;
-        transition: transform 0.3s ease-in-out; 
+        transition: left 0.3s ease-in-out; 
     }
 
         

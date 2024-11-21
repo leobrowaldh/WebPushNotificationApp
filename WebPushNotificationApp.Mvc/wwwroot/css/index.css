@@ -248,6 +248,7 @@ blockquote {
     background-color: #ccc; /* Default background */
     transition: 0.4s;
     border-radius: 34px;
+    border:1px solid;
 }
 
     .slider:before {
@@ -263,7 +264,7 @@ blockquote {
     }
 
 input:checked + .slider {
-    background-color: #11b281; /* Background when toggled on */
+    background-color: #a0dcdb; /* Background when toggled on */
 }
 
     input:checked + .slider:before {
