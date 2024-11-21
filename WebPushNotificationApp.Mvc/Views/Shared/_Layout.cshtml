@@ -10,65 +10,69 @@
     <link rel="manifest" href="~/manifest.json" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     @RenderSection("Styles", required: false)
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
 </head>
 <body>
     <header>
-            <nav class="navbar navbar-expand-sm navbar-light bg-white border-bottom box-shadow mb-3">
-                <div class="container-fluid">
-                    @*logo collapse button*@
-                    <p class="d-inline-flex flex-column gap-1">
-                        <button class="btn" type="button" data-bs-toggle="collapse" data-bs-target="#collapseLogo" aria-expanded="false" aria-controls="collapseExample">
-                            <img src="~/images/logo-ChatMaster2.jpg" class="img-nav" style="max-width: 60px; height: auto; border-radius:15px;" />
-                        </button>
-                    </p>
-                    @if(User.Identity.IsAuthenticated)
-                    {
-                        <div class="collapse" id="collapseLogo" hidden>
-                            <div class="card card-body">
-                            <button id="installPWA" class="btn btn-primary">Install app</button>
-                            </div>
+    <button class="navbar-toggler" type="button" aria-label="Toggle navigation" id="navbarToggleButton">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <nav id="navbar" class="navbar navbar-light border-bottom box-shadow mb-3">
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <div class="logo-button">
+                <button class="btn" type="button" data-bs-toggle="collapse" data-bs-target="#collapseLogo" aria-expanded="false" aria-controls="collapseExample">
+                    <img src="~/images/logo-ChatMaster2.jpg" class="img-nav" style="max-width: 90px; height: auto; border-radius:15px;" />
+                </button>
+                @if (User.Identity.IsAuthenticated)
+                {
+                    <div class="collapse" id="collapseLogo" hidden>
+                        <div class="card card-body">
+                        <button id="installPWA" class="btn btn-primary">Install app</button>
                         </div>
-                    }
-
-                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
-                            aria-expanded="false" aria-label="Toggle navigation">
-                        <span class="navbar-toggler-icon"></span>
-                    </button>
-
-                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                        <ul class="navbar-nav flex-grow-1">
-
-                        @if (User.Identity.IsAuthenticated)
-                        {
-                            <li class="nav-link">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Public Chat</a>
-                            </li>
-                            <li class="nav-link">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Notifications" asp-action="Settings">Notification Settings</a>
-                            </li>
-                            }
-                        else
-                        {
-                            <li class="nav-link">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Homepage">Home</a>
-                            </li>
-                        }
-                            <li class="nav-link">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="AboutUs">About Us</a>
-                            </li>
-                        </ul>
-
-                        <partial name="_LoginPartial" />
                     </div>
-                </div>
-            </nav>
-    </header>
+                }
+            </div>
+            <ul class="navbar-nav flex-grow-1">
+                @if (User.Identity.IsAuthenticated)
+                {
+                    <li class="nav-link">
+                        <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Public Chat</a>
+                    </li>
+
+                }
+                else
+                {
+                    <li class="nav-link">
+                        <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Homepage">Home</a>
+                    </li>
+                }
+                <li class="nav-link">
+                    <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="AboutUs">About Us</a>
+                </li>
+                                @if (User.Identity.IsAuthenticated)
+                {
+                    <div class="notification-settings">
+                        <a href="javascript:void(0);" class="text-dark" id="notification-settings-link">Notification Settings</a>
+                        <div id="notification-settings-container" class="collapse">
+                            <partial name="../Notifications/Settings" />
+                        </div>
+                    </div>
+                }
+
+            </ul>
+            <div class="partial-container">
+
+                <partial name="_LoginPartial" />
+            </div>
+        </div>
+    </nav>
+</header>
     <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
     </div>
-
 
     <footer class="border-top footer text-muted">
         <div class="container">
@@ -76,6 +80,19 @@
         </div>
     </footer>
 
+<script>
+    document.getElementById("navbarToggleButton").addEventListener("click", function () {
+        var navbar = document.getElementById("navbar");
+        navbar.classList.toggle("show");
+    });
+</script>
+<script>
+    $(document).ready(function() {
+        $('#notification-settings-link').on('click', function() {
+            $('#notification-settings-container').toggleClass('collapse');
+        });
+    });
+</script>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>

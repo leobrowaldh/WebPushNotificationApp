@@ -60,13 +60,3 @@ input:checked + .slider {
         border-color: #6c757d;
     }
 
-@media (max-width: 550px) {
-    nav {
-        text-align: left;
-    }
-
-    .nav-link {
-        display: flex;
-        justify-content: flex-start;
-    }
-}

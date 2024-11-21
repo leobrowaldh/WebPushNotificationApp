@@ -26,3 +26,9 @@
     color: white;
     text-shadow: -2px -2px 0 black, 2px -2px 0 black, -2px 2px 0 black, 2px 2px 0 black;
 }
+@media (max-width: 770px) {
+    body {
+        margin-top: 60px;
+        margin-left: 0;
+    }
+}

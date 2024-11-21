@@ -4,6 +4,10 @@
     padding: 0; 
 }
 
+body {
+    margin-left: 250px; 
+}
+
 .carousel {
     height: 80vh; 
 }
@@ -25,7 +29,7 @@
 .carousel-item .carousel-image-wrapper {
     display: flex;            
     justify-content: center;  
-    align-items: flex-start;      
+    align-items: center;      
     height: 100%;            
     width: 100%;   
     padding:0;
@@ -56,6 +60,10 @@
     margin-bottom: 10px;
 }
 @media (max-width: 770px){
+    body {
+        margin-top: 80px;
+        margin-left: 0;
+    }
     .slide-1{
     min-width:770px;
     width:100%;

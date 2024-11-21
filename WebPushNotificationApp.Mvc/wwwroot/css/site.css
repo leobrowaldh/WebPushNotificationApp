@@ -12,6 +12,7 @@ body {
     color: #3e3e3e;
     line-height: 1.6;
     min-height: calc(100vh - 167px);
+    margin-left:250px;
 }
 
 h1 {
@@ -114,4 +115,10 @@ nav {
     top: 100%; /* Place it directly below the button */
     left: 0;
     z-index: 1050; /* Ensure it appears above other content */
+}
+@media (max-width: 770px) {
+    body {
+        margin-top: 60px;
+        margin-left: 0;
+    }
 }
