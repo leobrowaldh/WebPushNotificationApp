@@ -40,7 +40,7 @@
     }
 
 input:checked + .slider {
-    background-color: #11b281; /* Background when toggled on */
+    background-color: #a0dcdb; /* Background when toggled on */
 }
 
     input:checked + .slider:before {
