@@ -18,6 +18,10 @@ public class HomeController(
     {
         //gets the current user
         var currentUser = await _userManager.GetUserAsync(User);
+        if (currentUser == null)
+        {
+            return RedirectToAction("Homepage");
+        }
         ViewBag.PublicKey = _configuration["VapidDetails:PublicKey"];
         var messageList = await _messageRepository.GetAllMessagesAsync();
         if (User.Identity is not null && User.Identity.IsAuthenticated && currentUser is not null)
