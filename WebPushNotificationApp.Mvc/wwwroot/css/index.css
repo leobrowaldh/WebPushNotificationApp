@@ -123,6 +123,8 @@ blockquote {
 #chat {
     flex: 1; /* Expands to take up available space */
     overflow-y: auto; /* Adds vertical scrolling for overflow content */
+    overflow-wrap:break-word;
+    word-wrap:break-word;
     border: 1px solid #ccc;
     padding: 10px;
     box-shadow: 2px 3px 3px rgba(0, 0, 0, 0.3);
