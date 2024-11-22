@@ -28,6 +28,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function submitForm() {
         $(messageForm).submit();
+        //Sending notifications to all other users:
+        fetch('/Notifications/NotifyAll', { method: 'POST' })
+            .then(response => response.text())
+            .catch(error => console.error('Error:', error));
     }
     });
 
