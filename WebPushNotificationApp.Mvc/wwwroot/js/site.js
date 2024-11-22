@@ -31,3 +31,27 @@
         disableInAppInstallPrompt();
     });
 });
+
+document.getElementById("navbarToggleButton").addEventListener("click", function () {
+    var navbar = document.getElementById("navbar");
+    navbar.classList.toggle("show"); 
+});
+
+document.addEventListener('click', function (event) {
+    var navbar = document.getElementById("navbar");
+    var toggleButton = document.getElementById("navbarToggleButton");
+
+    if (!navbar.contains(event.target) && event.target !== toggleButton) {
+        navbar.classList.remove("show"); 
+    }
+});
+
+document.getElementById("navbar").addEventListener('click', function (event) {
+    event.stopPropagation(); 
+});
+
+$(document).ready(function () {
+    $('#notification-settings-link').on('click', function () {
+        $('#notification-settings-container').toggleClass('collapse');
+    });
+});

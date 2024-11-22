@@ -67,8 +67,6 @@ ul {
 
 li {
     background: url('path_to_icon.png') no-repeat left center; 
-    padding-left: 20px; 
-    margin: 5px 0;
 }
 .container {
     display: flex;

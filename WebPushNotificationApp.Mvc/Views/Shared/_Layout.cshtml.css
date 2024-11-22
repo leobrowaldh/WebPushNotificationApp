@@ -42,6 +42,7 @@ nav {
     text-decoration:underline;
 }
 .navbar-nav {
+    justify-content:flex-start;
     display: flex;
     flex-direction: column;
     padding-left: 0;
@@ -71,10 +72,12 @@ nav {
     }
 .partial-container {
     flex-direction:column;
+    text-align:center;
 }
 
 #notification-settings-link {
-    margin-top:10px;
+    justify-content:center;
+    margin-top:20px;
     text-align: center;
     font-size: 22px;
     color: #b22222;
@@ -85,8 +88,8 @@ nav {
 }
 
 #notification-settings-container {
-    margin-left:20px;
-    margin-top: 10px;
+    justify-items:center;
+    text-align:center;
     padding: 10px;
     background-color: transparent;
     border-radius: 5px;
@@ -100,7 +103,7 @@ nav {
 
     nav {
         width: 250px;
-        position: absolute;
+        position: fixed;
         top: 0;
         left: -250px; 
         height: 100%;
@@ -224,4 +227,12 @@ input:checked + .slider {
         background-color: #6c757d;
         border-color: #6c757d;
     }
+#install {
+    margin-top: 30px;
+    background-color: #a0dcdb;
+    text-shadow: 1px 1px 2px black;
+    border-color: black;
+    border:1px solid black;
+    padding:8px;
+}
 

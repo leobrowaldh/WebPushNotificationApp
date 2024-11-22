@@ -24,14 +24,11 @@
                 <button class="btn" type="button" data-bs-toggle="collapse" data-bs-target="#collapseLogo" aria-expanded="false" aria-controls="collapseExample">
                     <img src="~/images/logo-ChatMaster2.jpg" class="img-nav" style="max-width: 90px; height: auto; border-radius:15px;" />
                 </button>
-                @if (User.Identity.IsAuthenticated)
-                {
-                    <div class="collapse" id="collapseLogo" hidden>
-                        <div class="card card-body">
-                        <button id="installPWA" class="btn btn-primary">Install app</button>
-                        </div>
+
+                    <div>
+                        <button id="install" class="btn btn-primary btn-sm" hidden>Install app</button>
                     </div>
-                }
+
             </div>
             <ul class="navbar-nav flex-grow-1">
                 @if (User.Identity.IsAuthenticated)
@@ -81,17 +78,7 @@
     </footer>
 
 <script>
-    document.getElementById("navbarToggleButton").addEventListener("click", function () {
-        var navbar = document.getElementById("navbar");
-        navbar.classList.toggle("show");
-    });
-</script>
-<script>
-    $(document).ready(function() {
-        $('#notification-settings-link').on('click', function() {
-            $('#notification-settings-container').toggleClass('collapse');
-        });
-    });
+
 </script>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>
