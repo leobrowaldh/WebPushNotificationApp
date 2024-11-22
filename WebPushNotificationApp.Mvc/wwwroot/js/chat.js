@@ -6,6 +6,31 @@
     }
 }
 
+//Press enter to send message and shift+enter to make a new line in the textbox.
+document.addEventListener("DOMContentLoaded", function () {
+    const messageTextArea = document.getElementById('messageText');
+    const messageForm = document.getElementById('message-form');
+    const submitButton = document.getElementById('submitButton');
+
+
+    messageTextArea.addEventListener('keydown', function (event) {
+        if (event.key === 'Enter' && !event.shiftKey) {
+            event.preventDefault();
+            submitForm();
+        }
+    });
+
+    messageTextArea.addEventListener('keydown', function (event) {
+        if (event.key === 'Enter' && event.shiftKey) {
+            return;
+        }
+    });
+
+    function submitForm() {
+        $(messageForm).submit();
+    }
+    });
+
 // userName is declared on the page
 const username = userName;
 const textInput = document.getElementById('messageText');
@@ -90,26 +115,4 @@ function addMessageToChat(message) {
     const chats = document.getElementById('chat');
     chats.scrollTop = chats.scrollHeight; // Scroll to the bottom for a better user experiance
 }
-//Press enter to send message and shift+enter to make a new line in the textbox.
-document.addEventListener("DOMContentLoaded", function () {
-    const messageTextArea = document.getElementById('messageText');
-    const messageForm = document.getElementById('message-form');
-    const submitButton = document.getElementById('submitButton');
 
-
-    messageTextArea.addEventListener('keydown', function (event) {
-        if (event.key === 'Enter' && !event.shiftKey) {
-            event.preventDefault(); 
-            submitForm();
-        }
-    });
-
-    messageTextArea.addEventListener('keydown', function (event) {
-        if (event.key === 'Enter' && event.shiftKey) {
-            return; 
-        }
-    });
-
-    function submitForm() {
-        $(messageForm).submit();
-});
