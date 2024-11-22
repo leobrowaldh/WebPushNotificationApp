@@ -168,6 +168,8 @@ blockquote {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    flex-grow: 1;
+    min-height: 0; /* Prevent flex-shrink issues */
 }
 
 /*@media (min-width: 770px) {
