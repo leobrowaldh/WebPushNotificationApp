@@ -28,7 +28,6 @@
       "src": "https://webpushchatapp-e7d5dac2fjdyfxaa.northeurope-01.azurewebsites.net/images/pwa-screenshot.png",
       "sizes": "884x863",
       "type": "image/png",
-      "form_factor": "tall",
       "label": "Homescreen of ChatMaster App"
     }
   ],

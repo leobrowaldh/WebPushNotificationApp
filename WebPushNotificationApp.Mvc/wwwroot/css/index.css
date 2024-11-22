@@ -2,37 +2,6 @@
     text-shadow: 3px 3px 5px #b4cccc
 }
 
-.under-chat-container {
-    display: flex;
-    align-items: center; /* Centers elements vertically */
-    justify-content: center; /* Centers elements horizontally */
-    gap: 10px; /* Adds spacing between the profile picture, text field, and button */
-    padding: 10px;
-    box-sizing: border-box; /* Includes padding in width calculations */
-    width: 100%;
-}
-
-.profile-picture {
-    flex-shrink: 0; /* Prevents the profile picture from shrinking */
-    width: 60px; /* Fixed width */
-    height: 60px; /* Fixed height */
-    border: solid;
-    border-width: 2px;
-    border-color: #000000;
-    border-radius: 50%; /* Makes it circular */
-    overflow: hidden; /* Hides any part of the image outside the circle */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    position: relative;
-    box-shadow: 4px 4px 2px black;
-}
-
-    .profile-picture img {
-        width: 100%; /* Make the image fill the container */
-        height: 100%; /* Ensure it fills both width and height */
-        object-fit: cover; /* Ensures the image covers the square container */
-    }
 
 
 #message-form {
@@ -152,14 +121,10 @@ blockquote {
 }
 
 #chat {
-    flex-grow: 1;
-    display: flex;
-    flex-direction: column;
-    height: 400px;
-    overflow-y: auto;
+    flex: 1; /* Expands to take up available space */
+    overflow-y: auto; /* Adds vertical scrolling for overflow content */
     border: 1px solid #ccc;
     padding: 10px;
-    margin-bottom: 10px;
     box-shadow: 2px 3px 3px rgba(0, 0, 0, 0.3);
     background-image: url('/images/watercolor-hand-drawn-background-with-plants.jpg');
 }
@@ -168,25 +133,47 @@ blockquote {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    height: calc(100vh - 100px);
 }
-
-/*@media (min-width: 770px) {
+@media (max-width: 770px) {
     .chat-window {
-        display: flex;
-        flex-direction: column;
-        min-height: calc(100vh - 167px);
+        height: 600px;
     }
-    #chat {
-        flex-grow: 0.7; 
-        min-height: 300px; 
-        overflow-y: auto;*/ /* Scrollable content */
-    /*}
-    .under-chat-container {
-        flex-grow: 0.3;
-        flex-shrink: 0;*/ /* Ensure it doesn't shrink */
-/*}
-
 }
+.under-chat-container {
+    flex-shrink: 0; /* Prevents shrinking */
+    padding: 10px;
+    display: flex;
+    align-items: center; /* Centers vertically */
+    gap: 10px; /* Space between children */
+    background-color: #f9f9f9; /* Optional styling */
+    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.profile-picture {
+    flex-shrink: 0; /* Prevents the profile picture from shrinking */
+    width: 60px; /* Fixed width */
+    height: 60px; /* Fixed height */
+    border: solid;
+    border-width: 2px;
+    border-color: #000000;
+    border-radius: 50%; /* Makes it circular */
+    overflow: hidden; /* Hides any part of the image outside the circle */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    box-shadow: 4px 4px 2px black;
+}
+
+    .profile-picture img {
+        width: 100%; /* Make the image fill the container */
+        height: 100%; /* Ensure it fills both width and height */
+        object-fit: cover; /* Ensures the image covers the square container */
+    }
+
+
+/*}
 
 @media (max-width: 750px) {
     #submitButton {

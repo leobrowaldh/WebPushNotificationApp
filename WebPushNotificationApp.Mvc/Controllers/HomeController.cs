@@ -69,6 +69,10 @@ public class HomeController(
     }
     public IActionResult Homepage()
     {
+        if (User.Identity != null && User.Identity.IsAuthenticated)
+        {
+            return RedirectToAction("Index");
+        }
         return View();
     }
 }
