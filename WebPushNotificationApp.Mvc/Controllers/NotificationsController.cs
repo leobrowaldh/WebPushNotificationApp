@@ -143,7 +143,7 @@ public class NotificationsController(
                 notificationId = notification.Id,
                 title = "Test Notification",
                 message = "This is a test Notification",
-                icon = "https://static-00.iconduck.com/assets.00/slightly-smiling-face-emoji-2048x2048-p8h7zhgm.png",
+                icon = "https://upload.wikimedia.org/wikipedia/commons/thumb/8/85/Smiley.svg/1024px-Smiley.svg.png",
                 badge = "https://static-00.iconduck.com/assets.00/message-icon-1023x1024-7pbl8unr.png",
             });
 
