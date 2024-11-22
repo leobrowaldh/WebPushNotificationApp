@@ -67,10 +67,9 @@ public class HomeController(
     {
         return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
     }
-    public async Task<IActionResult> Homepage()
+    public IActionResult Homepage()
     {
-        var currentUser = await _userManager.GetUserAsync(User);
-        if (currentUser != null && User.Identity != null && User.Identity.IsAuthenticated)
+        if (User.Identity != null && User.Identity.IsAuthenticated)
         {
             return RedirectToAction("Index");
         }
