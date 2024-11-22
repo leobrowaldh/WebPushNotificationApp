@@ -1,6 +1,13 @@
-﻿@{
-	ViewData["Title"] = "Notifications Settings";
+﻿@using Database.EntityModels
+@using Microsoft.AspNetCore.Identity
+@inject UserManager<AplicationUser> _userManager
+@inject IConfiguration _configuration
+
+@{
+    var UserId = _userManager.GetUserId(User);
+    var PublicKey = _configuration["VapidDetails:PublicKey"];
 }
+
 @section Styles {
     <link rel="stylesheet" href="~/css/index.css" />
     <link rel="stylesheet" href="~/css/notificationSettings.css" />
@@ -28,8 +35,8 @@
 <script type="module" src="~/js/settings.js"></script>
 <script src="~/sw.js"></script>
 <script>
-    var publicKey = '@ViewBag.PublicKey';
-    var userId = '@ViewBag.UserId';
+    var publicKey = '@PublicKey';
+    var userId = '@UserId';
 </script>
 
 </body>

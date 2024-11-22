@@ -19,22 +19,6 @@ public class NotificationsController(
 	UserManager<AplicationUser> _userManager,
     WebPushAppContext webPushAppContext) : Controller
 {
-    
-    [HttpGet("settings")]
-    [Authorize]
-    public  IActionResult Settings()
-    {
-        //manual authorize, since the attribute is not working
-        if (!User.Identity.IsAuthenticated)
-        {
-            _logger.LogWarning("User is not authenticated.");
-            // Redirect to the login page with a return URL
-            return RedirectToAction("Index", "Home");
-        }
-        ViewBag.UserId = _userManager.GetUserId(User);
-		ViewBag.PublicKey = _configuration["VapidDetails:PublicKey"];
-		return View();
-    }
 
     [HttpPost("SavingSubscriptionToDb")]
     public async Task<IActionResult> SavingSubscriptionToDb([FromBody] PushSubscriptionDto subscriptionDto)
