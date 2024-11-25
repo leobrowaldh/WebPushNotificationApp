@@ -70,3 +70,34 @@ export function urlBase64ToUint8Array(base64String) {
     const rawData = window.atob(base64);
     return new Uint8Array([...rawData].map(char => char.charCodeAt(0)));
 }
+export async function ManagingSubscriptionState() {
+
+    const pushButton = document.getElementById('push-button');
+    const registration = await navigator.serviceWorker.ready;
+    const existingSubscription = await registration.pushManager.getSubscription();
+
+    if (existingSubscription) {
+        console.log('Subscription exists');
+        const isUserSub = await isUserSubscription(existingSubscription);
+        if (isUserSub) {
+            pushButton.disabled = false;
+            document.getElementById('notification-switch').checked = true;
+            pushButton.classList.remove('disabled');
+            document.getElementById('status-message').textContent = 'Notifications are enabled.';
+        } else {
+            console.log('The subscription does not belong to this user');
+            await registerServiceWorker();
+            pushButton.disabled = true;
+            document.getElementById('notification-switch').checked = false;
+            pushButton.classList.add('disabled');
+            document.getElementById('status-message').textContent = 'Notifications are disabled.';
+        }
+    } else {
+        await registerServiceWorker();
+        console.log('No subscription found');
+        pushButton.disabled = true;
+        document.getElementById('notification-switch').checked = false;
+        pushButton.classList.add('disabled');
+        document.getElementById('status-message').textContent = 'Notifications are disabled.';
+    }
+}
