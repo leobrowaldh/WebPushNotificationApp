@@ -1,4 +1,4 @@
-﻿import { isUserSubscription, registerServiceWorker, urlBase64ToUint8Array } from './notifications.js'; 
+﻿import { isUserSubscription, registerServiceWorker, urlBase64ToUint8Array, ManagingSubscriptionState } from './notifications.js'; 
 
 
 // Creating a reference to the notification modal instance
@@ -53,6 +53,7 @@ document.getElementById('subscribe-button').addEventListener('click', async func
         });
         if (response.ok) {
             console.log('subscription saved to database');
+            ManagingSubscriptionState();
         } else {
             console.error('Failed to subscribe:', response.statusText);
         }
@@ -75,6 +76,8 @@ document.getElementById('no-thanks').addEventListener('click', function () {
     //remove subscription request and hide subscription button
     notificationModal.hide();
 });
+
+
 
 
 
